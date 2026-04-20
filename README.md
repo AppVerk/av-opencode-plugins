@@ -44,7 +44,6 @@ The command uses the packaged AppVerk workflow, generates a Conventional Commit 
 - `packages/commit` - plugin source, tests, command template, and build scripts for the commit workflow.
 - `docs/plugins/commit.md` - package-level installation, behavior, and usage guide.
 - `package.json` - workspace definition and shared validation commands.
-- `docs/superpowers/` - design and planning artifacts for repository changes.
 
 ## Local Development
 
