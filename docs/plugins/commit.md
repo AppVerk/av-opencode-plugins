@@ -13,7 +13,13 @@
 }
 ```
 
-2. Copy the example command from `examples/commit/.opencode/commands/commit.md` into your project.
+2. Restart OpenCode. The plugin registers `/commit` automatically.
+
+## Prompt Source
+
+- The `/commit` prompt source lives in `packages/commit/src/commands/commit.md`.
+- The build copies it to `packages/commit/dist/commands/commit.md`.
+- The content is based on the Claude marketplace `commit` command and adapted to use `av_commit` instead of raw bash commits.
 
 ## Usage
 
@@ -22,6 +28,9 @@
 
 ## Behavior
 
+- Registers `/commit` through the plugin `config` hook.
+- Overwrites any existing `commit` command definition with the AppVerk workflow.
+- Loads the command template from the packaged markdown asset when available, with a source fallback in development.
 - Blocks direct `git commit` through the `bash` tool.
 - Blocks `git push` through the `bash` tool.
 - Rejects `Co-Authored-By` footers.
@@ -29,6 +38,5 @@
 
 ## Limitations
 
-- The package does not install the `/commit` command automatically.
-- The user must add the command configuration explicitly.
 - Repository hooks still run and can reject the commit.
+- If the plugin fails to load, `/commit` will not be available.

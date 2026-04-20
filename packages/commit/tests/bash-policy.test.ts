@@ -8,10 +8,22 @@ describe("classifyBashCommand", () => {
     )
   })
 
+  it("blocks git commit after global git flags", () => {
+    expect(classifyBashCommand('git -C ../repo commit -m "feat: bad"')).toBe(
+      "block-direct-commit",
+    )
+  })
+
   it("blocks git push commands", () => {
     expect(classifyBashCommand("git push --force-with-lease")).toBe(
       "block-push",
     )
+  })
+
+  it("blocks git push after global git flags", () => {
+    expect(
+      classifyBashCommand("git --git-dir=.git --work-tree=. push origin main"),
+    ).toBe("block-push")
   })
 
   it("allows safe git inspection commands", () => {

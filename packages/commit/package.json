@@ -14,8 +14,8 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsup src/index.ts --format esm --dts",
-    "test": "vitest run --config vitest.config.ts",
+    "build": "tsup src/index.ts --format esm --dts && node ./scripts/copy-command-template.mjs",
+    "test": "npm run build && vitest run --config vitest.config.ts",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {

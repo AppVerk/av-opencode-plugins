@@ -3,16 +3,68 @@ export type BashPolicyDecision =
   | "block-direct-commit"
   | "block-push"
 
-export function classifyBashCommand(command: string): BashPolicyDecision {
-  const normalized = command.trim()
+const GIT_GLOBAL_OPTIONS_WITH_VALUES = new Set([
+  "-C",
+  "-c",
+  "--config-env",
+  "--exec-path",
+  "--git-dir",
+  "--namespace",
+  "--super-prefix",
+  "--work-tree",
+])
 
-  if (/\bgit\s+push(\s|$)/i.test(normalized)) {
-    return "block-push"
-  }
+function tokenizeShellCommand(command: string): string[] {
+  const matches = command.match(/"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|&&|\|\||[;|()]|[^\s;|()]+/g)
+  return matches ?? []
+}
 
-  if (/\bgit\s+commit(\s|$)/i.test(normalized)) {
-    return "block-direct-commit"
+function classifyGitSubcommand(command: string): BashPolicyDecision {
+  const tokens = tokenizeShellCommand(command)
+
+  for (let index = 0; index < tokens.length; index += 1) {
+    if (tokens[index] !== "git") {
+      continue
+    }
+
+    let subcommandIndex = index + 1
+
+    while (subcommandIndex < tokens.length) {
+      const token = tokens[subcommandIndex]
+
+      if (!token) {
+        break
+      }
+
+      if (!token.startsWith("-")) {
+        break
+      }
+
+      subcommandIndex += 1
+
+      if (
+        GIT_GLOBAL_OPTIONS_WITH_VALUES.has(token) &&
+        !token.includes("=") &&
+        subcommandIndex < tokens.length
+      ) {
+        subcommandIndex += 1
+      }
+    }
+
+    const subcommand = tokens[subcommandIndex]
+
+    if (subcommand === "push") {
+      return "block-push"
+    }
+
+    if (subcommand === "commit") {
+      return "block-direct-commit"
+    }
   }
 
   return "allow"
+}
+
+export function classifyBashCommand(command: string): BashPolicyDecision {
+  return classifyGitSubcommand(command.trim())
 }
