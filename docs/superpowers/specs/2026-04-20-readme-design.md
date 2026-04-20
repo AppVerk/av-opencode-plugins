@@ -70,7 +70,7 @@ Link to `docs/plugins/commit.md` for package-specific behavior.
 
 ### 8. License
 
-Point to the MIT license.
+Omit the license section unless a top-level `LICENSE` file is added.
 
 ## Content Principles
 
