@@ -1,0 +1,20 @@
+import { describe, expect, it } from "vitest"
+import { classifyBashCommand } from "../src/bash-policy.js"
+
+describe("classifyBashCommand", () => {
+  it("blocks direct git commit commands", () => {
+    expect(classifyBashCommand('git commit -m "feat: bad"')).toBe(
+      "block-direct-commit",
+    )
+  })
+
+  it("blocks git push commands", () => {
+    expect(classifyBashCommand("git push --force-with-lease")).toBe(
+      "block-push",
+    )
+  })
+
+  it("allows safe git inspection commands", () => {
+    expect(classifyBashCommand("git status --short")).toBe("allow")
+  })
+})
