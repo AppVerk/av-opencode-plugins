@@ -47,6 +47,7 @@ Run the Python development workflow with TDD and stack-specific patterns:
 ```
 
 The `/develop` command:
+
 1. Detects your project stack (FastAPI, Django, Celery, etc.)
 2. Loads relevant Python development skills
 3. Follows TDD: writes tests first, then implementation
@@ -58,12 +59,13 @@ You can also invoke the agent directly:
 opencode agent python-developer "Refactor user service to use repository pattern"
 ```
 
-## Available Packages
+## Available Commands & Agents
 
-| Package | Version | Description |
-|---------|---------|-------------|
-| [`@appverk/opencode-commit`](docs/plugins/commit.md) | `0.1.0` | Controlled OpenCode commit workflow with automatic `/commit` registration, commit message policy enforcement, and bash-level blocking for direct `git commit` and `git push`. |
-| [`@appverk/opencode-python-developer`](docs/plugins/python-developer.md) | `0.1.0` | Python development workflow with TDD, coding standards, and stack-specific patterns (FastAPI, Django, Celery). |
+| Command / Agent | Description | Docs |
+|-----------------|-------------|------|
+| `/commit` | Controlled commit workflow — Conventional Commit messages, bash-level blocking for direct `git commit`/`git push`. | [Guide](docs/plugins/commit.md) |
+| `/develop` | Python development workflow — TDD, coding standards, and stack-specific patterns (FastAPI, Django, Celery, SQLAlchemy). | [Guide](docs/plugins/python-developer.md) |
+| `@python-developer` | Direct agent invocation for Python tasks outside of `/develop`. | [Guide](docs/plugins/python-developer.md) |
 
 ## Repository Structure
 
