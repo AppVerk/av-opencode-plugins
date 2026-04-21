@@ -1,14 +1,15 @@
 # AppVerk OpenCode Plugins — Agent Guide
 
-This is an **OpenCode plugin monorepo** that bundles two workspace plugins: a controlled `/commit` workflow and a Python `/develop` workflow. The root package re-exports both and handles plugin merging.
+This is an **OpenCode plugin monorepo** that bundles multiple workspace plugins: a controlled `/commit` workflow, a Python `/develop` workflow, and a `/review` code review workflow. The root package re-exports all of them and handles plugin merging.
 
 ## Monorepo Layout
 
 | Path | Role |
 |------|------|
-| `src/index.js` + `src/index.d.ts` | **Published root entrypoint** — loads built outputs from both packages and merges their tools/hooks. |
+| `src/index.js` + `src/index.d.ts` | **Published root entrypoint** — loads built outputs from all packages and merges their tools/hooks. |
 | `packages/commit` | Commit plugin source, tests, build scripts. Output shipped at `packages/commit/dist/`. |
 | `packages/python-developer` | Python-developer plugin source, tests, skills, build scripts. Output shipped at `packages/python-developer/dist/`. |
+| `packages/code-review` | Code-review plugin source, tests, agent prompts, build scripts. Output shipped at `packages/code-review/dist/`. |
 | `.opencode/` | Local OpenCode config for this repo (separate `package.json`). |
 
 **Important:** `dist/` is usually ignored, but `packages/*/dist/` is **committed and published** (see `.gitignore`). Do not delete those `dist/` trees.
@@ -40,7 +41,7 @@ npm run test  --workspace @appverk/opencode-commit
 - **Package builds:** `tsup src/index.ts --format esm --dts`.
 - **Post-build asset copying:** Each package runs a Node script to copy markdown templates/skills into `dist/` (e.g., `dist/commands/commit.md`, `dist/skills/*.md`).
 - **Root entrypoint:** `src/index.js` is the runtime file consumed by tests and published consumers; `src/index.ts` is the typed source. When changing merge logic, update both `src/index.ts` and `src/index.js`, then run `npm run build` so the package-level tests still pass.
-- **Published files:** Only `src/index.js`, `src/index.d.ts`, and the two `packages/*/dist/` directories (see root `package.json` `files`).
+- **Published files:** Only `src/index.js`, `src/index.d.ts`, and the three `packages/*/dist/` directories (see root `package.json` `files`).
 
 ## TypeScript Configuration
 
@@ -55,14 +56,80 @@ npm run test  --workspace @appverk/opencode-commit
 - **Integration tests:** `packages/commit/tests/controlled-commit.integration.test.ts` exercises real git operations.
 - All three vitest configs use `include: ["tests/**/*.test.ts"]`.
 
+## Root Entrypoint Registration
+
+Every new plugin must be imported and registered in **both** root entrypoints. Skipping either will break tests or the published package.
+
+### `src/index.ts` (typed source)
+
+```typescript
+import { AppVerkNewPlugin } from "../packages/<name>/dist/index.js"
+
+const defaultPluginFactories: Plugin[] = [
+  AppVerkCommitPlugin,
+  AppVerkPythonDeveloperPlugin,
+  AppVerkCodeReviewPlugin,
+  AppVerkNewPlugin,  // <-- add here
+]
+```
+
+### `src/index.js` (runtime entrypoint)
+
+```javascript
+import { AppVerkNewPlugin } from "../packages/<name>/dist/index.js"
+
+const defaultPluginFactories = [
+  AppVerkCommitPlugin,
+  AppVerkPythonDeveloperPlugin,
+  AppVerkCodeReviewPlugin,
+  AppVerkNewPlugin,  // <-- add here
+]
+```
+
+**Critical:** After adding to `src/index.ts`, mirror the exact same change in `src/index.js`. The JS file is the runtime entrypoint consumed by tests and published consumers; the TS file provides types.
+
+---
+
+## Documentation Checklist
+
+When adding a new plugin, you MUST update both top-level and per-plugin documentation. An undocumented plugin is an unpublished plugin.
+
+### `README.md` (root)
+
+Update these sections:
+
+1. **Package count badge** — increment the number: `[![Package](https://img.shields.io/badge/package-N-blue.svg)]`
+2. **Introduction paragraph** — add a one-line description of the new plugin
+3. **Usage section** — add a subsection with `/command` example and what it does
+4. **Available Commands & Agents table** — add rows for the new command and any agents
+5. **Repository Structure** — add `packages/<name>` and `docs/plugins/<name>.md` entries
+6. **Documentation list** — add link to the new plugin guide
+
+### `docs/plugins/<name>.md` (per-plugin guide)
+
+Create a dedicated guide with:
+
+1. **Installation** — "The root plugin bundle includes this package automatically."
+2. **Usage** — `/command <args>` syntax with examples
+3. **What it does** — step-by-step breakdown of the workflow
+4. **Direct agent use** — `opencode agent <agent-name> "..."` examples (if applicable)
+5. **Architecture** — table of registered elements (commands, agents, tools) and their purposes
+6. **Limitations** — known MVP limitations or deferred features
+7. **Project Structure** — list of key source files
+
+---
+
 ## Adding a New Plugin Package
 
 1. Create `packages/<name>/` with `package.json`, `tsconfig.json`, `vitest.config.ts`, `src/index.ts`, and `tests/`.
 2. Add the workspace name to root `package.json` `workspaces` (already `packages/*`).
-3. Import and register the new plugin factory in `src/index.ts` and `src/index.js`.
+3. **Import and register the new plugin factory in `src/index.ts` and `src/index.js`.** See [Root Entrypoint Registration](#root-entrypoint-registration) above.
 4. Add the new `packages/<name>/dist/` path to root `package.json` `files`.
 5. Update root `npm run build` / `npm run test` / `npm run typecheck` scripts to include the new workspace.
 6. Add a smoke/packaging test in `tests/` or `packages/<name>/tests/`.
+7. **Update `README.md`** following the [Documentation Checklist](#documentation-checklist).
+8. **Create `docs/plugins/<name>.md`** following the per-plugin guide template.
+9. **Update this `AGENTS.md`** — increment plugin counts, add new rows to layout table, update published files count.
 
 ## Common Pitfalls
 
