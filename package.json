@@ -7,7 +7,8 @@
   "files": [
     "src/index.js",
     "src/index.d.ts",
-    "packages/commit/dist"
+    "packages/commit/dist",
+    "packages/python-developer/dist"
   ],
   "workspaces": [
     "packages/*"
@@ -16,9 +17,9 @@
     "@opencode-ai/plugin": "^1.14.19"
   },
   "scripts": {
-    "build": "npm run build --workspace @appverk/opencode-commit",
-    "test": "vitest run --config vitest.config.ts && npm run test --workspace @appverk/opencode-commit",
-    "typecheck": "tsc -p tsconfig.json --noEmit && npm run typecheck --workspace @appverk/opencode-commit",
+    "build": "npm run build --workspace @appverk/opencode-commit && npm run build --workspace @appverk/opencode-python-developer",
+    "test": "vitest run --config vitest.config.ts && npm run test --workspace @appverk/opencode-commit && npm run test --workspace @appverk/opencode-python-developer",
+    "typecheck": "tsc -p tsconfig.json --noEmit && npm run typecheck --workspace @appverk/opencode-commit && npm run typecheck --workspace @appverk/opencode-python-developer",
     "check": "npm run typecheck && npm run test && npm run build"
   },
   "devDependencies": {

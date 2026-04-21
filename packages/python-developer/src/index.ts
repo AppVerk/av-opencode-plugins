@@ -52,7 +52,7 @@ export const AppVerkPythonDeveloperPlugin: Plugin = async () => {
               "Skill name: coding-standards, tdd-workflow, fastapi-patterns, sqlalchemy-patterns, pydantic-patterns, async-python-patterns, uv-package-manager, django-web-patterns, django-orm-patterns, celery-patterns",
             ),
         },
-        execute(args) {
+        async execute(args) {
           return loadPythonSkill(args.name)
         },
       }),
