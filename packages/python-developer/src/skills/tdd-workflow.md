@@ -4,7 +4,7 @@ description: Enforces test-driven development: writes tests before code, uses fa
 allowed-tools: Read, Grep, Glob, Bash(pytest:*), Bash(make:*), Bash(uv:*), Bash(python:*), Bash(coverage:*)
 ---
 
-# Test-Driven Development Workflow
+# Test-Driven Development Workflow (Red-Green-Refactor)
 
 <HARD-RULES>
 These rules are NON-NEGOTIABLE. Violating any of them is a bug.
