@@ -2,6 +2,8 @@ node_modules/
 dist/
 !packages/commit/dist/
 !packages/commit/dist/**
+!packages/python-developer/dist/
+!packages/python-developer/dist/**
 coverage/
 .DS_Store
 *.tsbuildinfo
