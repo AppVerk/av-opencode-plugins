@@ -29,3 +29,15 @@ for (const skill of skills) {
 }
 
 console.log(`Copied ${skills.length} skills to dist/skills/`)
+
+const srcAgent = path.resolve(root, "../src/agent-prompt.md")
+const dstAgent = path.resolve(root, "../dist/agent-prompt.md")
+cpSync(srcAgent, dstAgent)
+console.log(`Copied agent-prompt.md → dist/`)
+
+const srcCommand = path.resolve(root, "../src/commands/develop.md")
+const dstCommandDir = path.resolve(root, "../dist/commands")
+const dstCommand = path.join(dstCommandDir, "develop.md")
+mkdirSync(dstCommandDir, { recursive: true })
+cpSync(srcCommand, dstCommand)
+console.log(`Copied commands/develop.md → dist/commands/`)

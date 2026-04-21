@@ -1,6 +1,7 @@
 import { AppVerkCommitPlugin } from "../packages/commit/dist/index.js"
+import { AppVerkPythonDeveloperPlugin } from "../packages/python-developer/dist/index.js"
 
-const defaultPluginFactories = [AppVerkCommitPlugin]
+const defaultPluginFactories = [AppVerkCommitPlugin, AppVerkPythonDeveloperPlugin]
 
 function mergeTools(plugins) {
   const merged = {}
