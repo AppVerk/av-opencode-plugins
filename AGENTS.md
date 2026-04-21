@@ -130,9 +130,16 @@ Create a dedicated guide with:
 7. **Update `README.md`** following the [Documentation Checklist](#documentation-checklist).
 8. **Create `docs/plugins/<name>.md`** following the per-plugin guide template.
 9. **Update this `AGENTS.md`** — increment plugin counts, add new rows to layout table, update published files count.
+10. **Add a `.gitignore` exception** for the new package's `dist/` directory:
+    ```gitignore
+    !packages/<name>/dist/
+    !packages/<name>/dist/**
+    ```
+    Then run `git add packages/<name>/dist/` so the built output is committed. Without this, installing the plugin from git will fail with `Cannot find module` because the consumer has no built files.
 
 ## Common Pitfalls
 
 - Do not run `git commit` or `git push` via the bash tool in this repo — the commit plugin blocks direct commits and pushes at runtime (`tool.execute.before` hook). Use `/commit` instead.
 - Changing `src/index.ts` without the corresponding `src/index.js` will break root tests and the published package.
 - Removing `packages/*/dist/` will break the root entrypoint and packaging tests.
+- **Forgetting to add a `.gitignore` exception and commit `packages/<name>/dist/`** will cause `Cannot find module` errors for consumers installing from git, because npm does not run the build step on git dependencies.

@@ -4,6 +4,8 @@ dist/
 !packages/commit/dist/**
 !packages/python-developer/dist/
 !packages/python-developer/dist/**
+!packages/code-review/dist/
+!packages/code-review/dist/**
 coverage/
 .DS_Store
 *.tsbuildinfo
