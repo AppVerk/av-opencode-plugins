@@ -2,7 +2,10 @@
 
 [![Package](https://img.shields.io/badge/package-2-blue.svg)](#available-packages)
 
-OpenCode plugin packages for AppVerk. The root plugin loads the AppVerk plugin bundle from this repository, which currently provides a controlled commit workflow that registers `/commit` and enforces AppVerk git policies inside OpenCode.
+OpenCode plugin packages for AppVerk. The root plugin loads the AppVerk plugin bundle from this repository, which currently provides:
+
+- A **controlled commit workflow** (`/commit`) that enforces AppVerk git policies.
+- A **Python development workflow** (`/develop`) with TDD, coding standards, and stack-specific patterns (FastAPI, Django, Celery, SQLAlchemy, Pydantic).
 
 ## Installation
 
@@ -15,9 +18,11 @@ Add the root plugin package to your OpenCode config:
 }
 ```
 
-Restart OpenCode after updating the config. The root plugin installs the AppVerk plugin bundle and registers `/commit` automatically.
+Restart OpenCode after updating the config. The root plugin installs the AppVerk plugin bundle and registers `/commit` and `/develop` automatically.
 
 ## Usage
+
+### Commit workflow
 
 Create a commit for the current repository changes:
 
@@ -32,6 +37,26 @@ Create a commit and append a work item reference:
 ```
 
 The command uses the packaged AppVerk workflow, generates a Conventional Commit style message, and routes the final commit through the controlled runtime instead of allowing raw `git commit` from the bash tool.
+
+### Python development workflow
+
+Run the Python development workflow with TDD and stack-specific patterns:
+
+```text
+/develop Add user authentication endpoint with JWT
+```
+
+The `/develop` command:
+1. Detects your project stack (FastAPI, Django, Celery, etc.)
+2. Loads relevant Python development skills
+3. Follows TDD: writes tests first, then implementation
+4. Runs quality gates (typecheck, tests, lint)
+
+You can also invoke the agent directly:
+
+```bash
+opencode agent python-developer "Refactor user service to use repository pattern"
+```
 
 ## Available Packages
 
