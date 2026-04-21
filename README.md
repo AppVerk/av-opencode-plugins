@@ -2,20 +2,20 @@
 
 [![Package](https://img.shields.io/badge/package-1-blue.svg)](#available-packages)
 
-OpenCode plugin packages for AppVerk. The repository currently provides a controlled commit workflow that registers `/commit` and enforces AppVerk git policies inside OpenCode.
+OpenCode plugin packages for AppVerk. The root plugin loads the AppVerk plugin bundle from this repository, which currently provides a controlled commit workflow that registers `/commit` and enforces AppVerk git policies inside OpenCode.
 
 ## Installation
 
-Add the plugin package to your OpenCode config:
+Add the root plugin package to your OpenCode config:
 
 ```json
 {
   "$schema": "https://opencode.ai/config.json",
-  "plugin": ["@appverk/opencode-commit"]
+  "plugin": ["av-opencode-plugins@git+https://github.com/AppVerk/av-opencode-plugins.git"]
 }
 ```
 
-Restart OpenCode after updating the config. The plugin registers `/commit` automatically.
+Restart OpenCode after updating the config. The root plugin installs the AppVerk plugin bundle and registers `/commit` automatically.
 
 ## Usage
 
@@ -42,7 +42,7 @@ The command uses the packaged AppVerk workflow, generates a Conventional Commit 
 ## Repository Structure
 
 - `packages/commit` - plugin source, tests, command template, and build scripts for the commit workflow.
-- `docs/plugins/commit.md` - package-level installation, behavior, and usage guide.
+- `docs/plugins/commit.md` - package-level behavior and usage guide.
 - `package.json` - workspace definition and shared validation commands.
 
 ## Local Development

@@ -1,14 +1,24 @@
 {
   "name": "av-opencode-plugins",
+  "version": "0.1.0",
   "private": true,
   "type": "module",
+  "main": "./src/index.js",
+  "files": [
+    "src/index.js",
+    "src/index.d.ts",
+    "packages/commit/dist"
+  ],
   "workspaces": [
     "packages/*"
   ],
+  "dependencies": {
+    "@opencode-ai/plugin": "^1.14.19"
+  },
   "scripts": {
     "build": "npm run build --workspace @appverk/opencode-commit",
-    "test": "npm run test --workspace @appverk/opencode-commit",
-    "typecheck": "npm run typecheck --workspace @appverk/opencode-commit",
+    "test": "vitest run --config vitest.config.ts && npm run test --workspace @appverk/opencode-commit",
+    "typecheck": "tsc -p tsconfig.json --noEmit && npm run typecheck --workspace @appverk/opencode-commit",
     "check": "npm run typecheck && npm run test && npm run build"
   },
   "devDependencies": {
@@ -16,5 +26,6 @@
     "tsup": "^8.5.0",
     "typescript": "^5.8.3",
     "vitest": "^3.1.2"
-  }
+  },
+  "types": "./src/index.d.ts"
 }

@@ -1,19 +1,19 @@
 # Commit Plugin
 
-`@appverk/opencode-commit` adds an OpenCode-native commit workflow with policy enforcement.
+The AppVerk commit plugin adds an OpenCode-native commit workflow with policy enforcement.
 
 ## Install
 
-1. Add the plugin package to your OpenCode config:
+1. Add the AppVerk root plugin bundle to your OpenCode config:
 
 ```json
 {
   "$schema": "https://opencode.ai/config.json",
-  "plugin": ["@appverk/opencode-commit"]
+  "plugin": ["av-opencode-plugins@git+https://github.com/AppVerk/av-opencode-plugins.git"]
 }
 ```
 
-2. Restart OpenCode. The plugin registers `/commit` automatically.
+2. Restart OpenCode. The root AppVerk plugin bundle registers `/commit` automatically.
 
 ## Prompt Source
 

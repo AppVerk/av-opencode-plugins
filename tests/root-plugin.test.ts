@@ -1,0 +1,146 @@
+import { execFileSync } from "node:child_process"
+import { existsSync, readFileSync } from "node:fs"
+import path from "node:path"
+import { fileURLToPath, pathToFileURL } from "node:url"
+import { describe, expect, it } from "vitest"
+import type { Hooks } from "@opencode-ai/plugin"
+
+const rootDirectory = path.resolve(fileURLToPath(new URL("..", import.meta.url)))
+const packageJsonPath = path.join(rootDirectory, "package.json")
+
+function readRootPackageJson() {
+  return JSON.parse(readFileSync(packageJsonPath, "utf8")) as {
+    main: string
+    types?: string
+    files?: string[]
+    dependencies?: Record<string, string>
+  }
+}
+
+async function loadRootModule() {
+  const packageJson = readRootPackageJson()
+  const entrypointPath = path.resolve(rootDirectory, packageJson.main)
+
+  expect(existsSync(entrypointPath)).toBe(true)
+
+  return import(pathToFileURL(entrypointPath).href)
+}
+
+type ShellEnvHook = NonNullable<Hooks["shell.env"]>
+type ChatHeadersHook = NonNullable<Hooks["chat.headers"]>
+
+describe("AppVerkPlugins", () => {
+  it("loads through the package main entrypoint and registers the commit command", async () => {
+    const { AppVerkPlugins } = await loadRootModule()
+    const plugin = await AppVerkPlugins({} as never)
+    const config = {} as {
+      command?: Record<string, { description?: string; template: string }>
+    }
+
+    await plugin.config?.(config as never)
+
+    expect(config.command?.commit?.description).toBe(
+      "Create a git commit with the AppVerk commit workflow",
+    )
+    expect(config.command?.commit?.template).toContain("## Context")
+    expect(config.command?.commit?.template).toContain("Use the `av_commit` tool")
+    expect(plugin.tool?.av_commit).toBeDefined()
+  })
+
+  it("packages a self-contained git-install surface", () => {
+    const packageJson = readRootPackageJson()
+
+    expect(packageJson.dependencies).toMatchObject({
+      "@opencode-ai/plugin": expect.any(String),
+    })
+    expect(packageJson.dependencies).not.toHaveProperty(
+      "@appverk/opencode-commit",
+    )
+    expect(packageJson.files).toEqual(
+      expect.arrayContaining([
+        "src/index.js",
+        "src/index.d.ts",
+        "packages/commit/dist",
+      ]),
+    )
+
+    const packResult = JSON.parse(
+      execFileSync("npm", ["pack", "--dry-run", "--json"], {
+        cwd: rootDirectory,
+        encoding: "utf8",
+      }),
+    ) as Array<{ files: Array<{ path: string }> }>
+
+    const packedFiles = packResult[0]?.files.map((file) => file.path) ?? []
+
+    expect(packedFiles).toEqual(
+      expect.arrayContaining([
+        "package.json",
+        "src/index.js",
+        "src/index.d.ts",
+        "packages/commit/dist/index.js",
+        "packages/commit/dist/index.d.ts",
+        "packages/commit/dist/commands/commit.md",
+      ]),
+    )
+  })
+
+  it("preserves commit bash protections through the aggregated hook", async () => {
+    const { AppVerkPlugins } = await loadRootModule()
+    const plugin = await AppVerkPlugins({} as never)
+
+    await expect(
+      plugin["tool.execute.before"]?.(
+        { tool: "bash", args: { command: 'git commit -m "feat: bypass"' } } as never,
+        { args: { command: 'git commit -m "feat: bypass"' } } as never,
+      ),
+    ).rejects.toThrow(/use \/commit/i)
+  })
+
+  it("composes non-tool hook keys generically", async () => {
+    const { createAppVerkPlugins } = await loadRootModule()
+    const plugin = createAppVerkPlugins([
+      async () => ({
+        "shell.env": async (
+          _input: Parameters<ShellEnvHook>[0],
+          output: Parameters<ShellEnvHook>[1],
+        ) => {
+          output.env.FIRST = "1"
+        },
+      }),
+      async () => ({
+        "shell.env": async (
+          _input: Parameters<ShellEnvHook>[0],
+          output: Parameters<ShellEnvHook>[1],
+        ) => {
+          output.env.SECOND = "2"
+        },
+        "chat.headers": async (
+          _input: Parameters<ChatHeadersHook>[0],
+          output: Parameters<ChatHeadersHook>[1],
+        ) => {
+          output.headers.authorization = "Bearer test"
+        },
+      }),
+    ])
+
+    const hooks = await plugin({} as never)
+    const envOutput = { env: {} as Record<string, string> }
+    const headersOutput = { headers: {} as Record<string, string> }
+
+    await hooks["shell.env"]?.({ cwd: rootDirectory } as never, envOutput as never)
+    await hooks["chat.headers"]?.(
+      {
+        sessionID: "session",
+        agent: "agent",
+        model: {} as never,
+        provider: {} as never,
+        message: {} as never,
+      } as never,
+      headersOutput as never,
+    )
+
+    expect(envOutput.env).toEqual({ FIRST: "1", SECOND: "2" })
+    expect(headersOutput.headers).toEqual({ authorization: "Bearer test" })
+  })
+})
