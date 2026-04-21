@@ -1,6 +1,6 @@
 # AppVerk OpenCode Plugins
 
-[![Package](https://img.shields.io/badge/package-1-blue.svg)](#available-packages)
+[![Package](https://img.shields.io/badge/package-2-blue.svg)](#available-packages)
 
 OpenCode plugin packages for AppVerk. The root plugin loads the AppVerk plugin bundle from this repository, which currently provides a controlled commit workflow that registers `/commit` and enforces AppVerk git policies inside OpenCode.
 
@@ -38,11 +38,14 @@ The command uses the packaged AppVerk workflow, generates a Conventional Commit 
 | Package | Version | Description |
 |---------|---------|-------------|
 | [`@appverk/opencode-commit`](docs/plugins/commit.md) | `0.1.0` | Controlled OpenCode commit workflow with automatic `/commit` registration, commit message policy enforcement, and bash-level blocking for direct `git commit` and `git push`. |
+| [`@appverk/opencode-python-developer`](docs/plugins/python-developer.md) | `0.1.0` | Python development workflow with TDD, coding standards, and stack-specific patterns (FastAPI, Django, Celery). |
 
 ## Repository Structure
 
 - `packages/commit` - plugin source, tests, command template, and build scripts for the commit workflow.
 - `docs/plugins/commit.md` - package-level behavior and usage guide.
+- `packages/python-developer` - plugin source, tests, skill files, and build scripts for the Python development workflow.
+- `docs/plugins/python-developer.md` - package-level behavior and usage guide.
 - `package.json` - workspace definition and shared validation commands.
 
 ## Local Development
@@ -65,6 +68,7 @@ npm run check
 ## Documentation
 
 - [Commit Plugin Guide](docs/plugins/commit.md)
+- [Python Developer Plugin Guide](docs/plugins/python-developer.md)
 
 ## License
 
