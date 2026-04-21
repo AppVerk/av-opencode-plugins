@@ -1,6 +1,7 @@
 import type { Hooks, Plugin } from "@opencode-ai/plugin"
 import { AppVerkCommitPlugin } from "../packages/commit/dist/index.js"
 import { AppVerkPythonDeveloperPlugin } from "../packages/python-developer/dist/index.js"
+import { AppVerkCodeReviewPlugin } from "../packages/code-review/dist/index.js"
 
 type PluginHooks = Awaited<ReturnType<Plugin>>
 type HookKey = Exclude<keyof PluginHooks, "config" | "tool">
@@ -8,7 +9,11 @@ type MergedHook = (...args: any[]) => Promise<void>
 type ToolExecuteBefore = NonNullable<Hooks["tool.execute.before"]>
 type ToolExecuteAfter = NonNullable<Hooks["tool.execute.after"]>
 
-const defaultPluginFactories: Plugin[] = [AppVerkCommitPlugin, AppVerkPythonDeveloperPlugin]
+const defaultPluginFactories: Plugin[] = [
+  AppVerkCommitPlugin,
+  AppVerkPythonDeveloperPlugin,
+  AppVerkCodeReviewPlugin,
+]
 
 function mergeTools(plugins: PluginHooks[]): PluginHooks["tool"] {
   const merged: NonNullable<PluginHooks["tool"]> = {}

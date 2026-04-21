@@ -1,0 +1,22 @@
+{
+  "name": "@appverk/opencode-code-review",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsup src/index.ts --format esm --dts && node scripts/copy-assets.mjs",
+    "test": "vitest run",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@opencode-ai/plugin": "^1.14.19"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.3",
+    "tsup": "^8.5.0",
+    "vitest": "^3.1.2",
+    "@types/node": "^22.15.3"
+  }
+}
