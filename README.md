@@ -1,11 +1,12 @@
 # AppVerk OpenCode Plugins
 
-[![Package](https://img.shields.io/badge/package-2-blue.svg)](#available-packages)
+[![Package](https://img.shields.io/badge/package-3-blue.svg)](#available-packages)
 
 OpenCode plugin packages for AppVerk. The root plugin loads the AppVerk plugin bundle from this repository, which currently provides:
 
 - A **controlled commit workflow** (`/commit`) that enforces AppVerk git policies.
 - A **Python development workflow** (`/develop`) with TDD, coding standards, and stack-specific patterns (FastAPI, Django, Celery, SQLAlchemy, Pydantic).
+- A **code review workflow** (`/review`) with parallel security and quality audits, python-developer integration, and structured issue tracking.
 
 ## Installation
 
@@ -59,13 +60,32 @@ You can also invoke the agent directly:
 opencode agent python-developer "Refactor user service to use repository pattern"
 ```
 
+### Code review workflow
+
+Run a comprehensive code review with parallel security and quality audits:
+
+```text
+/review Review the authentication module for security issues and code quality
+```
+
+The `/review` command:
+
+1. Detects your project stack and loads relevant skills
+2. Launches `security-auditor` and `code-quality-auditor` agents in parallel
+3. Aggregates findings with unique issue IDs (SEC-001, ARCH-001, etc.)
+4. Generates a structured markdown report
+5. Optionally saves to `docs/reviews/YYYY-MM-DD-<branch>.md`
+
 ## Available Commands & Agents
 
 | Command / Agent | Description | Docs |
 |-----------------|-------------|------|
 | `/commit` | Controlled commit workflow — Conventional Commit messages, bash-level blocking for direct `git commit`/`git push`. | [Guide](docs/plugins/commit.md) |
 | `/develop` | Python development workflow — TDD, coding standards, and stack-specific patterns (FastAPI, Django, Celery, SQLAlchemy). | [Guide](docs/plugins/python-developer.md) |
+| `/review` | Code review workflow — parallel security and quality audits with issue IDs and structured reports. | [Guide](docs/plugins/code-review.md) |
 | `@python-developer` | Direct agent invocation for Python tasks outside of `/develop`. | [Guide](docs/plugins/python-developer.md) |
+| `@security-auditor` | Direct agent invocation for security audits. | [Guide](docs/plugins/code-review.md) |
+| `@code-quality-auditor` | Direct agent invocation for code quality audits. | [Guide](docs/plugins/code-review.md) |
 
 ## Repository Structure
 
@@ -73,6 +93,8 @@ opencode agent python-developer "Refactor user service to use repository pattern
 - `docs/plugins/commit.md` - package-level behavior and usage guide.
 - `packages/python-developer` - plugin source, tests, skill files, and build scripts for the Python development workflow.
 - `docs/plugins/python-developer.md` - package-level behavior and usage guide.
+- `packages/code-review` - plugin source, tests, agent prompts, command template, and build scripts for the code review workflow.
+- `docs/plugins/code-review.md` - package-level behavior and usage guide.
 - `package.json` - workspace definition and shared validation commands.
 
 ## Local Development
@@ -96,6 +118,7 @@ npm run check
 
 - [Commit Plugin Guide](docs/plugins/commit.md)
 - [Python Developer Plugin Guide](docs/plugins/python-developer.md)
+- [Code Review Plugin Guide](docs/plugins/code-review.md)
 
 ## License
 
