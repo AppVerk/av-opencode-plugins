@@ -19,8 +19,9 @@ const moduleDirectory = path.dirname(fileURLToPath(import.meta.url))
 
 function resolveSkillPath(name: string): string | null {
   const candidates = [
-    path.resolve(moduleDirectory, "../../skills", `${name}.md`),
-    path.resolve(moduleDirectory, "../../src/skills", `${name}.md`),
+    path.resolve(moduleDirectory, "skills", `${name}.md`), // packaged build (dist/skills/)
+    path.resolve(moduleDirectory, "../src/skills", `${name}.md`), // from dist/ in repo (src/skills/)
+    path.resolve(moduleDirectory, "../skills", `${name}.md`), // from src/tools/ in vitest (src/skills/)
   ]
   for (const candidate of candidates) {
     if (existsSync(candidate)) {
@@ -41,7 +42,7 @@ export function loadPythonSkill(name: string): string {
 
   if (!skillPath) {
     throw new Error(
-      `python-developer skill file not found for: ${name}. Tried: ../../skills/${name}.md and ../../src/skills/${name}.md`,
+      `python-developer skill file not found for: ${name}. Tried: skills/${name}.md and ../src/skills/${name}.md`,
     )
   }
 

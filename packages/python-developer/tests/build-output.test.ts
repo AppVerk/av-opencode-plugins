@@ -37,4 +37,12 @@ describe("build output assets", () => {
     expect(config.command?.develop?.template).toContain("agent: python-developer")
     expect(config.command?.develop?.template).toContain("Python Development Workflow")
   })
+
+  it("load_python_skill tool works from dist build", async () => {
+    const { AppVerkPythonDeveloperPlugin } = await import("../dist/index.js")
+    const plugin = await AppVerkPythonDeveloperPlugin({} as never)
+    const result = await (plugin.tool!.load_python_skill!.execute as any)({ name: "coding-standards" })
+    expect(result).toContain("HARD-RULES")
+    expect(result).toContain("Python Coding Rules")
+  })
 })
