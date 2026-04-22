@@ -74,6 +74,33 @@ describe("AppVerkCodeReviewPlugin", () => {
     expect(config.agent["challenger"].prompt.length).toBeGreaterThan(0)
   })
 
+  it("config registers the fix command", async () => {
+    const config: any = { command: {} }
+    await pluginResult.config?.(config as never)
+    expect(config.command.fix).toBeDefined()
+    expect(config.command.fix.description).toBeDefined()
+    expect(typeof config.command.fix.template).toBe("string")
+    expect(config.command.fix.template.length).toBeGreaterThan(0)
+  })
+
+  it("config registers the fix-report command", async () => {
+    const config: any = { command: {} }
+    await pluginResult.config?.(config as never)
+    expect(config.command["fix-report"]).toBeDefined()
+    expect(config.command["fix-report"].description).toBeDefined()
+    expect(typeof config.command["fix-report"].template).toBe("string")
+    expect(config.command["fix-report"].template.length).toBeGreaterThan(0)
+  })
+
+  it("config registers fix-auto agent", async () => {
+    const config: any = { agent: {} }
+    await pluginResult.config?.(config as never)
+    expect(config.agent["fix-auto"]).toBeDefined()
+    expect(config.agent["fix-auto"].description).toBeDefined()
+    expect(typeof config.agent["fix-auto"].prompt).toBe("string")
+    expect(config.agent["fix-auto"].prompt.length).toBeGreaterThan(0)
+  })
+
   it("does not register any custom tools", async () => {
     const config: any = { command: {}, agent: {} }
     await pluginResult.config?.(config as never)

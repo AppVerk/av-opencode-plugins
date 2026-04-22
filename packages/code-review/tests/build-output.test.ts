@@ -50,4 +50,22 @@ describe("build output", () => {
     expect(existsSync(p)).toBe(true)
     expect(readFileSync(p, "utf8").length).toBeGreaterThan(100)
   })
+
+  it("dist/commands/fix.md exists and is non-empty", () => {
+    const p = path.resolve(distDir, "commands/fix.md")
+    expect(existsSync(p)).toBe(true)
+    expect(readFileSync(p, "utf8").length).toBeGreaterThan(100)
+  })
+
+  it("dist/commands/fix-report.md exists and is non-empty", () => {
+    const p = path.resolve(distDir, "commands/fix-report.md")
+    expect(existsSync(p)).toBe(true)
+    expect(readFileSync(p, "utf8").length).toBeGreaterThan(100)
+  })
+
+  it("dist/agents/fix-auto.md exists and is non-empty", () => {
+    const p = path.resolve(distDir, "agents/fix-auto.md")
+    expect(existsSync(p)).toBe(true)
+    expect(readFileSync(p, "utf8").length).toBeGreaterThan(100)
+  })
 })

@@ -18,6 +18,9 @@ const DOCUMENTATION_AUDITOR_PROMPT = loadMarkdownFile("agents/documentation-audi
 const CROSS_VERIFIER_PROMPT = loadMarkdownFile("agents/cross-verifier.md")
 const CHALLENGER_PROMPT = loadMarkdownFile("agents/challenger.md")
 const REVIEW_COMMAND_TEMPLATE = loadMarkdownFile("commands/review.md")
+const FIX_COMMAND_TEMPLATE = loadMarkdownFile("commands/fix.md")
+const FIX_REPORT_COMMAND_TEMPLATE = loadMarkdownFile("commands/fix-report.md")
+const FIX_AUTO_PROMPT = loadMarkdownFile("agents/fix-auto.md")
 
 const SECURITY_AUDITOR_DESCRIPTION =
   "Expert security auditor for comprehensive code security analysis including secret scanning, SAST, dependency scanning, and OWASP compliance."
@@ -36,6 +39,15 @@ const CHALLENGER_DESCRIPTION =
 
 const REVIEW_COMMAND_DESCRIPTION =
   "Perform comprehensive code review for security, performance, architecture, and maintainability."
+
+const FIX_COMMAND_DESCRIPTION =
+  "Apply fix for a single code review issue with verification and reporting."
+
+const FIX_REPORT_COMMAND_DESCRIPTION =
+  "Parse a saved review report, present issues as a checklist, fix selected issues, and mark them resolved."
+
+const FIX_AUTO_DESCRIPTION =
+  "Auto-fix subagent for code review issues. Performs analysis, implementation, verification, and reporting without user confirmation."
 
 export const AppVerkCodeReviewPlugin: Plugin = async () => {
   return {
@@ -66,6 +78,19 @@ export const AppVerkCodeReviewPlugin: Plugin = async () => {
       config.command.review = {
         description: REVIEW_COMMAND_DESCRIPTION,
         template: REVIEW_COMMAND_TEMPLATE,
+      }
+      config.command.fix = {
+        description: FIX_COMMAND_DESCRIPTION,
+        template: FIX_COMMAND_TEMPLATE,
+      }
+      config.command["fix-report"] = {
+        description: FIX_REPORT_COMMAND_DESCRIPTION,
+        template: FIX_REPORT_COMMAND_TEMPLATE,
+      }
+
+      config.agent["fix-auto"] = {
+        description: FIX_AUTO_DESCRIPTION,
+        prompt: FIX_AUTO_PROMPT,
       }
     },
   }
