@@ -50,6 +50,20 @@ Before launching agents, detect the project tech stack:
 
 ---
 
+## Step 1.5: Documentation Detection (Pre-Launch)
+
+Before launching agents, detect if the project has documentation:
+
+1. Check existence of `docs/`, `doc/`, `documentation/` directories in project root
+2. Search `README.md`, `CLAUDE.md`, `CONTRIBUTING.md`, `AGENTS.md` for keywords: "documentation", "docs", "dokumentacja"
+3. Glob `**/*.md` (max 2 levels deep), filter out README, CHANGELOG, LICENSE, CODE_OF_CONDUCT
+
+Store result: `has_documentation = true/false`
+
+**If no documentation detected:** Skip documentation-auditor dispatch in Step 2. All other review steps proceed normally.
+
+---
+
 ## Step 2: Launch Agents (Parallel)
 
 **You MUST launch both agents in your FIRST response.** Use the Task tool for each:
@@ -88,7 +102,23 @@ Return findings as a structured markdown report with a JSON array of findings."
 )
 ```
 
-**CRITICAL:** Both agents MUST be launched. If you only launch one, the review is INCOMPLETE.
+### Agent 3: Documentation Auditor (CONDITIONAL)
+
+**Only launch if `has_documentation = true` from the Documentation Detection Phase.**
+
+```
+Task(
+  subagent_type: "general",
+  prompt: "You are the documentation-auditor agent. Perform a documentation audit of this codebase.
+
+Check if code changes are reflected in project documentation.
+Report findings with severity, file path, line number, related code change, and remediation.
+
+Return findings as a structured markdown report with a JSON array of findings."
+)
+```
+
+**CRITICAL:** Both security-auditor and code-quality-auditor MUST be launched. If you only launch one, the review is INCOMPLETE.
 
 ---
 
@@ -151,6 +181,66 @@ The Task tool returns results directly. Parse the findings from both agents.
 If any agent returns an error or no findings, note it but continue with available results.
 
 Mark "Collect agent results" as completed using `todowrite`.
+
+---
+
+## Step 5.5: Verification
+
+Verification always runs after collecting agent results.
+
+### 5.5.1: Build findings bundle
+
+```
+findings = {
+  security: [security auditor results],
+  quality: [code quality auditor results],
+  documentation: [documentation auditor results, if launched],
+  performance: [your performance analysis from Step 4],
+  architecture: [your architecture/maintainability analysis from Step 5]
+}
+```
+
+### 5.5.2: Spawn Cross-Verifier
+
+```
+Task(
+  subagent_type: "code-review:cross-verifier",
+  prompt: "Analyze the following findings from a code review.
+
+Here are the findings from all auditors:
+{findings}
+
+Identify correlations between security and quality findings.
+Focus on cases where security vulnerabilities intersect with architectural issues.
+Follow your output format exactly."
+)
+```
+
+### 5.5.3: Spawn Challenger
+
+```
+Task(
+  subagent_type: "code-review:challenger",
+  prompt: "Review the following findings from a code review.
+
+Here are the findings from all auditors:
+{findings}
+
+Challenge CRITICAL and HIGH findings from both security and quality auditors.
+Check for false positives, especially in linter results and SAST output.
+Follow your output format exactly."
+)
+```
+
+### 5.5.4: Collect verification results
+
+The Task tool returns results directly. Parse findings from both verification agents.
+
+### 5.5.5: Merge enhanced findings
+
+1. Apply Challenger decisions (remove false positives, adjust severity)
+2. Add Cross-Verifier composite findings
+3. Tag confirmed findings as `[verified]`
 
 ---
 
@@ -305,6 +395,10 @@ Mark "Save review to file" as completed using `todowrite`.
 
 > **Found {N} issues.** To fix them:
 >
+> `/fix-report <saved-report-path>` — fix multiple issues interactively
+>
+> `/fix SEC-001` — fix a single issue by ID (uses latest saved report)
+>
 > `/fix <paste issue block>` — fix a single issue by pasting
 
 **If issues found but report NOT saved:**
@@ -313,7 +407,7 @@ Mark "Save review to file" as completed using `todowrite`.
 >
 > `/fix <paste issue block from above>`
 >
-> To use ID-based fixes, save the review first (re-run `/review` and choose to save).
+> To use ID-based fixes or `/fix-report`, save the review first (re-run `/review` and choose to save).
 
 **If no issues found:**
 

@@ -32,4 +32,22 @@ describe("build output", () => {
     expect(existsSync(p)).toBe(true)
     expect(readFileSync(p, "utf8").length).toBeGreaterThan(100)
   })
+
+  it("dist/agents/documentation-auditor.md exists and is non-empty", () => {
+    const p = path.resolve(distDir, "agents/documentation-auditor.md")
+    expect(existsSync(p)).toBe(true)
+    expect(readFileSync(p, "utf8").length).toBeGreaterThan(100)
+  })
+
+  it("dist/agents/cross-verifier.md exists and is non-empty", () => {
+    const p = path.resolve(distDir, "agents/cross-verifier.md")
+    expect(existsSync(p)).toBe(true)
+    expect(readFileSync(p, "utf8").length).toBeGreaterThan(100)
+  })
+
+  it("dist/agents/challenger.md exists and is non-empty", () => {
+    const p = path.resolve(distDir, "agents/challenger.md")
+    expect(existsSync(p)).toBe(true)
+    expect(readFileSync(p, "utf8").length).toBeGreaterThan(100)
+  })
 })

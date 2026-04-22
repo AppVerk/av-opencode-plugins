@@ -11,9 +11,15 @@ function loadMarkdownFile(name) {
 }
 var SECURITY_AUDITOR_PROMPT = loadMarkdownFile("agents/security-auditor.md");
 var CODE_QUALITY_AUDITOR_PROMPT = loadMarkdownFile("agents/code-quality-auditor.md");
+var DOCUMENTATION_AUDITOR_PROMPT = loadMarkdownFile("agents/documentation-auditor.md");
+var CROSS_VERIFIER_PROMPT = loadMarkdownFile("agents/cross-verifier.md");
+var CHALLENGER_PROMPT = loadMarkdownFile("agents/challenger.md");
 var REVIEW_COMMAND_TEMPLATE = loadMarkdownFile("commands/review.md");
 var SECURITY_AUDITOR_DESCRIPTION = "Expert security auditor for comprehensive code security analysis including secret scanning, SAST, dependency scanning, and OWASP compliance.";
 var CODE_QUALITY_AUDITOR_DESCRIPTION = "Expert code quality auditor for architecture, design patterns, SOLID/DDD compliance, and maintainability analysis.";
+var DOCUMENTATION_AUDITOR_DESCRIPTION = "Documentation auditor that verifies code changes are reflected in project documentation.";
+var CROSS_VERIFIER_DESCRIPTION = "Cross-domain correlation agent that finds intersections between security, quality, and documentation findings.";
+var CHALLENGER_DESCRIPTION = "Adversarial review agent that challenges findings for false positives and validates severity levels.";
 var REVIEW_COMMAND_DESCRIPTION = "Perform comprehensive code review for security, performance, architecture, and maintainability.";
 var AppVerkCodeReviewPlugin = async () => {
   return {
@@ -26,6 +32,18 @@ var AppVerkCodeReviewPlugin = async () => {
       config.agent["code-quality-auditor"] = {
         description: CODE_QUALITY_AUDITOR_DESCRIPTION,
         prompt: CODE_QUALITY_AUDITOR_PROMPT
+      };
+      config.agent["documentation-auditor"] = {
+        description: DOCUMENTATION_AUDITOR_DESCRIPTION,
+        prompt: DOCUMENTATION_AUDITOR_PROMPT
+      };
+      config.agent["cross-verifier"] = {
+        description: CROSS_VERIFIER_DESCRIPTION,
+        prompt: CROSS_VERIFIER_PROMPT
+      };
+      config.agent["challenger"] = {
+        description: CHALLENGER_DESCRIPTION,
+        prompt: CHALLENGER_PROMPT
       };
       config.command = config.command ?? {};
       config.command.review = {

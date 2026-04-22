@@ -47,6 +47,33 @@ describe("AppVerkCodeReviewPlugin", () => {
     expect(config.agent["code-quality-auditor"].prompt.length).toBeGreaterThan(0)
   })
 
+  it("config registers documentation-auditor agent", async () => {
+    const config: any = { agent: {} }
+    await pluginResult.config?.(config as never)
+    expect(config.agent["documentation-auditor"]).toBeDefined()
+    expect(config.agent["documentation-auditor"].description).toBeDefined()
+    expect(typeof config.agent["documentation-auditor"].prompt).toBe("string")
+    expect(config.agent["documentation-auditor"].prompt.length).toBeGreaterThan(0)
+  })
+
+  it("config registers cross-verifier agent", async () => {
+    const config: any = { agent: {} }
+    await pluginResult.config?.(config as never)
+    expect(config.agent["cross-verifier"]).toBeDefined()
+    expect(config.agent["cross-verifier"].description).toBeDefined()
+    expect(typeof config.agent["cross-verifier"].prompt).toBe("string")
+    expect(config.agent["cross-verifier"].prompt.length).toBeGreaterThan(0)
+  })
+
+  it("config registers challenger agent", async () => {
+    const config: any = { agent: {} }
+    await pluginResult.config?.(config as never)
+    expect(config.agent["challenger"]).toBeDefined()
+    expect(config.agent["challenger"].description).toBeDefined()
+    expect(typeof config.agent["challenger"].prompt).toBe("string")
+    expect(config.agent["challenger"].prompt.length).toBeGreaterThan(0)
+  })
+
   it("does not register any custom tools", async () => {
     const config: any = { command: {}, agent: {} }
     await pluginResult.config?.(config as never)

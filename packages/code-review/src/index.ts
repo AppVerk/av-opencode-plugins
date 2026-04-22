@@ -14,6 +14,9 @@ function loadMarkdownFile(name: string): string {
 
 const SECURITY_AUDITOR_PROMPT = loadMarkdownFile("agents/security-auditor.md")
 const CODE_QUALITY_AUDITOR_PROMPT = loadMarkdownFile("agents/code-quality-auditor.md")
+const DOCUMENTATION_AUDITOR_PROMPT = loadMarkdownFile("agents/documentation-auditor.md")
+const CROSS_VERIFIER_PROMPT = loadMarkdownFile("agents/cross-verifier.md")
+const CHALLENGER_PROMPT = loadMarkdownFile("agents/challenger.md")
 const REVIEW_COMMAND_TEMPLATE = loadMarkdownFile("commands/review.md")
 
 const SECURITY_AUDITOR_DESCRIPTION =
@@ -21,6 +24,15 @@ const SECURITY_AUDITOR_DESCRIPTION =
 
 const CODE_QUALITY_AUDITOR_DESCRIPTION =
   "Expert code quality auditor for architecture, design patterns, SOLID/DDD compliance, and maintainability analysis."
+
+const DOCUMENTATION_AUDITOR_DESCRIPTION =
+  "Documentation auditor that verifies code changes are reflected in project documentation."
+
+const CROSS_VERIFIER_DESCRIPTION =
+  "Cross-domain correlation agent that finds intersections between security, quality, and documentation findings."
+
+const CHALLENGER_DESCRIPTION =
+  "Adversarial review agent that challenges findings for false positives and validates severity levels."
 
 const REVIEW_COMMAND_DESCRIPTION =
   "Perform comprehensive code review for security, performance, architecture, and maintainability."
@@ -36,6 +48,18 @@ export const AppVerkCodeReviewPlugin: Plugin = async () => {
       config.agent["code-quality-auditor"] = {
         description: CODE_QUALITY_AUDITOR_DESCRIPTION,
         prompt: CODE_QUALITY_AUDITOR_PROMPT,
+      }
+      config.agent["documentation-auditor"] = {
+        description: DOCUMENTATION_AUDITOR_DESCRIPTION,
+        prompt: DOCUMENTATION_AUDITOR_PROMPT,
+      }
+      config.agent["cross-verifier"] = {
+        description: CROSS_VERIFIER_DESCRIPTION,
+        prompt: CROSS_VERIFIER_PROMPT,
+      }
+      config.agent["challenger"] = {
+        description: CHALLENGER_DESCRIPTION,
+        prompt: CHALLENGER_PROMPT,
       }
 
       config.command = config.command ?? {}

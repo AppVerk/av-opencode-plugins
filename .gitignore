@@ -8,5 +8,6 @@ dist/
 !packages/code-review/dist/**
 coverage/
 .DS_Store
+.serena/
 *.tsbuildinfo
 .worktrees/
