@@ -116,6 +116,8 @@ Every issue includes:
 
 The plugin registers the following elements through its `config` hook:
 
+> **Note:** All code-review agents are registered with `mode: "subagent"`. They are hidden from tab-completion and intended to be invoked programmatically by commands or other agents.
+
 ### Commands
 
 | Element | OpenCode Mechanism | Purpose |
@@ -125,7 +127,7 @@ The plugin registers the following elements through its `config` hook:
 | `command.fix-report` | `config.command` | Parses a saved review report, presents issues as a checklist, fixes selected issues via `fix-auto` subagent, and marks them resolved. |
 | `command.analyze-feedback` | `config.command` | Fetches PR comments, classifies each via `feedback-analyzer` subagent, generates report with draft responses, optionally publishes to GitHub. |
 
-### Primary Agents
+### Main Audit Agents
 
 | Element | OpenCode Mechanism | Purpose |
 |---|---|---|
@@ -149,7 +151,7 @@ The plugin registers the following elements through its `config` hook:
 
 ### Skill-Agents
 
-Skill-agents are dedicated subagents for heavy analysis tasks, invoked by primary agents via the Task tool:
+Skill-agents are dedicated subagents for heavy analysis tasks, invoked by main audit agents via the Task tool:
 
 | Element | OpenCode Mechanism | Purpose |
 |---|---|---|
@@ -163,15 +165,15 @@ Skill-agents are dedicated subagents for heavy analysis tasks, invoked by primar
 
 1. The `/review` command starts by detecting the project tech stack (Python, Frontend, PHP).
 2. If Python is detected, it loads relevant `python-developer` skills via the `load_python_skill` tool.
-3. It launches primary agents in parallel via the `task` tool.
-4. Primary agents delegate heavy analysis to skill-agents via the Task tool (e.g., `security-auditor` spawns `skill-secret-scanner`).
+3. It launches main audit agents in parallel via the `task` tool.
+4. Main audit agents delegate heavy analysis to skill-agents via the Task tool (e.g., `security-auditor` spawns `skill-secret-scanner`).
 5. After collecting results, verification agents (`cross-verifier`, `challenger`) validate findings.
 6. Results are aggregated, false positives removed, composite findings added.
 7. The command assigns category-prefixed IDs and formats the final report.
 
 ## Limitations
 
-- **Skill-agent dependency:** Primary agents require skill-agents to be registered. If a skill-agent is missing, the primary agent falls back to manual instructions.
+- **Skill-agent dependency:** Main audit agents require skill-agents to be registered. If a skill-agent is missing, the main audit agent falls back to manual instructions.
 - **Agent output parsing:** Agents return findings as text; the command parses them from Task output. Complex reports may require manual verification of ID assignment.
 - **No persistent state:** Issue status tracking (fixed/partially-fixed) relies on markdown report files. No database or external state.
 - **GitHub CLI required:** `/analyze-feedback` requires `gh` CLI installed and authenticated.
