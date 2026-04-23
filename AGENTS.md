@@ -142,20 +142,20 @@ Create a dedicated guide with:
 When installing from git, OpenCode (via Bun) caches the repository and **does not automatically pull updates** when the branch moves. To ensure users receive the latest commands and agents:
 
 1. **Bump the version** in **all** `package.json` files (root + every workspace) when adding new commands, agents, or built assets.
-2. **Create a git tag** matching the version (e.g. `v0.2.1`) after the bump commit.
+2. **Create a git tag** matching the version (e.g. `v0.2.2`) after the bump commit.
 3. **Update installation examples** in `README.md`, `AGENTS.md`, and `.opencode/opencode.json` to reference the new tag instead of a branch name like `#master`.
 
 Example config:
 ```json
 {
   "plugin": [
-    "av-opencode-plugins@git+https://github.com/AppVerk/av-opencode-plugins.git#v0.2.1"
+    "av-opencode-plugins@git+https://github.com/AppVerk/av-opencode-plugins.git#v0.2.2"
   ]
 }
 ```
 
 If a user reports missing commands after an update, instruct them to either:
-- Re-install with `opencode plugin -f av-opencode-plugins@git+https://github.com/AppVerk/av-opencode-plugins.git#v0.2.1`, or
+- Re-install with `opencode plugin -f av-opencode-plugins@git+https://github.com/AppVerk/av-opencode-plugins.git#v0.2.2`, or
 - Remove the old cache directory manually:
   ```bash
   rm -rf ~/.cache/opencode/packages/av-opencode-plugins*
