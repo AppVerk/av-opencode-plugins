@@ -123,6 +123,7 @@ Classifies each comment as "Address" or "Reject" and optionally publishes respon
 | `@documentation-auditor` | Documentation audit agent — verifies code changes are reflected in docs. | `subagent` | [Guide](docs/plugins/code-review.md) |
 | `@cross-verifier` | Cross-domain correlation agent — finds intersections between findings. | `subagent` | [Guide](docs/plugins/code-review.md) |
 | `@challenger` | Adversarial review agent — challenges findings for false positives. | `subagent` | [Guide](docs/plugins/code-review.md) |
+| `@synthesis-agent` | **Planned** — deduplicates and groups findings into actionable PRs. Not yet implemented. | `subagent` | [Guide](docs/plugins/code-review.md) |
 | `@feedback-analyzer` | Per-comment classification agent for PR feedback analysis. | `subagent` | [Guide](docs/plugins/code-review.md) |
 | `@fix-auto` | Auto-fix subagent — performs fixes without user confirmation. | `subagent` | [Guide](docs/plugins/code-review.md) |
 

@@ -80,18 +80,18 @@ If a finding block is malformed, skip it and note it in the log.
 - Same `category`
 - Normalized `title` is identical (case-insensitive, stripped whitespace)
 
-**Soft match** — merge if ALL of the following match:
-- Same `file`
-- Same `category`
-- ≥60% shared words in the `title` (case-insensitive, after removing stop words)
+**Soft match** — compute Jaccard similarity on the union of `title` + `tags` + `file` (case-insensitive, after removing stop words):
+- **Auto-merge** if similarity ≥ 0.85.
+- **Flag for manual review** if similarity is between 0.60 and 0.85 (list candidates in the log).
+- **Do not merge** if similarity < 0.60.
 
 **Merge rules:**
 - Keep the **higher severity**.
-- Keep the **longer description** (more context).
+- **Concatenate descriptions** (deduplicated by sentence) rather than picking one — this preserves unique context from each finding.
 - Concatenate `tags` and `related_files` (deduplicated).
 - Preserve all `source_agent` values.
 
-Log every deduplication decision.
+Log every deduplication decision, including similarity scores and manual-review candidates.
 
 ### Step 4: Build Composite Findings
 
@@ -652,28 +652,9 @@ Task(
   subagent_type: "code-review:synthesis-agent",
   prompt: "You are the synthesis-agent. Here are all findings from the code review:
 
-Security findings:
-{security_results}
+{findings}
 
-Quality findings:
-{quality_results}
-
-Documentation findings:
-{documentation_results}
-
-Performance findings:
-{performance_analysis}
-
-Architecture findings:
-{architecture_analysis}
-
-Cross-verifier results:
-{cross_verifier_results}
-
-Challenger results:
-{challenger_results}
-
-Perform deduplication, build composite findings, group into PRs, add remediation code, and prioritize. Return structured markdown."
+The findings bundle above contains categorized results from all auditors (security, quality, documentation), performance analysis, architecture review, cross-verifier composite findings, and challenger validations. Parse the sections, perform deduplication, build composite findings, group into PRs, add remediation code, and prioritize. Return structured markdown."
 )
 ```
 
@@ -908,11 +889,31 @@ Run:
 npm run test --workspace @appverk/opencode-code-review -- --run tests/build-output.test.ts
 ```
 
-Expected: FAIL because `dist/agents/synthesis-agent.md` does not exist yet (we haven't built). This is expected — the test will pass after Task 11.
+Expected: FAIL because `dist/agents/synthesis-agent.md` does not exist yet (we haven't built). This is expected — the test will pass after Task 12.
 
 ---
 
-## Task 11: Build the Package
+## Task 11: Bump Version
+
+**Files:**
+- Modify: `package.json`
+- Modify: `packages/code-review/package.json`
+
+- [ ] **Step 1: Bump version in all package.json files**
+
+Increment the version number in:
+- Root `package.json`
+- `packages/code-review/package.json`
+
+Per AGENTS.md "Versioning & Git Installation", bumping the version is required when adding new commands, agents, or built assets so that users installing from git receive the latest changes.
+
+- [ ] **Step 2: Update installation references**
+
+If creating a git tag, update installation examples in `README.md`, `AGENTS.md`, and `.opencode/opencode.json` to reference the new tag.
+
+---
+
+## Task 12: Build the Package
 
 **Files:**
 - Modify: `packages/code-review/dist/` (generated)
@@ -951,7 +952,7 @@ Expected: all grep commands return matching file paths.
 
 ---
 
-## Task 12: Run All Tests
+## Task 13: Run All Tests
 
 **Files:**
 - (no file changes — validation only)
@@ -978,7 +979,7 @@ Expected: No errors.
 
 ---
 
-## Task 13: Commit
+## Task 14: Commit
 
 **Files:**
 - (no file changes — git operation)
@@ -1039,7 +1040,7 @@ feat(code-review): add synthesis-agent and structured markdown I/O
 | Final report with PR groups | Task 7 | Covered |
 | Register agent in index | Task 8 | Covered |
 | Update tests | Tasks 9, 10 | Covered |
-| Build & verify | Tasks 11, 12 | Covered |
+| Build & verify | Tasks 12, 13 | Covered |
 
 ### Placeholder Scan
 

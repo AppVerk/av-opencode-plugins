@@ -141,6 +141,7 @@ The plugin registers the following elements through its `config` hook:
 |---|---|---|
 | `agent.cross-verifier` | `config.agent` | Cross-domain correlation agent. Finds intersections between security, quality, and documentation findings. |
 | `agent.challenger` | `config.agent` | Adversarial review agent. Challenges CRITICAL/HIGH findings for false positives and validates severity levels. |
+| `agent.synthesis-agent` | `config.agent` | **Planned** — deduplicates, composites, and groups findings into actionable PRs. Not yet implemented. |
 
 ### Subagents
 
@@ -167,7 +168,7 @@ Skill-agents are dedicated subagents for heavy analysis tasks, invoked by main a
 2. If Python is detected, it loads relevant `python-developer` skills via the `load_python_skill` tool.
 3. It launches main audit agents in parallel via the `task` tool.
 4. Main audit agents delegate heavy analysis to skill-agents via the Task tool (e.g., `security-auditor` spawns `skill-secret-scanner`).
-5. After collecting results, verification agents (`cross-verifier`, `challenger`) validate findings.
+5. After collecting results, verification agents (`cross-verifier`, `challenger`) and the planned `synthesis-agent` validate findings.
 6. Results are aggregated, false positives removed, composite findings added.
 7. The command assigns category-prefixed IDs and formats the final report.
 

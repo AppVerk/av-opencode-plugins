@@ -205,7 +205,7 @@ For each composite:
 - Assign ID: COMPOSITE-001, COMPOSITE-002...
 - Severity = max(severity of components).
 - Remediation = fix the shared root cause (include ready code).
-- Remove original component findings to avoid duplication.
+- Retain original component findings inline (include ID, title, file path, and line for traceability).
 
 ### Step 5: Add Remediation Code
 For every HIGH+ finding and composite, generate a complete before/after code snippet.
@@ -248,6 +248,9 @@ category: Composite
 severity: HIGH
 title: SearchTerm Value Object
 basis: SEC-003, ARCH-001
+components:
+  - SEC-003: SQL injection via unescaped LIKE (src/repos/user.py:42)
+  - ARCH-001: Missing Value Object encapsulation (src/domain/search.py:10)
 ...
 
 ### PR Groups
@@ -256,6 +259,31 @@ basis: SEC-003, ARCH-001
 ### Final Findings List
 [All remaining findings after dedup, composites replacing originals]
 ```
+
+### 7.3 Context-Budgeting & Fallback Strategies
+
+To prevent synthesis-agent context-window overflow on large codebases:
+
+1. **Token Threshold & Pre-Summarization**
+   - If any single auditor output exceeds ~8,000 tokens, the host must pre-summarize it using a dedicated summarization pass before sending to synthesis.
+   - Summarization preserves: finding IDs, severity, file/line, and one-sentence problem descriptions; strips verbose code examples and extended reasoning.
+
+2. **Incremental Deduplication**
+   - When total findings exceed 50, the synthesis agent processes them incrementally:
+     - First pass: deduplicate within each category (Security, Quality, Performance, Architecture, Documentation) separately.
+     - Second pass: cross-category deduplication and composite construction on the reduced set.
+   - This keeps each incremental batch under the context limit while still producing globally consistent results.
+
+3. **Maximum Findings Batch Size**
+   - Hard cap: 100 findings per synthesis invocation.
+   - If more than 100 findings exist after pre-summarization, the host splits them into multiple synthesis batches (e.g., by severity tier: CRITICAL+HIGH first, then MEDIUM+LOW).
+   - Each batch produces a partial synthesis; the host merges partial results in a final lightweight aggregation step.
+
+4. **Fallback Behavior**
+   - If the synthesis agent returns an error or incomplete output due to context limits, the host must:
+     - Retry with the incremental (file-by-file or category-by-category) strategy.
+     - If still failing, fall back to raw findings without deduplication/composites, preserving all original auditor outputs in the final report.
+     - Log the fallback so the user knows the synthesis step was skipped.
 
 ---
 
