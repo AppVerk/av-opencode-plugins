@@ -7,6 +7,10 @@ const moduleDirectory = path.dirname(fileURLToPath(import.meta.url))
 
 function loadMarkdownFile(name: string): string {
   const filePath = path.resolve(moduleDirectory, name)
+  const baseDir = path.resolve(moduleDirectory, "..")
+  if (!filePath.startsWith(baseDir)) {
+    throw new Error("Invalid path: traversal detected")
+  }
   if (!existsSync(filePath)) {
     throw new Error(
       `Markdown asset not found: ${name} (looked in ${filePath}). ` +

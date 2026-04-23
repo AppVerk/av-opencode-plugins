@@ -7,7 +7,9 @@ const projectRoot = path.resolve(__dirname, "..")
 const distDir = path.resolve(projectRoot, "dist")
 
 function copyDir(src, dest) {
-  if (!src.includes("src")) return
+  const srcCommands = path.resolve(projectRoot, "src", "commands")
+  const srcAgents = path.resolve(projectRoot, "src", "agents")
+  if (src !== srcCommands && src !== srcAgents) return
   mkdirSync(dest, { recursive: true })
   cpSync(src, dest, { recursive: true })
 }

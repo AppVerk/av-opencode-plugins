@@ -5,6 +5,10 @@ import { fileURLToPath } from "url";
 var moduleDirectory = path.dirname(fileURLToPath(import.meta.url));
 function loadMarkdownFile(name) {
   const filePath = path.resolve(moduleDirectory, name);
+  const baseDir = path.resolve(moduleDirectory, "..");
+  if (!filePath.startsWith(baseDir)) {
+    throw new Error("Invalid path: traversal detected");
+  }
   if (!existsSync(filePath)) {
     throw new Error(
       `Markdown asset not found: ${name} (looked in ${filePath}). Ensure the package is built so that copy-assets.mjs copies assets into dist/.`

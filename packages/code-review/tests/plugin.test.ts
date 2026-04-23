@@ -20,148 +20,39 @@ describe("AppVerkCodeReviewPlugin", () => {
     expect(typeof pluginResult.config).toBe("function")
   })
 
-  it("config registers the review command", async () => {
+  const EXPECTED_AGENTS = [
+    "security-auditor",
+    "code-quality-auditor",
+    "documentation-auditor",
+    "cross-verifier",
+    "challenger",
+    "feedback-analyzer",
+    "fix-auto",
+    "skill-secret-scanner",
+    "skill-sast-analyzer",
+    "skill-dependency-scanner",
+    "skill-architecture-analyzer",
+    "skill-linter-integrator",
+  ]
+
+  const EXPECTED_COMMANDS = ["review", "fix", "fix-report", "analyze-feedback"]
+
+  it.each(EXPECTED_AGENTS)("config registers %s agent", async (name) => {
+    const config: any = { agent: {} }
+    await pluginResult.config?.(config as never)
+    expect(config.agent[name]).toBeDefined()
+    expect(config.agent[name].description).toBeDefined()
+    expect(typeof config.agent[name].prompt).toBe("string")
+    expect(config.agent[name].prompt.length).toBeGreaterThan(0)
+  })
+
+  it.each(EXPECTED_COMMANDS)("config registers %s command", async (name) => {
     const config: any = { command: {} }
     await pluginResult.config?.(config as never)
-    expect(config.command.review).toBeDefined()
-    expect(config.command.review.description).toBeDefined()
-    expect(typeof config.command.review.template).toBe("string")
-    expect(config.command.review.template.length).toBeGreaterThan(0)
-  })
-
-  it("config registers security-auditor agent", async () => {
-    const config: any = { agent: {} }
-    await pluginResult.config?.(config as never)
-    expect(config.agent["security-auditor"]).toBeDefined()
-    expect(config.agent["security-auditor"].description).toBeDefined()
-    expect(typeof config.agent["security-auditor"].prompt).toBe("string")
-    expect(config.agent["security-auditor"].prompt.length).toBeGreaterThan(0)
-  })
-
-  it("config registers code-quality-auditor agent", async () => {
-    const config: any = { agent: {} }
-    await pluginResult.config?.(config as never)
-    expect(config.agent["code-quality-auditor"]).toBeDefined()
-    expect(config.agent["code-quality-auditor"].description).toBeDefined()
-    expect(typeof config.agent["code-quality-auditor"].prompt).toBe("string")
-    expect(config.agent["code-quality-auditor"].prompt.length).toBeGreaterThan(0)
-  })
-
-  it("config registers documentation-auditor agent", async () => {
-    const config: any = { agent: {} }
-    await pluginResult.config?.(config as never)
-    expect(config.agent["documentation-auditor"]).toBeDefined()
-    expect(config.agent["documentation-auditor"].description).toBeDefined()
-    expect(typeof config.agent["documentation-auditor"].prompt).toBe("string")
-    expect(config.agent["documentation-auditor"].prompt.length).toBeGreaterThan(0)
-  })
-
-  it("config registers cross-verifier agent", async () => {
-    const config: any = { agent: {} }
-    await pluginResult.config?.(config as never)
-    expect(config.agent["cross-verifier"]).toBeDefined()
-    expect(config.agent["cross-verifier"].description).toBeDefined()
-    expect(typeof config.agent["cross-verifier"].prompt).toBe("string")
-    expect(config.agent["cross-verifier"].prompt.length).toBeGreaterThan(0)
-  })
-
-  it("config registers challenger agent", async () => {
-    const config: any = { agent: {} }
-    await pluginResult.config?.(config as never)
-    expect(config.agent["challenger"]).toBeDefined()
-    expect(config.agent["challenger"].description).toBeDefined()
-    expect(typeof config.agent["challenger"].prompt).toBe("string")
-    expect(config.agent["challenger"].prompt.length).toBeGreaterThan(0)
-  })
-
-  it("config registers the fix command", async () => {
-    const config: any = { command: {} }
-    await pluginResult.config?.(config as never)
-    expect(config.command.fix).toBeDefined()
-    expect(config.command.fix.description).toBeDefined()
-    expect(typeof config.command.fix.template).toBe("string")
-    expect(config.command.fix.template.length).toBeGreaterThan(0)
-  })
-
-  it("config registers the fix-report command", async () => {
-    const config: any = { command: {} }
-    await pluginResult.config?.(config as never)
-    expect(config.command["fix-report"]).toBeDefined()
-    expect(config.command["fix-report"].description).toBeDefined()
-    expect(typeof config.command["fix-report"].template).toBe("string")
-    expect(config.command["fix-report"].template.length).toBeGreaterThan(0)
-  })
-
-  it("config registers the analyze-feedback command", async () => {
-    const config: any = { command: {} }
-    await pluginResult.config?.(config as never)
-    expect(config.command["analyze-feedback"]).toBeDefined()
-    expect(config.command["analyze-feedback"].description).toBeDefined()
-    expect(typeof config.command["analyze-feedback"].template).toBe("string")
-    expect(config.command["analyze-feedback"].template.length).toBeGreaterThan(0)
-  })
-
-  it("config registers feedback-analyzer agent", async () => {
-    const config: any = { agent: {} }
-    await pluginResult.config?.(config as never)
-    expect(config.agent["feedback-analyzer"]).toBeDefined()
-    expect(config.agent["feedback-analyzer"].description).toBeDefined()
-    expect(typeof config.agent["feedback-analyzer"].prompt).toBe("string")
-    expect(config.agent["feedback-analyzer"].prompt.length).toBeGreaterThan(0)
-  })
-
-  it("config registers fix-auto agent", async () => {
-    const config: any = { agent: {} }
-    await pluginResult.config?.(config as never)
-    expect(config.agent["fix-auto"]).toBeDefined()
-    expect(config.agent["fix-auto"].description).toBeDefined()
-    expect(typeof config.agent["fix-auto"].prompt).toBe("string")
-    expect(config.agent["fix-auto"].prompt.length).toBeGreaterThan(0)
-  })
-
-  it("config registers skill-secret-scanner agent", async () => {
-    const config: any = { agent: {} }
-    await pluginResult.config?.(config as never)
-    expect(config.agent["skill-secret-scanner"]).toBeDefined()
-    expect(config.agent["skill-secret-scanner"].description).toBeDefined()
-    expect(typeof config.agent["skill-secret-scanner"].prompt).toBe("string")
-    expect(config.agent["skill-secret-scanner"].prompt.length).toBeGreaterThan(0)
-  })
-
-  it("config registers skill-sast-analyzer agent", async () => {
-    const config: any = { agent: {} }
-    await pluginResult.config?.(config as never)
-    expect(config.agent["skill-sast-analyzer"]).toBeDefined()
-    expect(config.agent["skill-sast-analyzer"].description).toBeDefined()
-    expect(typeof config.agent["skill-sast-analyzer"].prompt).toBe("string")
-    expect(config.agent["skill-sast-analyzer"].prompt.length).toBeGreaterThan(0)
-  })
-
-  it("config registers skill-dependency-scanner agent", async () => {
-    const config: any = { agent: {} }
-    await pluginResult.config?.(config as never)
-    expect(config.agent["skill-dependency-scanner"]).toBeDefined()
-    expect(config.agent["skill-dependency-scanner"].description).toBeDefined()
-    expect(typeof config.agent["skill-dependency-scanner"].prompt).toBe("string")
-    expect(config.agent["skill-dependency-scanner"].prompt.length).toBeGreaterThan(0)
-  })
-
-  it("config registers skill-architecture-analyzer agent", async () => {
-    const config: any = { agent: {} }
-    await pluginResult.config?.(config as never)
-    expect(config.agent["skill-architecture-analyzer"]).toBeDefined()
-    expect(config.agent["skill-architecture-analyzer"].description).toBeDefined()
-    expect(typeof config.agent["skill-architecture-analyzer"].prompt).toBe("string")
-    expect(config.agent["skill-architecture-analyzer"].prompt.length).toBeGreaterThan(0)
-  })
-
-  it("config registers skill-linter-integrator agent", async () => {
-    const config: any = { agent: {} }
-    await pluginResult.config?.(config as never)
-    expect(config.agent["skill-linter-integrator"]).toBeDefined()
-    expect(config.agent["skill-linter-integrator"].description).toBeDefined()
-    expect(typeof config.agent["skill-linter-integrator"].prompt).toBe("string")
-    expect(config.agent["skill-linter-integrator"].prompt.length).toBeGreaterThan(0)
+    expect(config.command[name]).toBeDefined()
+    expect(config.command[name].description).toBeDefined()
+    expect(typeof config.command[name].template).toBe("string")
+    expect(config.command[name].template.length).toBeGreaterThan(0)
   })
 
   it("does not register any custom tools", async () => {
