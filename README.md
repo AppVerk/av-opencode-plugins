@@ -109,22 +109,24 @@ Classifies each comment as "Address" or "Reject" and optionally publishes respon
 
 ## Available Commands & Agents
 
-| Command / Agent | Description | Docs |
-|-----------------|-------------|------|
-| `/commit` | Controlled commit workflow — Conventional Commit messages, bash-level blocking for direct `git commit`/`git push`. | [Guide](docs/plugins/commit.md) |
-| `/develop` | Python development workflow — TDD, coding standards, and stack-specific patterns (FastAPI, Django, Celery, SQLAlchemy). | [Guide](docs/plugins/python-developer.md) |
-| `/review` | Code review workflow — parallel security, quality, and documentation audits with verification and structured reports. | [Guide](docs/plugins/code-review.md) |
-| `/fix` | Fix a single issue by ID or pasted issue block from a saved review report. | [Guide](docs/plugins/code-review.md) |
-| `/fix-report` | Batch-fix issues from a saved review report with interactive selection. | [Guide](docs/plugins/code-review.md) |
-| `/analyze-feedback` | Analyze PR feedback comments, classify validity, and generate response drafts. | [Guide](docs/plugins/code-review.md) |
-| `@python-developer` | Direct agent invocation for Python tasks outside of `/develop`. | [Guide](docs/plugins/python-developer.md) |
-| `@security-auditor` | Direct agent invocation for security audits with skill-agent delegation. | [Guide](docs/plugins/code-review.md) |
-| `@code-quality-auditor` | Direct agent invocation for code quality audits with skill-agent delegation. | [Guide](docs/plugins/code-review.md) |
-| `@documentation-auditor` | Documentation audit agent — verifies code changes are reflected in docs. | [Guide](docs/plugins/code-review.md) |
-| `@cross-verifier` | Cross-domain correlation agent — finds intersections between findings. | [Guide](docs/plugins/code-review.md) |
-| `@challenger` | Adversarial review agent — challenges findings for false positives. | [Guide](docs/plugins/code-review.md) |
-| `@feedback-analyzer` | Per-comment classification agent for PR feedback analysis. | [Guide](docs/plugins/code-review.md) |
-| `@fix-auto` | Auto-fix subagent — performs fixes without user confirmation. | [Guide](docs/plugins/code-review.md) |
+| Command / Agent | Description | Mode | Docs |
+|-----------------|-------------|------|------|
+| `/commit` | Controlled commit workflow — Conventional Commit messages, bash-level blocking for direct `git commit`/`git push`. | — | [Guide](docs/plugins/commit.md) |
+| `/develop` | Python development workflow — TDD, coding standards, and stack-specific patterns (FastAPI, Django, Celery, SQLAlchemy). | — | [Guide](docs/plugins/python-developer.md) |
+| `/review` | Code review workflow — parallel security, quality, and documentation audits with verification and structured reports. | — | [Guide](docs/plugins/code-review.md) |
+| `/fix` | Fix a single issue by ID or pasted issue block from a saved review report. | — | [Guide](docs/plugins/code-review.md) |
+| `/fix-report` | Batch-fix issues from a saved review report with interactive selection. | — | [Guide](docs/plugins/code-review.md) |
+| `/analyze-feedback` | Analyze PR feedback comments, classify validity, and generate response drafts. | — | [Guide](docs/plugins/code-review.md) |
+| `@python-developer` | Direct agent invocation for Python tasks outside of `/develop`. | `primary` | [Guide](docs/plugins/python-developer.md) |
+| `@security-auditor` | Direct agent invocation for security audits with skill-agent delegation. | `subagent` | [Guide](docs/plugins/code-review.md) |
+| `@code-quality-auditor` | Direct agent invocation for code quality audits with skill-agent delegation. | `subagent` | [Guide](docs/plugins/code-review.md) |
+| `@documentation-auditor` | Documentation audit agent — verifies code changes are reflected in docs. | `subagent` | [Guide](docs/plugins/code-review.md) |
+| `@cross-verifier` | Cross-domain correlation agent — finds intersections between findings. | `subagent` | [Guide](docs/plugins/code-review.md) |
+| `@challenger` | Adversarial review agent — challenges findings for false positives. | `subagent` | [Guide](docs/plugins/code-review.md) |
+| `@feedback-analyzer` | Per-comment classification agent for PR feedback analysis. | `subagent` | [Guide](docs/plugins/code-review.md) |
+| `@fix-auto` | Auto-fix subagent — performs fixes without user confirmation. | `subagent` | [Guide](docs/plugins/code-review.md) |
+
+> **Note on Mode:** Commands always appear in tab-completion. Agents marked `primary` also appear in tab-completion, while `subagent` agents are hidden and must be invoked explicitly (e.g., `@fix-auto`).
 
 ## Repository Structure
 

@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest"
+import type { Config } from "@opencode-ai/plugin"
 import { AppVerkPythonDeveloperPlugin } from "../src/index.js"
 
 describe("AppVerkPythonDeveloperPlugin", () => {
@@ -8,11 +9,9 @@ describe("AppVerkPythonDeveloperPlugin", () => {
 
   it("registers agent python-developer in config", async () => {
     const plugin = await AppVerkPythonDeveloperPlugin({} as never)
-    const config = { agent: {} } as {
-      agent?: Record<string, { description?: string; prompt?: string; mode?: string }>
-    }
+    const config = { agent: {} } as Config
 
-    await plugin.config?.(config as never)
+    await plugin.config?.(config)
 
     expect(config.agent?.["python-developer"]).toBeDefined()
     expect(config.agent!["python-developer"]!.description).toContain("Python")
@@ -22,9 +21,9 @@ describe("AppVerkPythonDeveloperPlugin", () => {
 
   it("registers command /develop in config", async () => {
     const plugin = await AppVerkPythonDeveloperPlugin({} as never)
-    const config = { command: {} } as { command?: Record<string, { description?: string; template: string; agent?: string }> }
+    const config = { command: {} } as Config
 
-    await plugin.config?.(config as never)
+    await plugin.config?.(config)
 
     expect(config.command?.develop).toBeDefined()
     expect(config.command!.develop!.description).toContain("Python")

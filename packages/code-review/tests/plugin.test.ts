@@ -1,4 +1,5 @@
 import { describe, it, expect, beforeAll } from "vitest"
+import type { Config } from "@opencode-ai/plugin"
 import { AppVerkCodeReviewPlugin } from "../src/index.js"
 
 describe("AppVerkCodeReviewPlugin", () => {
@@ -38,27 +39,27 @@ describe("AppVerkCodeReviewPlugin", () => {
   const EXPECTED_COMMANDS = ["review", "fix", "fix-report", "analyze-feedback"]
 
   it.each(EXPECTED_AGENTS)("config registers %s agent", async (name) => {
-    const config: any = { agent: {} }
-    await pluginResult.config?.(config as never)
-    expect(config.agent[name]).toBeDefined()
-    expect(config.agent[name].description).toBeDefined()
-    expect(typeof config.agent[name].prompt).toBe("string")
-    expect(config.agent[name].prompt.length).toBeGreaterThan(0)
-    expect(config.agent[name].mode).toBe("subagent")
+    const config: Config = { agent: {} }
+    await pluginResult.config?.(config)
+    expect(config.agent![name]).toBeDefined()
+    expect(config.agent![name]!.description).toBeDefined()
+    expect(typeof config.agent![name]!.prompt).toBe("string")
+    expect(config.agent![name]!.prompt!.length).toBeGreaterThan(0)
+    expect(config.agent![name]!.mode).toBe("subagent")
   })
 
   it.each(EXPECTED_COMMANDS)("config registers %s command", async (name) => {
-    const config: any = { command: {} }
-    await pluginResult.config?.(config as never)
-    expect(config.command[name]).toBeDefined()
-    expect(config.command[name].description).toBeDefined()
-    expect(typeof config.command[name].template).toBe("string")
-    expect(config.command[name].template.length).toBeGreaterThan(0)
+    const config: Config = { command: {} }
+    await pluginResult.config?.(config)
+    expect(config.command![name]).toBeDefined()
+    expect(config.command![name]!.description).toBeDefined()
+    expect(typeof config.command![name]!.template).toBe("string")
+    expect(config.command![name]!.template.length).toBeGreaterThan(0)
   })
 
   it("does not register any custom tools", async () => {
-    const config: any = { command: {}, agent: {} }
-    await pluginResult.config?.(config as never)
+    const config: Config = { command: {}, agent: {} }
+    await pluginResult.config?.(config)
     expect(pluginResult.tool).toBeUndefined()
   })
 })

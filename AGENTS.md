@@ -88,6 +88,22 @@ const defaultPluginFactories = [
 
 **Critical:** After adding to `src/index.ts`, mirror the exact same change in `src/index.js`. The JS file is the runtime entrypoint consumed by tests and published consumers; the TS file provides types.
 
+## Agent Visibility (`mode`)
+
+OpenCode agents support a `mode` property that controls tab-completion visibility:
+
+- **`mode: "primary"`** — User-facing agent. Appears in tab-completion and is
+  intended for direct user interaction. Use this for agents that users invoke
+  directly, such as `python-developer`.
+- **`mode: "subagent"`** — Hidden agent. Excluded from tab-completion;
+  intended to be invoked programmatically by commands or other agents. Use this
+  for skill-agents and background workers, such as `fix-auto` or
+  `security-auditor`.
+
+If `mode` is omitted, OpenCode defaults to `"all"` (visible everywhere). Always
+set an explicit `mode` when registering an agent to avoid unnecessary
+tab-completion noise or accidentally hiding user-facing agents.
+
 ---
 
 ## Documentation Checklist
@@ -101,7 +117,9 @@ Update these sections:
 1. **Package count badge** — increment the number: `[![Package](https://img.shields.io/badge/package-N-blue.svg)]`
 2. **Introduction paragraph** — add a one-line description of the new plugin
 3. **Usage section** — add a subsection with `/command` example and what it does
-4. **Available Commands & Agents table** — add rows for the new command and any agents
+4. **Available Commands & Agents table** — add rows for the new command and
+   any agents. Verify each agent has the correct `mode` (`"primary"` for
+   user-facing agents, `"subagent"` for background/skill agents).
 5. **Repository Structure** — add `packages/<name>` and `docs/plugins/<name>.md` entries
 6. **Documentation list** — add link to the new plugin guide
 
