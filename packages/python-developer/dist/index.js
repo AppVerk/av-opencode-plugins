@@ -72,7 +72,8 @@ var AppVerkPythonDeveloperPlugin = async () => {
       config.agent = config.agent ?? {};
       config.agent["python-developer"] = {
         description: AGENT_DESCRIPTION,
-        prompt: AGENT_PROMPT
+        prompt: AGENT_PROMPT,
+        mode: "primary"
       };
       config.command = config.command ?? {};
       config.command.develop = {

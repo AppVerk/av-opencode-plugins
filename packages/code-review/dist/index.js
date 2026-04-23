@@ -104,7 +104,7 @@ var AppVerkCodeReviewPlugin = async () => ({
   config: async (config) => {
     config.agent ??= {};
     for (const a of AGENTS) {
-      config.agent[a.name] = { description: a.description, prompt: loadMarkdownFile(a.path) };
+      config.agent[a.name] = { description: a.description, prompt: loadMarkdownFile(a.path), mode: "subagent" };
     }
     config.command ??= {};
     for (const c of COMMANDS) {
