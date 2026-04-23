@@ -92,6 +92,24 @@ describe("AppVerkCodeReviewPlugin", () => {
     expect(config.command["fix-report"].template.length).toBeGreaterThan(0)
   })
 
+  it("config registers the analyze-feedback command", async () => {
+    const config: any = { command: {} }
+    await pluginResult.config?.(config as never)
+    expect(config.command["analyze-feedback"]).toBeDefined()
+    expect(config.command["analyze-feedback"].description).toBeDefined()
+    expect(typeof config.command["analyze-feedback"].template).toBe("string")
+    expect(config.command["analyze-feedback"].template.length).toBeGreaterThan(0)
+  })
+
+  it("config registers feedback-analyzer agent", async () => {
+    const config: any = { agent: {} }
+    await pluginResult.config?.(config as never)
+    expect(config.agent["feedback-analyzer"]).toBeDefined()
+    expect(config.agent["feedback-analyzer"].description).toBeDefined()
+    expect(typeof config.agent["feedback-analyzer"].prompt).toBe("string")
+    expect(config.agent["feedback-analyzer"].prompt.length).toBeGreaterThan(0)
+  })
+
   it("config registers fix-auto agent", async () => {
     const config: any = { agent: {} }
     await pluginResult.config?.(config as never)

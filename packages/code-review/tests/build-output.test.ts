@@ -68,4 +68,16 @@ describe("build output", () => {
     expect(existsSync(p)).toBe(true)
     expect(readFileSync(p, "utf8").length).toBeGreaterThan(100)
   })
+
+  it("dist/commands/analyze-feedback.md exists and is non-empty", () => {
+    const p = path.resolve(distDir, "commands/analyze-feedback.md")
+    expect(existsSync(p)).toBe(true)
+    expect(readFileSync(p, "utf8").length).toBeGreaterThan(100)
+  })
+
+  it("dist/agents/feedback-analyzer.md exists and is non-empty", () => {
+    const p = path.resolve(distDir, "agents/feedback-analyzer.md")
+    expect(existsSync(p)).toBe(true)
+    expect(readFileSync(p, "utf8").length).toBeGreaterThan(100)
+  })
 })

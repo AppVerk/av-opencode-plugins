@@ -21,6 +21,8 @@ const REVIEW_COMMAND_TEMPLATE = loadMarkdownFile("commands/review.md")
 const FIX_COMMAND_TEMPLATE = loadMarkdownFile("commands/fix.md")
 const FIX_REPORT_COMMAND_TEMPLATE = loadMarkdownFile("commands/fix-report.md")
 const FIX_AUTO_PROMPT = loadMarkdownFile("agents/fix-auto.md")
+const ANALYZE_FEEDBACK_COMMAND_TEMPLATE = loadMarkdownFile("commands/analyze-feedback.md")
+const FEEDBACK_ANALYZER_PROMPT = loadMarkdownFile("agents/feedback-analyzer.md")
 
 const SECURITY_AUDITOR_DESCRIPTION =
   "Expert security auditor for comprehensive code security analysis including secret scanning, SAST, dependency scanning, and OWASP compliance."
@@ -48,6 +50,12 @@ const FIX_REPORT_COMMAND_DESCRIPTION =
 
 const FIX_AUTO_DESCRIPTION =
   "Auto-fix subagent for code review issues. Performs analysis, implementation, verification, and reporting without user confirmation."
+
+const ANALYZE_FEEDBACK_COMMAND_DESCRIPTION =
+  "Analyze PR feedback comments, classify them, and generate response drafts."
+
+const FEEDBACK_ANALYZER_DESCRIPTION =
+  "Analyze single PR comment for validity and generate response if needed."
 
 export const AppVerkCodeReviewPlugin: Plugin = async () => {
   return {
@@ -91,6 +99,15 @@ export const AppVerkCodeReviewPlugin: Plugin = async () => {
       config.agent["fix-auto"] = {
         description: FIX_AUTO_DESCRIPTION,
         prompt: FIX_AUTO_PROMPT,
+      }
+      config.agent["feedback-analyzer"] = {
+        description: FEEDBACK_ANALYZER_DESCRIPTION,
+        prompt: FEEDBACK_ANALYZER_PROMPT,
+      }
+
+      config.command["analyze-feedback"] = {
+        description: ANALYZE_FEEDBACK_COMMAND_DESCRIPTION,
+        template: ANALYZE_FEEDBACK_COMMAND_TEMPLATE,
       }
     },
   }

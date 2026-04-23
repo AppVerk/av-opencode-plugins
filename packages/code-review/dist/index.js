@@ -18,6 +18,8 @@ var REVIEW_COMMAND_TEMPLATE = loadMarkdownFile("commands/review.md");
 var FIX_COMMAND_TEMPLATE = loadMarkdownFile("commands/fix.md");
 var FIX_REPORT_COMMAND_TEMPLATE = loadMarkdownFile("commands/fix-report.md");
 var FIX_AUTO_PROMPT = loadMarkdownFile("agents/fix-auto.md");
+var ANALYZE_FEEDBACK_COMMAND_TEMPLATE = loadMarkdownFile("commands/analyze-feedback.md");
+var FEEDBACK_ANALYZER_PROMPT = loadMarkdownFile("agents/feedback-analyzer.md");
 var SECURITY_AUDITOR_DESCRIPTION = "Expert security auditor for comprehensive code security analysis including secret scanning, SAST, dependency scanning, and OWASP compliance.";
 var CODE_QUALITY_AUDITOR_DESCRIPTION = "Expert code quality auditor for architecture, design patterns, SOLID/DDD compliance, and maintainability analysis.";
 var DOCUMENTATION_AUDITOR_DESCRIPTION = "Documentation auditor that verifies code changes are reflected in project documentation.";
@@ -27,6 +29,8 @@ var REVIEW_COMMAND_DESCRIPTION = "Perform comprehensive code review for security
 var FIX_COMMAND_DESCRIPTION = "Apply fix for a single code review issue with verification and reporting.";
 var FIX_REPORT_COMMAND_DESCRIPTION = "Parse a saved review report, present issues as a checklist, fix selected issues, and mark them resolved.";
 var FIX_AUTO_DESCRIPTION = "Auto-fix subagent for code review issues. Performs analysis, implementation, verification, and reporting without user confirmation.";
+var ANALYZE_FEEDBACK_COMMAND_DESCRIPTION = "Analyze PR feedback comments, classify them, and generate response drafts.";
+var FEEDBACK_ANALYZER_DESCRIPTION = "Analyze single PR comment for validity and generate response if needed.";
 var AppVerkCodeReviewPlugin = async () => {
   return {
     config: async (config) => {
@@ -67,6 +71,14 @@ var AppVerkCodeReviewPlugin = async () => {
       config.agent["fix-auto"] = {
         description: FIX_AUTO_DESCRIPTION,
         prompt: FIX_AUTO_PROMPT
+      };
+      config.agent["feedback-analyzer"] = {
+        description: FEEDBACK_ANALYZER_DESCRIPTION,
+        prompt: FEEDBACK_ANALYZER_PROMPT
+      };
+      config.command["analyze-feedback"] = {
+        description: ANALYZE_FEEDBACK_COMMAND_DESCRIPTION,
+        template: ANALYZE_FEEDBACK_COMMAND_TEMPLATE
       };
     }
   };
