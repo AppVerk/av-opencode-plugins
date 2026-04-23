@@ -9,14 +9,12 @@ const dst = path.resolve(root, "../dist/skills")
 const skills = [
   "coding-standards",
   "tdd-workflow",
-  "fastapi-patterns",
-  "sqlalchemy-patterns",
-  "pydantic-patterns",
-  "async-python-patterns",
-  "uv-package-manager",
-  "django-web-patterns",
-  "django-orm-patterns",
-  "celery-patterns",
+  "tailwind-patterns",
+  "zustand-patterns",
+  "tanstack-query-patterns",
+  "form-patterns",
+  "tanstack-router-patterns",
+  "pnpm-package-manager",
 ]
 
 mkdirSync(dst, { recursive: true })
@@ -35,9 +33,9 @@ const dstAgent = path.resolve(root, "../dist/agent-prompt.md")
 cpSync(srcAgent, dstAgent)
 console.log(`Copied agent-prompt.md → dist/`)
 
-const srcCommand = path.resolve(root, "../src/commands/python.md")
+const srcCommand = path.resolve(root, "../src/commands/frontend.md")
 const dstCommandDir = path.resolve(root, "../dist/commands")
-const dstCommand = path.join(dstCommandDir, "python.md")
+const dstCommand = path.join(dstCommandDir, "frontend.md")
 mkdirSync(dstCommandDir, { recursive: true })
 cpSync(srcCommand, dstCommand)
-console.log(`Copied commands/python.md → dist/commands/`)
+console.log(`Copied commands/frontend.md → dist/commands/`)

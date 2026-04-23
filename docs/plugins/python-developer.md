@@ -1,6 +1,6 @@
 # @appverk/opencode-python-developer
 
-Python development workflow for OpenCode. Provides the `/develop` command and `python-developer` agent with modular skill loading for FastAPI, Django, Celery, SQLAlchemy, Pydantic, and async patterns.
+Python development workflow for OpenCode. Provides the `/python` command and `python-developer` agent with modular skill loading for FastAPI, Django, Celery, SQLAlchemy, Pydantic, and async patterns.
 
 ## Installation
 
@@ -11,12 +11,12 @@ The root plugin bundle (`av-opencode-plugins`) includes this package automatical
 Run the Python development workflow:
 
 ```text
-/develop <task description>
+/python <task description>
 ```
 
 Example:
 ```text
-/develop Add user authentication endpoint with JWT
+/python Add user authentication endpoint with JWT
 ```
 
 The command:
@@ -60,7 +60,7 @@ The plugin registers three elements through its `config` hook:
 
 ### How Skills Are Loaded
 
-1. The `/develop` command (or direct agent invocation) starts a session with the `python-developer` agent.
+1. The `/python` command (or direct agent invocation) starts a session with the `python-developer` agent.
 2. The agent detects the project stack by reading `pyproject.toml` and scanning `src/` or `app/` imports.
 3. The agent calls the `load_python_skill(name)` tool for each relevant skill.
 4. The tool reads the bundled `dist/skills/{name}.md` file and returns its content.
@@ -72,15 +72,15 @@ The plugin registers three elements through its `config` hook:
 
 ## Limitations
 
-- OpenCode does **not** auto-detect Python files and auto-switch to the `python-developer` agent. You must explicitly use `/develop` or invoke the agent manually.
+- OpenCode does **not** auto-detect Python files and auto-switch to the `python-developer` agent. You must explicitly use `/python` or invoke the agent manually.
 - Skills are loaded on demand via tool calls; the agent must correctly identify which skills are needed.
-- If the plugin fails to load, `/develop` will not be available and the `python-developer` agent will not exist.
+- If the plugin fails to load, `/python` will not be available and the `python-developer` agent will not exist.
 
 ## Project Structure
 
 - `src/index.ts` — Plugin entry point (config hook + tool registration)
 - `src/agent-prompt.md` — Core system prompt for `python-developer` agent
-- `src/commands/develop.md` — `/develop` command template
+- `src/commands/python.md` — `/python` command template
 - `src/tools/load-skill.ts` — `load_python_skill` tool implementation
 - `src/skills/*.md` — 10 skill markdown files
 - `scripts/copy-skills.mjs` — Build step that copies skills to `dist/skills/`

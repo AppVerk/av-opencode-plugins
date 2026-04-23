@@ -9,7 +9,8 @@
     "src/index.d.ts",
     "packages/commit/dist",
     "packages/python-developer/dist",
-    "packages/code-review/dist"
+    "packages/code-review/dist",
+    "packages/frontend-developer/dist"
   ],
   "workspaces": [
     "packages/*"
@@ -21,9 +22,9 @@
     "uuid": ">=14.0.0"
   },
   "scripts": {
-    "build": "npm run build --workspace @appverk/opencode-commit && npm run build --workspace @appverk/opencode-python-developer && npm run build --workspace @appverk/opencode-code-review",
-    "test": "vitest run --config vitest.config.ts && npm run test --workspace @appverk/opencode-commit && npm run test --workspace @appverk/opencode-python-developer && npm run test --workspace @appverk/opencode-code-review",
-    "typecheck": "tsc -p tsconfig.json --noEmit && npm run typecheck --workspace @appverk/opencode-commit && npm run typecheck --workspace @appverk/opencode-python-developer && npm run typecheck --workspace @appverk/opencode-code-review",
+    "build": "npm run build --workspace @appverk/opencode-commit && npm run build --workspace @appverk/opencode-python-developer && npm run build --workspace @appverk/opencode-code-review && npm run build --workspace @appverk/opencode-frontend-developer",
+    "test": "vitest run --config vitest.config.ts && npm run test --workspace @appverk/opencode-commit && npm run test --workspace @appverk/opencode-python-developer && npm run test --workspace @appverk/opencode-code-review && npm run test --workspace @appverk/opencode-frontend-developer",
+    "typecheck": "tsc -p tsconfig.json --noEmit && npm run typecheck --workspace @appverk/opencode-commit && npm run typecheck --workspace @appverk/opencode-python-developer && npm run typecheck --workspace @appverk/opencode-code-review && npm run typecheck --workspace @appverk/opencode-frontend-developer",
     "check": "npm run typecheck && npm run test && npm run build"
   },
   "devDependencies": {

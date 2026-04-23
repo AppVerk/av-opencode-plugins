@@ -11,14 +11,12 @@ import { fileURLToPath } from "url";
 var AVAILABLE_SKILLS = [
   "coding-standards",
   "tdd-workflow",
-  "fastapi-patterns",
-  "sqlalchemy-patterns",
-  "pydantic-patterns",
-  "async-python-patterns",
-  "uv-package-manager",
-  "django-web-patterns",
-  "django-orm-patterns",
-  "celery-patterns"
+  "tailwind-patterns",
+  "zustand-patterns",
+  "tanstack-query-patterns",
+  "form-patterns",
+  "tanstack-router-patterns",
+  "pnpm-package-manager"
 ];
 var moduleDirectory = path.dirname(fileURLToPath(import.meta.url));
 function resolveSkillPath(name) {
@@ -37,68 +35,68 @@ function resolveSkillPath(name) {
   }
   return null;
 }
-function loadPythonSkill(name) {
+function loadFrontendSkill(name) {
   if (!AVAILABLE_SKILLS.includes(name)) {
     throw new Error(
-      `python-developer skill not found: ${name}. Available: ${AVAILABLE_SKILLS.join(", ")}`
+      `frontend-developer skill not found: ${name}. Available: ${AVAILABLE_SKILLS.join(", ")}`
     );
   }
   const skillPath = resolveSkillPath(name);
   if (!skillPath) {
     throw new Error(
-      `python-developer skill file not found for: ${name}. Tried: skills/${name}.md and ../src/skills/${name}.md`
+      `frontend-developer skill file not found for: ${name}. Tried: skills/${name}.md and ../src/skills/${name}.md`
     );
   }
   return readFileSync(skillPath, "utf8");
 }
 
 // src/index.ts
-var AGENT_DESCRIPTION = "Expert Python developer enforcing AppVerk coding standards, TDD workflow, and stack-specific patterns.";
-var COMMAND_DESCRIPTION = "Python development workflow enforcing coding standards, TDD, and stack-specific patterns.";
+var AGENT_DESCRIPTION = "Expert TypeScript + React developer enforcing AppVerk coding standards, TDD workflow, and stack-specific patterns.";
+var COMMAND_DESCRIPTION = "TypeScript + React development workflow enforcing coding standards, TDD, and stack-specific patterns.";
 var moduleDirectory2 = path2.dirname(fileURLToPath2(import.meta.url));
 var packagedAgentPath = path2.resolve(moduleDirectory2, "agent-prompt.md");
 var sourceAgentPath = path2.resolve(moduleDirectory2, "../src/agent-prompt.md");
-var packagedCommandPath = path2.resolve(moduleDirectory2, "commands/python.md");
-var sourceCommandPath = path2.resolve(moduleDirectory2, "../src/commands/python.md");
+var packagedCommandPath = path2.resolve(moduleDirectory2, "commands/frontend.md");
+var sourceCommandPath = path2.resolve(moduleDirectory2, "../src/commands/frontend.md");
 function loadFile(packaged, source) {
   const filePath = existsSync2(packaged) ? packaged : source;
   return readFileSync2(filePath, "utf8");
 }
 var AGENT_PROMPT = loadFile(packagedAgentPath, sourceAgentPath);
 var COMMAND_TEMPLATE = loadFile(packagedCommandPath, sourceCommandPath);
-var AppVerkPythonDeveloperPlugin = async () => {
+var AppVerkFrontendDeveloperPlugin = async () => {
   return {
     config: async (config) => {
       config.agent = config.agent ?? {};
-      config.agent["python-developer"] = {
+      config.agent["frontend-developer"] = {
         description: AGENT_DESCRIPTION,
         prompt: AGENT_PROMPT,
         mode: "primary"
       };
       config.command = config.command ?? {};
-      config.command.python = {
+      config.command.frontend = {
         description: COMMAND_DESCRIPTION,
         template: COMMAND_TEMPLATE,
-        agent: "python-developer"
+        agent: "frontend-developer"
       };
     },
     tool: {
-      load_python_skill: tool({
-        description: "Load a Python development skill by name. Returns the full markdown content of the skill's rules and patterns.",
+      load_frontend_skill: tool({
+        description: "Load a frontend development skill by name. Returns the full markdown content of the skill's rules and patterns.",
         args: {
           name: tool.schema.string().describe(
-            "Skill name: coding-standards, tdd-workflow, fastapi-patterns, sqlalchemy-patterns, pydantic-patterns, async-python-patterns, uv-package-manager, django-web-patterns, django-orm-patterns, celery-patterns"
+            "Skill name: coding-standards, tdd-workflow, tailwind-patterns, zustand-patterns, tanstack-query-patterns, form-patterns, tanstack-router-patterns, pnpm-package-manager"
           )
         },
         async execute(args) {
-          return loadPythonSkill(args.name);
+          return loadFrontendSkill(args.name);
         }
       })
     }
   };
 };
-var index_default = AppVerkPythonDeveloperPlugin;
+var index_default = AppVerkFrontendDeveloperPlugin;
 export {
-  AppVerkPythonDeveloperPlugin,
+  AppVerkFrontendDeveloperPlugin,
   index_default as default
 };

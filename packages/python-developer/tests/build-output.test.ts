@@ -34,8 +34,8 @@ describe("build output assets", () => {
 
     await plugin.config?.(config as never)
 
-    expect(config.command?.develop?.template).toContain("agent: python-developer")
-    expect(config.command?.develop?.template).toContain("Python Development Workflow")
+    expect(config.command?.python?.template).toContain("agent: python-developer")
+    expect(config.command?.python?.template).toContain("Python Development Workflow")
   })
 
   it("load_python_skill tool works from dist build", async () => {

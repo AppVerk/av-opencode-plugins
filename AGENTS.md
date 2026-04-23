@@ -1,6 +1,6 @@
 # AppVerk OpenCode Plugins — Agent Guide
 
-This is an **OpenCode plugin monorepo** that bundles multiple workspace plugins: a controlled `/commit` workflow, a Python `/develop` workflow, and a `/review` code review workflow. The root package re-exports all of them and handles plugin merging.
+This is an **OpenCode plugin monorepo** that bundles multiple workspace plugins: a controlled `/commit` workflow, a Python `/python` workflow, a TypeScript + React `/frontend` workflow, and a `/review` code review workflow. The root package re-exports all of them and handles plugin merging.
 
 ## Monorepo Layout
 
@@ -10,6 +10,7 @@ This is an **OpenCode plugin monorepo** that bundles multiple workspace plugins:
 | `packages/commit` | Commit plugin source, tests, build scripts. Output shipped at `packages/commit/dist/`. |
 | `packages/python-developer` | Python-developer plugin source, tests, skills, build scripts. Output shipped at `packages/python-developer/dist/`. |
 | `packages/code-review` | Code-review plugin source, tests, agent prompts, command templates, skill-agents, build scripts. Output shipped at `packages/code-review/dist/`. |
+| `packages/frontend-developer` | Frontend-developer plugin source, tests, skills, build scripts. Output shipped at `packages/frontend-developer/dist/`. |
 | `.opencode/` | Local OpenCode config for this repo (separate `package.json`). |
 
 **Important:** `dist/` is usually ignored, but `packages/*/dist/` is **committed and published** (see `.gitignore`). Do not delete those `dist/` trees.
@@ -41,7 +42,7 @@ npm run test  --workspace @appverk/opencode-commit
 - **Package builds:** `tsup src/index.ts --format esm --dts`.
 - **Post-build asset copying:** Each package runs a Node script to copy markdown templates/skills into `dist/` (e.g., `dist/commands/commit.md`, `dist/skills/*.md`).
 - **Root entrypoint:** `src/index.js` is the runtime file consumed by tests and published consumers; `src/index.ts` is the typed source. When changing merge logic, update both `src/index.ts` and `src/index.js`, then run `npm run build` so the package-level tests still pass.
-- **Published files:** Only `src/index.js`, `src/index.d.ts`, and the three `packages/*/dist/` directories (see root `package.json` `files`).
+- **Published files:** Only `src/index.js`, `src/index.d.ts`, and the four `packages/*/dist/` directories (see root `package.json` `files`).
 
 ## TypeScript Configuration
 

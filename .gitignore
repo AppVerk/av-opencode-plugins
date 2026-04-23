@@ -6,6 +6,8 @@ dist/
 !packages/python-developer/dist/**
 !packages/code-review/dist/
 !packages/code-review/dist/**
+!packages/frontend-developer/dist/
+!packages/frontend-developer/dist/**
 coverage/
 .DS_Store
 .serena/

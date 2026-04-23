@@ -19,16 +19,16 @@ describe("AppVerkPythonDeveloperPlugin", () => {
     expect(config.agent!["python-developer"]!.mode).toBe("primary")
   })
 
-  it("registers command /develop in config", async () => {
+  it("registers command /python in config", async () => {
     const plugin = await AppVerkPythonDeveloperPlugin({} as never)
     const config = { command: {} } as Config
 
     await plugin.config?.(config)
 
-    expect(config.command?.develop).toBeDefined()
-    expect(config.command!.develop!.description).toContain("Python")
-    expect(config.command!.develop!.template).toContain("Python Development Workflow")
-    expect(config.command!.develop!.agent).toBe("python-developer")
+    expect(config.command?.python).toBeDefined()
+    expect(config.command!.python!.description).toContain("Python")
+    expect(config.command!.python!.template).toContain("Python Development Workflow")
+    expect(config.command!.python!.agent).toBe("python-developer")
   })
 
   it("registers load_python_skill tool", async () => {

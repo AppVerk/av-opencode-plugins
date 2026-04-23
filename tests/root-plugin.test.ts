@@ -47,6 +47,23 @@ describe("AppVerkPlugins", () => {
     expect(plugin.tool?.av_commit).toBeDefined()
   })
 
+  it("registers the /frontend command and frontend-developer agent", async () => {
+    const { AppVerkPlugins } = await loadRootModule()
+    const plugin = await AppVerkPlugins({} as never)
+    const config = {} as {
+      command?: Record<string, { description?: string; template: string; agent?: string }>
+      agent?: Record<string, { description?: string; prompt: string; mode?: string }>
+    }
+
+    await plugin.config?.(config as never)
+
+    expect(config.command?.frontend?.description).toContain("TypeScript")
+    expect(config.command?.frontend?.agent).toBe("frontend-developer")
+    expect(config.agent?.["frontend-developer"]?.description).toContain("TypeScript")
+    expect(config.agent?.["frontend-developer"]?.mode).toBe("primary")
+    expect(plugin.tool?.load_frontend_skill).toBeDefined()
+  })
+
   it("packages a self-contained git-install surface", () => {
     const packageJson = readRootPackageJson()
 
@@ -81,6 +98,9 @@ describe("AppVerkPlugins", () => {
         "packages/commit/dist/index.js",
         "packages/commit/dist/index.d.ts",
         "packages/commit/dist/commands/commit.md",
+        "packages/frontend-developer/dist/index.js",
+        "packages/frontend-developer/dist/index.d.ts",
+        "packages/frontend-developer/dist/commands/frontend.md",
       ]),
     )
   })

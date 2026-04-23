@@ -1,11 +1,12 @@
 # AppVerk OpenCode Plugins
 
-[![Package](https://img.shields.io/badge/package-3-blue.svg)](#available-packages)
+[![Package](https://img.shields.io/badge/package-4-blue.svg)](#available-packages)
 
 OpenCode plugin packages for AppVerk. The root plugin loads the AppVerk plugin bundle from this repository, which currently provides:
 
 - A **controlled commit workflow** (`/commit`) that enforces AppVerk git policies.
-- A **Python development workflow** (`/develop`) with TDD, coding standards, and stack-specific patterns (FastAPI, Django, Celery, SQLAlchemy, Pydantic).
+- A **Python development workflow** (`/python`) with TDD, coding standards, and stack-specific patterns (FastAPI, Django, Celery, SQLAlchemy, Pydantic).
+- A **TypeScript + React development workflow** (`/frontend`) with TDD, coding standards, and stack-specific patterns (Tailwind, Zustand, TanStack Query, React Hook Form, TanStack Router).
 - A **code review workflow** (`/review`) with parallel security and quality audits, verification agents, fix commands, feedback analysis, and skill-agent integration.
 
 ## Installation
@@ -19,7 +20,7 @@ Add the root plugin package to your OpenCode config:
 }
 ```
 
-Restart OpenCode after updating the config. The root plugin installs the AppVerk plugin bundle and registers `/commit` and `/develop` automatically.
+Restart OpenCode after updating the config. The root plugin installs the AppVerk plugin bundle and registers `/commit`, `/python`, and `/frontend` automatically.
 
 ## Usage
 
@@ -39,15 +40,15 @@ Create a commit and append a work item reference:
 
 The command uses the packaged AppVerk workflow, generates a Conventional Commit style message, and routes the final commit through the controlled runtime instead of allowing raw `git commit` from the bash tool.
 
-### Python development workflow
+### /python — Python development workflow
 
 Run the Python development workflow with TDD and stack-specific patterns:
 
 ```text
-/develop Add user authentication endpoint with JWT
+/python Add user authentication endpoint with JWT
 ```
 
-The `/develop` command:
+The `/python` command:
 
 1. Detects your project stack (FastAPI, Django, Celery, etc.)
 2. Loads relevant Python development skills
@@ -58,6 +59,27 @@ You can also invoke the agent directly:
 
 ```bash
 opencode agent python-developer "Refactor user service to use repository pattern"
+```
+
+### /frontend — TypeScript + React development workflow
+
+Run the TypeScript + React development workflow with TDD and stack-specific patterns:
+
+```text
+/frontend Add user profile form with validation
+```
+
+The `/frontend` command:
+
+1. Detects your project stack (Tailwind, Zustand, TanStack Query, etc.)
+2. Loads relevant TypeScript + React development skills
+3. Follows TDD: writes tests first, then implementation
+4. Runs quality gates (typecheck, tests, lint)
+
+You can also invoke the agent directly:
+
+```bash
+opencode agent frontend-developer "Refactor auth store to use Zustand"
 ```
 
 ### Code review workflow
@@ -112,12 +134,14 @@ Classifies each comment as "Address" or "Reject" and optionally publishes respon
 | Command / Agent | Description | Mode | Docs |
 |-----------------|-------------|------|------|
 | `/commit` | Controlled commit workflow — Conventional Commit messages, bash-level blocking for direct `git commit`/`git push`. | — | [Guide](docs/plugins/commit.md) |
-| `/develop` | Python development workflow — TDD, coding standards, and stack-specific patterns (FastAPI, Django, Celery, SQLAlchemy). | — | [Guide](docs/plugins/python-developer.md) |
+| `/python` | Python development workflow — TDD, coding standards, and stack-specific patterns (FastAPI, Django, Celery, SQLAlchemy). | — | [Guide](docs/plugins/python-developer.md) |
+| `/frontend` | TypeScript + React development workflow — TDD, coding standards, and stack-specific patterns (Tailwind, Zustand, TanStack Query). | — | [Guide](docs/plugins/frontend-developer.md) |
 | `/review` | Code review workflow — parallel security, quality, and documentation audits with verification and structured reports. | — | [Guide](docs/plugins/code-review.md) |
 | `/fix` | Fix a single issue by ID or pasted issue block from a saved review report. | — | [Guide](docs/plugins/code-review.md) |
 | `/fix-report` | Batch-fix issues from a saved review report with interactive selection. | — | [Guide](docs/plugins/code-review.md) |
 | `/analyze-feedback` | Analyze PR feedback comments, classify validity, and generate response drafts. | — | [Guide](docs/plugins/code-review.md) |
-| `@python-developer` | Direct agent invocation for Python tasks outside of `/develop`. | `primary` | [Guide](docs/plugins/python-developer.md) |
+| `@python-developer` | Direct agent invocation for Python tasks outside of `/python`. | `primary` | [Guide](docs/plugins/python-developer.md) |
+| `@frontend-developer` | Direct agent invocation for TypeScript + React tasks outside of `/frontend`. | `primary` | [Guide](docs/plugins/frontend-developer.md) |
 | `@security-auditor` | Direct agent invocation for security audits with skill-agent delegation. | `subagent` | [Guide](docs/plugins/code-review.md) |
 | `@code-quality-auditor` | Direct agent invocation for code quality audits with skill-agent delegation. | `subagent` | [Guide](docs/plugins/code-review.md) |
 | `@documentation-auditor` | Documentation audit agent — verifies code changes are reflected in docs. | `subagent` | [Guide](docs/plugins/code-review.md) |
@@ -137,6 +161,8 @@ Classifies each comment as "Address" or "Reject" and optionally publishes respon
 - `docs/plugins/python-developer.md` - package-level behavior and usage guide.
 - `packages/code-review` - plugin source, tests, agent prompts, command template, and build scripts for the code review workflow.
 - `docs/plugins/code-review.md` - package-level behavior and usage guide.
+- `packages/frontend-developer` - plugin source, tests, skill files, and build scripts for the TypeScript + React development workflow.
+- `docs/plugins/frontend-developer.md` - package-level behavior and usage guide.
 - `package.json` - workspace definition and shared validation commands.
 
 ## Local Development
@@ -161,6 +187,7 @@ npm run check
 - [Commit Plugin Guide](docs/plugins/commit.md)
 - [Python Developer Plugin Guide](docs/plugins/python-developer.md)
 - [Code Review Plugin Guide](docs/plugins/code-review.md)
+- [Frontend Developer Plugin Guide](docs/plugins/frontend-developer.md)
 
 ## License
 
