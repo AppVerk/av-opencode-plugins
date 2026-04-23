@@ -1,10 +1,12 @@
 {
   "name": "@appverk/opencode-code-review",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsup src/index.ts --format esm --dts && node scripts/copy-assets.mjs",
     "test": "vitest run",

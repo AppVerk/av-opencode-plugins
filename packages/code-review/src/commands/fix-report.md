@@ -1,6 +1,6 @@
 ---
 description: Parse a saved review report, present issues as a checklist, fix selected issues, and mark them resolved in the report.
-argument-hint: <path-to-review-report>
+argument-hint: [<path-to-review-report>]
 ---
 
 # Fix Issues From Review Report
@@ -28,9 +28,32 @@ Use the `todowrite` tool to create the following tasks:
 
 ## Step 1: Parse Review Report
 
-### Step 1.1: Read the report file
+### Step 1.1: Determine report path
 
-Use the Read tool to read the file at the path provided in $ARGUMENTS.
+**If `$ARGUMENTS` is provided:**
+
+1. Resolve the path from `$ARGUMENTS` relative to the project root.
+2. Reject paths that contain `..` or resolve outside the project directory.
+3. If the path is invalid, display an error and stop:
+
+   > Error: Invalid path `<path>`. Path traversal is not allowed.
+
+**If `$ARGUMENTS` is empty or not provided:**
+
+Automatically locate the most recent review report:
+
+```bash
+ls -t docs/reviews/*.md 2>/dev/null | head -1
+```
+
+- If a file is found, use it as the report path.
+- If no files are found, display an error and stop:
+
+  > Error: No saved review reports found in `docs/reviews/`. Run `/review` and save a report first, or provide a path explicitly: `/fix-report <path-to-report>`.
+
+### Step 1.2: Read the report file
+
+Use the Read tool to read the file at the determined path.
 
 **If the file does not exist or cannot be read:**
 
@@ -38,7 +61,7 @@ Display an error and stop:
 
 > Error: Could not read file `<path>`. Make sure the path is correct and the file exists.
 
-### Step 1.2: Extract issues
+### Step 1.3: Extract issues
 
 Scan the report for issue sections. Each issue starts with a heading matching this pattern:
 
@@ -50,7 +73,7 @@ Where SEVERITY is one of: CRITICAL, HIGH, MEDIUM, LOW.
 
 For each found issue section, extract the full block — everything from the `### [SEVERITY] Title` line until the next `###` heading or `---` separator or end of file.
 
-### Step 1.3: Filter out already-fixed issues
+### Step 1.4: Filter out already-fixed issues
 
 For each extracted issue, check if the block contains any of these status lines:
 
@@ -61,7 +84,7 @@ If a status line is present, **skip this issue** — it has already been handled
 
 Collect only unfixed issues (those without a `**Status:**` line).
 
-### Step 1.4: Handle edge cases
+### Step 1.5: Handle edge cases
 
 **If no issue sections found at all:**
 
@@ -141,7 +164,7 @@ For each selected issue, **sequentially** (one at a time, wait for completion):
    - subagent_type: "code-review:fix-auto"
    - run_in_background: false
    - description: "Auto-fix: [SEVERITY] Issue title"
-   - prompt: The full issue block from the report (everything extracted in Step 1.2 for this issue — including severity, title, location, category, OWASP, CWE, effort, problem, impact, remediation with code examples)
+   - prompt: The full issue block from the report (everything extracted in Step 1.3 for this issue — including severity, title, location, category, OWASP, CWE, effort, problem, impact, remediation with code examples)
 
 2. Collect the result and determine status:
    - **Fixed** — subagent report says "Fixed" and all verifications passed
