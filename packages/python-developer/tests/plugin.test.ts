@@ -8,13 +8,16 @@ describe("AppVerkPythonDeveloperPlugin", () => {
 
   it("registers agent python-developer in config", async () => {
     const plugin = await AppVerkPythonDeveloperPlugin({} as never)
-    const config = { agent: {} } as { agent?: Record<string, { description?: string; prompt?: string }> }
+    const config = { agent: {} } as {
+      agent?: Record<string, { description?: string; prompt?: string; mode?: string }>
+    }
 
     await plugin.config?.(config as never)
 
     expect(config.agent?.["python-developer"]).toBeDefined()
     expect(config.agent!["python-developer"]!.description).toContain("Python")
     expect(config.agent!["python-developer"]!.prompt).toContain("Python Developer Agent")
+    expect(config.agent!["python-developer"]!.mode).toBe("primary")
   })
 
   it("registers command /develop in config", async () => {
