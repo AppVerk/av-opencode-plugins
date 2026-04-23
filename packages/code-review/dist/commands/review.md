@@ -141,6 +141,8 @@ Use the `todowrite` tool to create progress tasks:
 - [ ] Perform performance analysis
 - [ ] Perform architecture & maintainability review
 - [ ] Collect agent results
+- [ ] Run cross-verifier and challenger
+- [ ] Merge verification results
 - [ ] Generate final report
 - [ ] Save review to file
 
@@ -196,6 +198,8 @@ Mark "Collect agent results" as completed using `todowrite`.
 ---
 
 ## Step 5.5: Verification
+
+**CRITICAL: Verification is MANDATORY. Do NOT skip cross-verifier and challenger.**
 
 Verification always runs after collecting agent results.
 
@@ -253,6 +257,8 @@ The Task tool returns results directly. Parse findings from both verification ag
 2. Add Cross-Verifier composite findings
 3. Tag confirmed findings as `[verified]`
 
+Mark "Run cross-verifier and challenger" and "Merge verification results" as completed using `todowrite`.
+
 ---
 
 ## Step 7: Assign Issue IDs
@@ -264,6 +270,8 @@ Before rendering the final report, assign unique identifiers:
 1. Collect all findings from:
    - Security auditor results
    - Code quality auditor results
+   - Cross-verifier composite findings
+   - Challenger validated findings
    - Your own performance analysis (Step 4)
    - Your own architecture/maintainability analysis (Step 5)
 
@@ -485,6 +493,13 @@ When reviewing microservices, check:
 - [ ] Linter/typecheck results integrated
 - [ ] Architecture analysis completed
 
+### Verification (MANDATORY)
+
+- [ ] cross-verifier agent launched
+- [ ] challenger agent launched
+- [ ] Verification results collected
+- [ ] Verification results merged with findings
+
 ### Completeness
 
 - [ ] Performance analysis done
@@ -505,4 +520,4 @@ When reviewing microservices, check:
 - [ ] python-developer skills loaded (if applicable)
 - [ ] Framework-specific patterns applied in agent prompts
 
-**If ANY security or quality checkbox is unchecked: STOP. Complete those steps first.**
+**If ANY security, quality, or verification checkbox is unchecked: STOP. Complete those steps first.**

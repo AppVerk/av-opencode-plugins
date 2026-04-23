@@ -42,3 +42,32 @@ describe("build output", () => {
     expect(content).toMatch(/^#/m)
   })
 })
+
+describe("review.md verification tracking", () => {
+  const reviewPath = path.resolve(distDir, "commands/review.md")
+  let content: string
+
+  beforeAll(() => {
+    content = readFileSync(reviewPath, "utf8")
+  })
+
+  it("includes verification tasks in progress tracking", () => {
+    const step3Match = content.match(/## Step 3: Track Progress.*?(?=## Step \d+:|$)/is)
+    expect(step3Match).toBeDefined()
+    expect(step3Match![0]).toMatch(/verification|cross-verifier|challenger/is)
+  })
+
+  it("includes cross-verifier in final verification checklist", () => {
+    const idx = content.indexOf("## Final Verification Checklist")
+    expect(idx).toBeGreaterThan(-1)
+    const after = content.slice(idx)
+    expect(after).toMatch(/cross-verifier/is)
+  })
+
+  it("includes challenger in final verification checklist", () => {
+    const idx = content.indexOf("## Final Verification Checklist")
+    expect(idx).toBeGreaterThan(-1)
+    const after = content.slice(idx)
+    expect(after).toMatch(/challenger/is)
+  })
+})
