@@ -80,4 +80,34 @@ describe("build output", () => {
     expect(existsSync(p)).toBe(true)
     expect(readFileSync(p, "utf8").length).toBeGreaterThan(100)
   })
+
+  it("dist/agents/skill-secret-scanner.md exists and is non-empty", () => {
+    const p = path.resolve(distDir, "agents/skill-secret-scanner.md")
+    expect(existsSync(p)).toBe(true)
+    expect(readFileSync(p, "utf8").length).toBeGreaterThan(100)
+  })
+
+  it("dist/agents/skill-sast-analyzer.md exists and is non-empty", () => {
+    const p = path.resolve(distDir, "agents/skill-sast-analyzer.md")
+    expect(existsSync(p)).toBe(true)
+    expect(readFileSync(p, "utf8").length).toBeGreaterThan(100)
+  })
+
+  it("dist/agents/skill-dependency-scanner.md exists and is non-empty", () => {
+    const p = path.resolve(distDir, "agents/skill-dependency-scanner.md")
+    expect(existsSync(p)).toBe(true)
+    expect(readFileSync(p, "utf8").length).toBeGreaterThan(100)
+  })
+
+  it("dist/agents/skill-architecture-analyzer.md exists and is non-empty", () => {
+    const p = path.resolve(distDir, "agents/skill-architecture-analyzer.md")
+    expect(existsSync(p)).toBe(true)
+    expect(readFileSync(p, "utf8").length).toBeGreaterThan(100)
+  })
+
+  it("dist/agents/skill-linter-integrator.md exists and is non-empty", () => {
+    const p = path.resolve(distDir, "agents/skill-linter-integrator.md")
+    expect(existsSync(p)).toBe(true)
+    expect(readFileSync(p, "utf8").length).toBeGreaterThan(100)
+  })
 })

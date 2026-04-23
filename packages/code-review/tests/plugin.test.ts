@@ -119,6 +119,51 @@ describe("AppVerkCodeReviewPlugin", () => {
     expect(config.agent["fix-auto"].prompt.length).toBeGreaterThan(0)
   })
 
+  it("config registers skill-secret-scanner agent", async () => {
+    const config: any = { agent: {} }
+    await pluginResult.config?.(config as never)
+    expect(config.agent["skill-secret-scanner"]).toBeDefined()
+    expect(config.agent["skill-secret-scanner"].description).toBeDefined()
+    expect(typeof config.agent["skill-secret-scanner"].prompt).toBe("string")
+    expect(config.agent["skill-secret-scanner"].prompt.length).toBeGreaterThan(0)
+  })
+
+  it("config registers skill-sast-analyzer agent", async () => {
+    const config: any = { agent: {} }
+    await pluginResult.config?.(config as never)
+    expect(config.agent["skill-sast-analyzer"]).toBeDefined()
+    expect(config.agent["skill-sast-analyzer"].description).toBeDefined()
+    expect(typeof config.agent["skill-sast-analyzer"].prompt).toBe("string")
+    expect(config.agent["skill-sast-analyzer"].prompt.length).toBeGreaterThan(0)
+  })
+
+  it("config registers skill-dependency-scanner agent", async () => {
+    const config: any = { agent: {} }
+    await pluginResult.config?.(config as never)
+    expect(config.agent["skill-dependency-scanner"]).toBeDefined()
+    expect(config.agent["skill-dependency-scanner"].description).toBeDefined()
+    expect(typeof config.agent["skill-dependency-scanner"].prompt).toBe("string")
+    expect(config.agent["skill-dependency-scanner"].prompt.length).toBeGreaterThan(0)
+  })
+
+  it("config registers skill-architecture-analyzer agent", async () => {
+    const config: any = { agent: {} }
+    await pluginResult.config?.(config as never)
+    expect(config.agent["skill-architecture-analyzer"]).toBeDefined()
+    expect(config.agent["skill-architecture-analyzer"].description).toBeDefined()
+    expect(typeof config.agent["skill-architecture-analyzer"].prompt).toBe("string")
+    expect(config.agent["skill-architecture-analyzer"].prompt.length).toBeGreaterThan(0)
+  })
+
+  it("config registers skill-linter-integrator agent", async () => {
+    const config: any = { agent: {} }
+    await pluginResult.config?.(config as never)
+    expect(config.agent["skill-linter-integrator"]).toBeDefined()
+    expect(config.agent["skill-linter-integrator"].description).toBeDefined()
+    expect(typeof config.agent["skill-linter-integrator"].prompt).toBe("string")
+    expect(config.agent["skill-linter-integrator"].prompt.length).toBeGreaterThan(0)
+  })
+
   it("does not register any custom tools", async () => {
     const config: any = { command: {}, agent: {} }
     await pluginResult.config?.(config as never)

@@ -20,6 +20,11 @@ var FIX_REPORT_COMMAND_TEMPLATE = loadMarkdownFile("commands/fix-report.md");
 var FIX_AUTO_PROMPT = loadMarkdownFile("agents/fix-auto.md");
 var ANALYZE_FEEDBACK_COMMAND_TEMPLATE = loadMarkdownFile("commands/analyze-feedback.md");
 var FEEDBACK_ANALYZER_PROMPT = loadMarkdownFile("agents/feedback-analyzer.md");
+var SECRET_SCANNER_PROMPT = loadMarkdownFile("agents/skill-secret-scanner.md");
+var SAST_ANALYZER_PROMPT = loadMarkdownFile("agents/skill-sast-analyzer.md");
+var DEPENDENCY_SCANNER_PROMPT = loadMarkdownFile("agents/skill-dependency-scanner.md");
+var ARCHITECTURE_ANALYZER_PROMPT = loadMarkdownFile("agents/skill-architecture-analyzer.md");
+var LINTER_INTEGRATOR_PROMPT = loadMarkdownFile("agents/skill-linter-integrator.md");
 var SECURITY_AUDITOR_DESCRIPTION = "Expert security auditor for comprehensive code security analysis including secret scanning, SAST, dependency scanning, and OWASP compliance.";
 var CODE_QUALITY_AUDITOR_DESCRIPTION = "Expert code quality auditor for architecture, design patterns, SOLID/DDD compliance, and maintainability analysis.";
 var DOCUMENTATION_AUDITOR_DESCRIPTION = "Documentation auditor that verifies code changes are reflected in project documentation.";
@@ -31,6 +36,11 @@ var FIX_REPORT_COMMAND_DESCRIPTION = "Parse a saved review report, present issue
 var FIX_AUTO_DESCRIPTION = "Auto-fix subagent for code review issues. Performs analysis, implementation, verification, and reporting without user confirmation.";
 var ANALYZE_FEEDBACK_COMMAND_DESCRIPTION = "Analyze PR feedback comments, classify them, and generate response drafts.";
 var FEEDBACK_ANALYZER_DESCRIPTION = "Analyze single PR comment for validity and generate response if needed.";
+var SECRET_SCANNER_DESCRIPTION = "Detects and handles sensitive information in code. Use when reviewing code for secret leaks and hard-coded credentials.";
+var SAST_ANALYZER_DESCRIPTION = "Static Application Security Testing (SAST) for multi-language codebases. Uses Semgrep and language-specific tools.";
+var DEPENDENCY_SCANNER_DESCRIPTION = "Scans project dependencies for known vulnerabilities (CVEs). Supports Python, JavaScript, Go, Java, and more.";
+var ARCHITECTURE_ANALYZER_DESCRIPTION = "Analyzes codebase for SOLID principles violations, DDD patterns compliance, Clean Architecture layer dependencies, and anti-patterns.";
+var LINTER_INTEGRATOR_DESCRIPTION = "Auto-detects and runs project-specific linters, formatters, and typecheckers. Supports Python and TypeScript.";
 var AppVerkCodeReviewPlugin = async () => {
   return {
     config: async (config) => {
@@ -79,6 +89,26 @@ var AppVerkCodeReviewPlugin = async () => {
       config.command["analyze-feedback"] = {
         description: ANALYZE_FEEDBACK_COMMAND_DESCRIPTION,
         template: ANALYZE_FEEDBACK_COMMAND_TEMPLATE
+      };
+      config.agent["skill-secret-scanner"] = {
+        description: SECRET_SCANNER_DESCRIPTION,
+        prompt: SECRET_SCANNER_PROMPT
+      };
+      config.agent["skill-sast-analyzer"] = {
+        description: SAST_ANALYZER_DESCRIPTION,
+        prompt: SAST_ANALYZER_PROMPT
+      };
+      config.agent["skill-dependency-scanner"] = {
+        description: DEPENDENCY_SCANNER_DESCRIPTION,
+        prompt: DEPENDENCY_SCANNER_PROMPT
+      };
+      config.agent["skill-architecture-analyzer"] = {
+        description: ARCHITECTURE_ANALYZER_DESCRIPTION,
+        prompt: ARCHITECTURE_ANALYZER_PROMPT
+      };
+      config.agent["skill-linter-integrator"] = {
+        description: LINTER_INTEGRATOR_DESCRIPTION,
+        prompt: LINTER_INTEGRATOR_PROMPT
       };
     }
   };

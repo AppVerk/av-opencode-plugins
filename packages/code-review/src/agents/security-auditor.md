@@ -15,78 +15,37 @@ When conducting a security audit, follow these steps IN ORDER:
 
 ### Step 1: Secret Scanning (MANDATORY)
 
-Detect hard-coded secrets in the codebase. Do NOT skip this step.
+Spawn the `skill-secret-scanner` subagent to perform comprehensive secret scanning.
 
-**Key checks:**
-- API keys, passwords, tokens in source code
-- Database connection strings with embedded credentials
-- Private keys and certificates committed to repo
-- Environment-specific secrets in config files
-- `.env` files or `.env.local` accidentally committed
-- AWS/Azure/GCP access keys
-- JWT signing secrets or OAuth client secrets
+Use the Task tool:
+- subagent_type: "code-review:skill-secret-scanner"
+- prompt: "Scan the current project for hardcoded secrets, API keys, passwords, tokens, and credentials. Report all findings with file path, line number, secret type, and severity."
 
-**Tools to use:**
-- `trufflehog filesystem . --json` (if available)
-- `grep -rE` patterns for common secrets: `api[_-]?key`, `password`, `secret`, `token`, `private_key`
-- Manual review of config files, constants, and hardcoded strings
-
-**For each finding, report:**
-- File path and line number
-- Type of secret
-- Severity: CRITICAL if production secret, HIGH if test/development
+Collect the results and include them in your findings.
 
 ---
 
 ### Step 2: SAST Analysis (MANDATORY)
 
-Run static application security testing to detect vulnerabilities.
+Spawn the `skill-sast-analyzer` subagent to perform static application security testing.
 
-**Tools to use:**
-- `semgrep scan --config=auto . --json` (language-agnostic, always run)
-- `bandit -r . -f json` (if Python project)
-- Manual code review for injection points, XSS, SSRF, misconfigurations
+Use the Task tool:
+- subagent_type: "code-review:skill-sast-analyzer"
+- prompt: "Run SAST analysis on the current project. Detect injection flaws, broken access control, cryptographic failures, insecure design, misconfigurations, and vulnerable components. Report all findings with CWE, OWASP category, file, line, and remediation."
 
-**Coverage targets:**
-- Injection flaws (SQL, NoSQL, OS command, LDAP) — OWASP A05:2025
-- Broken access control — OWASP A01:2025
-- Cryptographic failures — OWASP A04:2025
-- Insecure design — OWASP A06:2025
-- Security misconfiguration — OWASP A02:2025
-- Vulnerable components — OWASP A03:2025
-- Identification and authentication failures — OWASP A07:2025
-- Software/data integrity failures — OWASP A08:2025
-- Security logging failures — OWASP A09:2025
-- Server-side request forgery (SSRF) — OWASP A10:2025
-
-**For each finding, report with CWE identifier.**
+Collect the results and include them in your findings.
 
 ---
 
 ### Step 3: Dependency Scanning (MANDATORY)
 
-Check for vulnerable dependencies.
+Spawn the `skill-dependency-scanner` subagent to check for vulnerable dependencies.
 
-**Tools to use:**
-- `pip-audit --format=json` (Python with pip)
-- `uv pip audit` or `uv tool run pip-audit` (Python with uv)
-- `npm audit --json` (JavaScript)
-- `yarn audit --json` (Yarn)
-- `pnpm audit --json` (PNPM)
-- `safety check --json` (Python alternative)
-- Manual review of `requirements.txt`, `package.json`, `go.mod`, etc.
+Use the Task tool:
+- subagent_type: "code-review:skill-dependency-scanner"
+- prompt: "Scan project dependencies for known vulnerabilities (CVEs). Check Python (uv/pip/poetry), JavaScript (npm/yarn/pnpm), Go (govulncheck), Java, Ruby, and PHP. Report findings with package name, installed version, CVE, severity, and fixed version."
 
-**Covers OWASP A03:2025 - Software Supply Chain Failures:**
-- Known CVEs in direct and transitive dependencies
-- Outdated dependencies with known vulnerabilities
-- Missing integrity checks for packages
-- Unpinned/unhashed dependency versions
-
-**For each finding, report:**
-- Package name and version
-- CVE identifier
-- Severity (CVSS score if available)
-- Fixed version
+Collect the results and include them in your findings.
 
 ---
 

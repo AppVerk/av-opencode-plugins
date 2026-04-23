@@ -34,6 +34,54 @@ Find project coding standards. Do NOT skip this step.
 - `CLAUDE.md` or `.claude/` project-specific instructions
 - `.editorconfig`, `.prettierrc`, `pyproject.toml` tool configs
 
+**Discovery workflow:**
+
+1. Search for standards files:
+   ```bash
+   find . -type f \( \
+     -iname "CONTRIBUTING*" -o \
+     -iname "CODING*STANDARD*" -o \
+     -iname "STYLE*GUIDE*" -o \
+     -iname "CODE*STYLE*" -o \
+     -iname "CONVENTIONS*" -o \
+     -iname "ARCHITECTURE*" -o \
+     -iname "GUIDELINES*" -o \
+     -iname "DEVELOPMENT*" -o \
+     -iname "STANDARDS*" \
+   \) -not -path "./.git/*" -not -path "./node_modules/*" -not -path "./.venv/*" -not -path "./vendor/*" 2>/dev/null
+   ```
+
+2. Check common locations:
+   - `CONTRIBUTING.md` — HIGH priority
+   - `docs/ARCHITECTURE.md` — HIGH priority
+   - `docs/CODING_STANDARDS.md` — HIGH priority
+   - `README.md` — LOW priority
+
+3. Parse README for standards section:
+   ```bash
+   grep -n -i -A 20 "## Development\|## Contributing\|## Code Style\|## Standards\|## Guidelines" README.md 2>/dev/null
+   ```
+
+4. Search for naming conventions:
+   ```bash
+   grep -rni "naming convention\|camelCase\|snake_case\|PascalCase\|kebab-case\|UPPER_CASE" --include="*.md" . 2>/dev/null
+   ```
+
+5. Search for architecture mentions:
+   ```bash
+   grep -rni "clean architecture\|hexagonal\|DDD\|domain.driven\|layered\|SOLID" --include="*.md" . 2>/dev/null
+   ```
+
+6. Search for testing requirements:
+   ```bash
+   grep -rni "test coverage\|unit test\|integration test\|pytest\|jest\|testing" --include="*.md" . 2>/dev/null
+   ```
+
+7. Search for import rules:
+   ```bash
+   grep -rni "import\|absolute import\|relative import\|circular\|dependency" --include="*.md" . 2>/dev/null
+   ```
+
 **Project-specific rules always override generic best practices.**
 
 **Record discovered standards** and reference them in all subsequent analysis.
@@ -42,44 +90,25 @@ Find project coding standards. Do NOT skip this step.
 
 ### Step 2: Linter Integration (MANDATORY)
 
-Run project linters and typecheckers. Do NOT proceed without linter results.
+Spawn the `skill-linter-integrator` subagent to run project linters and typecheckers.
 
-**Tools to run:**
-- Python: `ruff check .` (with `pyproject.toml` config), `mypy .` (or `basedpyright`), `black --check .` (if configured)
-- JavaScript/TypeScript: `eslint .`, `tsc --noEmit`, `prettier --check .`
-- Go: `go vet ./...`, `gofmt -d .`
-- Rust: `cargo clippy`, `cargo fmt --check`
+Use the Task tool:
+- subagent_type: "code-review:skill-linter-integrator"
+- prompt: "Run all project-configured linters and typecheckers. Detect Python (ruff, mypy, black, flake8, pylint) and TypeScript (eslint, tsc, prettier). Use existing project configuration files. Report all findings with file, line, severity, rule, and message."
 
-**For each linter:**
-- Use project configuration files, not defaults
-- Record top issues by frequency
-- Identify blocking errors (not just warnings)
-- Note config files used
-
-**DO NOT proceed without linter results.**
+Collect the results and include them in your findings.
 
 ---
 
 ### Step 3: Architecture Analysis (MANDATORY)
 
-Perform design pattern verification.
+Spawn the `skill-architecture-analyzer` subagent to perform design pattern verification.
 
-**Covers:**
-- **SOLID Principles** - SRP, OCP, LSP, ISP, DIP violations
-- **DDD Patterns** - Aggregates, Value Objects, Repositories, Domain Services
-- **Clean Architecture** - Layer boundaries, dependency direction
-- **Anti-patterns** - God Objects, Circular Dependencies, Deep Inheritance
+Use the Task tool:
+- subagent_type: "code-review:skill-architecture-analyzer"
+- prompt: "Analyze the codebase for SOLID principles violations, DDD patterns compliance, Clean Architecture layer dependencies, and common anti-patterns (God Objects, Circular Dependencies, Deep Inheritance). Report findings with severity, principle, file, line, remediation, and code examples."
 
-**Checklist:**
-- [ ] Single Responsibility: each class/module has one reason to change
-- [ ] Open/Closed: extend behavior without modifying existing code
-- [ ] Liskov Substitution: subclasses don't break parent contracts
-- [ ] Interface Segregation: clients don't depend on unused methods
-- [ ] Dependency Inversion: high-level modules don't depend on low-level details
-- [ ] Layer boundaries: domain doesn't import infrastructure
-- [ ] No God Objects: no class >500 LOC with >20 methods
-- [ ] No circular imports/dependencies
-- [ ] Inheritance depth ≤ 3
+Collect the results and include them in your findings.
 
 ---
 

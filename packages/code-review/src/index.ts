@@ -23,6 +23,11 @@ const FIX_REPORT_COMMAND_TEMPLATE = loadMarkdownFile("commands/fix-report.md")
 const FIX_AUTO_PROMPT = loadMarkdownFile("agents/fix-auto.md")
 const ANALYZE_FEEDBACK_COMMAND_TEMPLATE = loadMarkdownFile("commands/analyze-feedback.md")
 const FEEDBACK_ANALYZER_PROMPT = loadMarkdownFile("agents/feedback-analyzer.md")
+const SECRET_SCANNER_PROMPT = loadMarkdownFile("agents/skill-secret-scanner.md")
+const SAST_ANALYZER_PROMPT = loadMarkdownFile("agents/skill-sast-analyzer.md")
+const DEPENDENCY_SCANNER_PROMPT = loadMarkdownFile("agents/skill-dependency-scanner.md")
+const ARCHITECTURE_ANALYZER_PROMPT = loadMarkdownFile("agents/skill-architecture-analyzer.md")
+const LINTER_INTEGRATOR_PROMPT = loadMarkdownFile("agents/skill-linter-integrator.md")
 
 const SECURITY_AUDITOR_DESCRIPTION =
   "Expert security auditor for comprehensive code security analysis including secret scanning, SAST, dependency scanning, and OWASP compliance."
@@ -56,6 +61,21 @@ const ANALYZE_FEEDBACK_COMMAND_DESCRIPTION =
 
 const FEEDBACK_ANALYZER_DESCRIPTION =
   "Analyze single PR comment for validity and generate response if needed."
+
+const SECRET_SCANNER_DESCRIPTION =
+  "Detects and handles sensitive information in code. Use when reviewing code for secret leaks and hard-coded credentials."
+
+const SAST_ANALYZER_DESCRIPTION =
+  "Static Application Security Testing (SAST) for multi-language codebases. Uses Semgrep and language-specific tools."
+
+const DEPENDENCY_SCANNER_DESCRIPTION =
+  "Scans project dependencies for known vulnerabilities (CVEs). Supports Python, JavaScript, Go, Java, and more."
+
+const ARCHITECTURE_ANALYZER_DESCRIPTION =
+  "Analyzes codebase for SOLID principles violations, DDD patterns compliance, Clean Architecture layer dependencies, and anti-patterns."
+
+const LINTER_INTEGRATOR_DESCRIPTION =
+  "Auto-detects and runs project-specific linters, formatters, and typecheckers. Supports Python and TypeScript."
 
 export const AppVerkCodeReviewPlugin: Plugin = async () => {
   return {
@@ -108,6 +128,27 @@ export const AppVerkCodeReviewPlugin: Plugin = async () => {
       config.command["analyze-feedback"] = {
         description: ANALYZE_FEEDBACK_COMMAND_DESCRIPTION,
         template: ANALYZE_FEEDBACK_COMMAND_TEMPLATE,
+      }
+
+      config.agent["skill-secret-scanner"] = {
+        description: SECRET_SCANNER_DESCRIPTION,
+        prompt: SECRET_SCANNER_PROMPT,
+      }
+      config.agent["skill-sast-analyzer"] = {
+        description: SAST_ANALYZER_DESCRIPTION,
+        prompt: SAST_ANALYZER_PROMPT,
+      }
+      config.agent["skill-dependency-scanner"] = {
+        description: DEPENDENCY_SCANNER_DESCRIPTION,
+        prompt: DEPENDENCY_SCANNER_PROMPT,
+      }
+      config.agent["skill-architecture-analyzer"] = {
+        description: ARCHITECTURE_ANALYZER_DESCRIPTION,
+        prompt: ARCHITECTURE_ANALYZER_PROMPT,
+      }
+      config.agent["skill-linter-integrator"] = {
+        description: LINTER_INTEGRATOR_DESCRIPTION,
+        prompt: LINTER_INTEGRATOR_PROMPT,
       }
     },
   }

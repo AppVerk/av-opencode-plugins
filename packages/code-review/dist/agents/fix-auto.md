@@ -120,7 +120,18 @@ Before proceeding, detect the project tech stack:
    Call the tool `load_python_skill` with name `<skill-name>`
    ```
 
-3. Store the list of successfully loaded skills in `skills_to_load`.
+3. Check for Frontend project markers:
+   - `package.json` exists and contains `"react"` in dependencies
+   - `tsconfig.json` exists
+
+4. If Frontend detected, note frameworks for later reference:
+   - tailwindcss, zustand, tanstack query, react hook form, pnpm
+
+5. Check for PHP project markers:
+   - `composer.json` exists
+   - `symfony.lock` exists
+
+6. Store the list of successfully loaded skills in `skills_to_load`.
 
 **Graceful degradation:** If `load_python_skill` is unavailable, or no Python is detected, set `skills_to_load = []` and proceed normally. Stack detection is additive only.
 
