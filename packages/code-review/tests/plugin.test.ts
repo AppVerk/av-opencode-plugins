@@ -44,6 +44,7 @@ describe("AppVerkCodeReviewPlugin", () => {
     expect(config.agent[name].description).toBeDefined()
     expect(typeof config.agent[name].prompt).toBe("string")
     expect(config.agent[name].prompt.length).toBeGreaterThan(0)
+    expect(config.agent[name].mode).toBe("subagent")
   })
 
   it.each(EXPECTED_COMMANDS)("config registers %s command", async (name) => {
