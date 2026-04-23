@@ -17,6 +17,9 @@
   "dependencies": {
     "@opencode-ai/plugin": "^1.14.19"
   },
+  "overrides": {
+    "uuid": ">=14.0.0"
+  },
   "scripts": {
     "build": "npm run build --workspace @appverk/opencode-commit && npm run build --workspace @appverk/opencode-python-developer && npm run build --workspace @appverk/opencode-code-review",
     "test": "vitest run --config vitest.config.ts && npm run test --workspace @appverk/opencode-commit && npm run test --workspace @appverk/opencode-python-developer && npm run test --workspace @appverk/opencode-code-review",
