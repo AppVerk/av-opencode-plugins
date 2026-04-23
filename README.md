@@ -6,7 +6,7 @@ OpenCode plugin packages for AppVerk. The root plugin loads the AppVerk plugin b
 
 - A **controlled commit workflow** (`/commit`) that enforces AppVerk git policies.
 - A **Python development workflow** (`/develop`) with TDD, coding standards, and stack-specific patterns (FastAPI, Django, Celery, SQLAlchemy, Pydantic).
-- A **code review workflow** (`/review`) with parallel security and quality audits, python-developer integration, and structured issue tracking.
+- A **code review workflow** (`/review`) with parallel security and quality audits, verification agents, fix commands, feedback analysis, and skill-agent integration.
 
 ## Installation
 
@@ -70,11 +70,42 @@ Run a comprehensive code review with parallel security and quality audits:
 
 The `/review` command:
 
-1. Detects your project stack and loads relevant skills
-2. Launches `security-auditor` and `code-quality-auditor` agents in parallel
-3. Aggregates findings with unique issue IDs (SEC-001, ARCH-001, etc.)
-4. Generates a structured markdown report
-5. Optionally saves to `docs/reviews/YYYY-MM-DD-<branch>.md`
+1. Detects your project stack and loads relevant skills (Python, Frontend, PHP)
+2. Launches `security-auditor`, `code-quality-auditor`, and optionally `documentation-auditor` agents in parallel
+3. Runs verification agents (`cross-verifier`, `challenger`) to validate findings
+4. Aggregates findings with unique issue IDs (SEC-001, ARCH-001, etc.)
+5. Generates a structured markdown report
+6. Optionally saves to `docs/reviews/YYYY-MM-DD-<branch>.md`
+
+### Fix commands
+
+Fix a single issue by ID from a saved report:
+
+```text
+/fix SEC-001
+```
+
+Or paste the full issue block directly:
+
+```text
+/fix [paste issue block from /review]
+```
+
+Batch-fix issues from a saved report:
+
+```text
+/fix-report docs/reviews/2026-04-22-feature-auth.md
+```
+
+### Feedback analysis
+
+Analyze PR comments and generate response drafts:
+
+```text
+/analyze-feedback 123
+```
+
+Classifies each comment as "Address" or "Reject" and optionally publishes responses via GitHub CLI.
 
 ## Available Commands & Agents
 
@@ -82,10 +113,18 @@ The `/review` command:
 |-----------------|-------------|------|
 | `/commit` | Controlled commit workflow — Conventional Commit messages, bash-level blocking for direct `git commit`/`git push`. | [Guide](docs/plugins/commit.md) |
 | `/develop` | Python development workflow — TDD, coding standards, and stack-specific patterns (FastAPI, Django, Celery, SQLAlchemy). | [Guide](docs/plugins/python-developer.md) |
-| `/review` | Code review workflow — parallel security and quality audits with issue IDs and structured reports. | [Guide](docs/plugins/code-review.md) |
+| `/review` | Code review workflow — parallel security, quality, and documentation audits with verification and structured reports. | [Guide](docs/plugins/code-review.md) |
+| `/fix` | Fix a single issue by ID or pasted issue block from a saved review report. | [Guide](docs/plugins/code-review.md) |
+| `/fix-report` | Batch-fix issues from a saved review report with interactive selection. | [Guide](docs/plugins/code-review.md) |
+| `/analyze-feedback` | Analyze PR feedback comments, classify validity, and generate response drafts. | [Guide](docs/plugins/code-review.md) |
 | `@python-developer` | Direct agent invocation for Python tasks outside of `/develop`. | [Guide](docs/plugins/python-developer.md) |
-| `@security-auditor` | Direct agent invocation for security audits. | [Guide](docs/plugins/code-review.md) |
-| `@code-quality-auditor` | Direct agent invocation for code quality audits. | [Guide](docs/plugins/code-review.md) |
+| `@security-auditor` | Direct agent invocation for security audits with skill-agent delegation. | [Guide](docs/plugins/code-review.md) |
+| `@code-quality-auditor` | Direct agent invocation for code quality audits with skill-agent delegation. | [Guide](docs/plugins/code-review.md) |
+| `@documentation-auditor` | Documentation audit agent — verifies code changes are reflected in docs. | [Guide](docs/plugins/code-review.md) |
+| `@cross-verifier` | Cross-domain correlation agent — finds intersections between findings. | [Guide](docs/plugins/code-review.md) |
+| `@challenger` | Adversarial review agent — challenges findings for false positives. | [Guide](docs/plugins/code-review.md) |
+| `@feedback-analyzer` | Per-comment classification agent for PR feedback analysis. | [Guide](docs/plugins/code-review.md) |
+| `@fix-auto` | Auto-fix subagent — performs fixes without user confirmation. | [Guide](docs/plugins/code-review.md) |
 
 ## Repository Structure
 

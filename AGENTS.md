@@ -9,7 +9,7 @@ This is an **OpenCode plugin monorepo** that bundles multiple workspace plugins:
 | `src/index.js` + `src/index.d.ts` | **Published root entrypoint** — loads built outputs from all packages and merges their tools/hooks. |
 | `packages/commit` | Commit plugin source, tests, build scripts. Output shipped at `packages/commit/dist/`. |
 | `packages/python-developer` | Python-developer plugin source, tests, skills, build scripts. Output shipped at `packages/python-developer/dist/`. |
-| `packages/code-review` | Code-review plugin source, tests, agent prompts, build scripts. Output shipped at `packages/code-review/dist/`. |
+| `packages/code-review` | Code-review plugin source, tests, agent prompts, command templates, skill-agents, build scripts. Output shipped at `packages/code-review/dist/`. |
 | `.opencode/` | Local OpenCode config for this repo (separate `package.json`). |
 
 **Important:** `dist/` is usually ignored, but `packages/*/dist/` is **committed and published** (see `.gitignore`). Do not delete those `dist/` trees.

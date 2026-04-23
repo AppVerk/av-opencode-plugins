@@ -20,14 +20,46 @@ Example:
 ```
 
 The command:
-1. Detects your project stack (Python, JavaScript, etc.)
+1. Detects your project stack (Python, Frontend, PHP)
 2. Loads relevant `python-developer` skills for framework-specific checks (if Python)
-3. Launches two agents in parallel:
-   - **security-auditor** — secret scanning, SAST, dependency scanning, threat modeling
-   - **code-quality-auditor** — standards discovery, linter integration, architecture analysis
-4. Aggregates findings, assigns issue IDs (SEC-001, ARCH-001, etc.)
-5. Generates a structured markdown report
-6. Optionally saves to `docs/reviews/YYYY-MM-DD-<branch>.md`
+3. Launches agents in parallel:
+   - **security-auditor** — delegates to skill-agents for secret scanning, SAST, and dependency scanning
+   - **code-quality-auditor** — delegates to skill-agents for linter integration and architecture analysis
+   - **documentation-auditor** — verifies code changes are reflected in docs (if documentation detected)
+4. Runs verification agents:
+   - **cross-verifier** — finds correlations between security, quality, and documentation findings
+   - **challenger** — challenges CRITICAL/HIGH findings for false positives
+5. Aggregates findings, assigns issue IDs (SEC-001, ARCH-001, etc.)
+6. Generates a structured markdown report
+7. Optionally saves to `docs/reviews/YYYY-MM-DD-<branch>.md`
+
+### Fix single issue
+
+```text
+/fix SEC-001
+```
+
+Or paste the full issue block:
+
+```text
+/fix [paste issue block]
+```
+
+### Batch fix from report
+
+```text
+/fix-report docs/reviews/2026-04-22-feature-auth.md
+```
+
+Presents issues as a checklist, fixes selected ones via `fix-auto` subagent, and marks them resolved.
+
+### Analyze PR feedback
+
+```text
+/analyze-feedback 123
+```
+
+Fetches review comments from PR #123, classifies each as "Address" or "Reject", and generates draft responses for rejected feedback. Optionally publishes responses via GitHub CLI.
 
 ## Direct Agent Use
 
@@ -36,6 +68,11 @@ You can also invoke the agents directly:
 ```bash
 opencode agent security-auditor "Audit the payment module for vulnerabilities"
 opencode agent code-quality-auditor "Review the user service for SOLID violations"
+opencode agent documentation-auditor "Check if API changes are documented"
+opencode agent cross-verifier "Correlate security and architecture findings"
+opencode agent challenger "Challenge HIGH severity findings for false positives"
+opencode agent feedback-analyzer "Evaluate this PR comment for validity"
+opencode agent fix-auto "Fix this issue block without asking for confirmation"
 ```
 
 ## What Gets Reviewed
@@ -77,35 +114,86 @@ Every issue includes:
 
 ## Architecture
 
-The plugin registers three elements through its `config` hook:
+The plugin registers the following elements through its `config` hook:
+
+### Commands
 
 | Element | OpenCode Mechanism | Purpose |
 |---|---|---|
-| `agent.security-auditor` | `config.agent` | Security-focused agent prompt with OWASP checklist, secret scanning, SAST, and dependency scanning instructions. |
-| `agent.code-quality-auditor` | `config.agent` | Quality-focused agent prompt with standards discovery, linter integration, architecture analysis, and design review instructions. |
-| `command.review` | `config.command` | Orchestrates stack detection, parallel agent dispatch, result aggregation, ID assignment, and report formatting. |
+| `command.review` | `config.command` | Orchestrates stack detection, parallel agent dispatch, verification, result aggregation, ID assignment, and report formatting. |
+| `command.fix` | `config.command` | Fixes a single issue by ID lookup or pasted issue block. Performs analysis, proposal, implementation, verification, and reporting. |
+| `command.fix-report` | `config.command` | Parses a saved review report, presents issues as a checklist, fixes selected issues via `fix-auto` subagent, and marks them resolved. |
+| `command.analyze-feedback` | `config.command` | Fetches PR comments, classifies each via `feedback-analyzer` subagent, generates report with draft responses, optionally publishes to GitHub. |
+
+### Primary Agents
+
+| Element | OpenCode Mechanism | Purpose |
+|---|---|---|
+| `agent.security-auditor` | `config.agent` | Security-focused agent prompt. Delegates secret scanning, SAST, and dependency scanning to skill-agents via Task tool. Performs AI threat modeling and framework-specific checks. |
+| `agent.code-quality-auditor` | `config.agent` | Quality-focused agent prompt. Performs inline standards-discovery. Delegates linter integration and architecture analysis to skill-agents via Task tool. |
+| `agent.documentation-auditor` | `config.agent` | Documentation audit agent. Detects project docs, maps code changes to documentation, and flags outdated or missing entries. |
+
+### Verification Agents
+
+| Element | OpenCode Mechanism | Purpose |
+|---|---|---|
+| `agent.cross-verifier` | `config.agent` | Cross-domain correlation agent. Finds intersections between security, quality, and documentation findings. |
+| `agent.challenger` | `config.agent` | Adversarial review agent. Challenges CRITICAL/HIGH findings for false positives and validates severity levels. |
+
+### Subagents
+
+| Element | OpenCode Mechanism | Purpose |
+|---|---|---|
+| `agent.feedback-analyzer` | `config.agent` | Per-comment classification agent. Analyzes a single PR comment for validity and generates a draft response if rejected. |
+| `agent.fix-auto` | `config.agent` | Auto-fix subagent. Performs analysis, implementation, verification, and reporting without user confirmation. Invoked by `/fix-report`. |
+
+### Skill-Agents
+
+Skill-agents are dedicated subagents for heavy analysis tasks, invoked by primary agents via the Task tool:
+
+| Element | OpenCode Mechanism | Purpose |
+|---|---|---|
+| `agent.skill-secret-scanner` | `config.agent` | Detects hardcoded secrets, API keys, passwords, and credentials. Uses trufflehog and fallback pattern matching. |
+| `agent.skill-sast-analyzer` | `config.agent` | Multi-language static application security testing. Uses Semgrep, Bandit, ESLint, and pattern matching. |
+| `agent.skill-dependency-scanner` | `config.agent` | Scans dependencies for known CVEs. Supports Python (uv/pip/poetry), JavaScript, Go, Java, Ruby, PHP. |
+| `agent.skill-architecture-analyzer` | `config.agent` | Analyzes SOLID principles, DDD patterns, Clean Architecture boundaries, and anti-patterns. |
+| `agent.skill-linter-integrator` | `config.agent` | Auto-detects and runs project-configured linters and typecheckers. Supports Python and TypeScript. |
 
 ### How Agents Work
 
-1. The `/review` command starts by detecting the project tech stack.
+1. The `/review` command starts by detecting the project tech stack (Python, Frontend, PHP).
 2. If Python is detected, it loads relevant `python-developer` skills via the `load_python_skill` tool.
-3. It launches `security-auditor` and `code-quality-auditor` agents in parallel via the `task` tool.
-4. Each agent runs its full audit workflow independently.
-5. Results are collected directly from the `task` tool output.
-6. The command aggregates all findings, assigns category-prefixed IDs, and formats the final report.
+3. It launches primary agents in parallel via the `task` tool.
+4. Primary agents delegate heavy analysis to skill-agents via the Task tool (e.g., `security-auditor` spawns `skill-secret-scanner`).
+5. After collecting results, verification agents (`cross-verifier`, `challenger`) validate findings.
+6. Results are aggregated, false positives removed, composite findings added.
+7. The command assigns category-prefixed IDs and formats the final report.
 
 ## Limitations
 
-- **MVP scope:** Only `/review` is implemented. `/fix`, `/fix-report`, and `/analyze-feedback` are planned for v2.
-- **No verification phase:** Cross-Verifier and Challenger agents (false-positive detection) are planned for v2.
-- **No Documentation Auditor:** Documentation review is planned for v2.
-- **Python-only framework integration:** Frontend-developer skill integration is planned for v2.
-- Agents return findings as text; the command parses them from `task` output. Complex reports may require manual verification of ID assignment.
+- **Skill-agent dependency:** Primary agents require skill-agents to be registered. If a skill-agent is missing, the primary agent falls back to manual instructions.
+- **Agent output parsing:** Agents return findings as text; the command parses them from Task output. Complex reports may require manual verification of ID assignment.
+- **No persistent state:** Issue status tracking (fixed/partially-fixed) relies on markdown report files. No database or external state.
+- **GitHub CLI required:** `/analyze-feedback` requires `gh` CLI installed and authenticated.
+- **Frontend/PHP skills:** Stack detection recognizes Frontend and PHP projects, but dedicated skill loading (like `load_python_skill`) is not yet implemented for these stacks.
 
 ## Project Structure
 
 - `src/index.ts` — Plugin entry point (config hook registration)
 - `src/commands/review.md` — `/review` command template
-- `src/agents/security-auditor.md` — Security auditor agent prompt
-- `src/agents/code-quality-auditor.md` — Code quality auditor agent prompt
+- `src/commands/fix.md` — `/fix` command template
+- `src/commands/fix-report.md` — `/fix-report` command template
+- `src/commands/analyze-feedback.md` — `/analyze-feedback` command template
+- `src/agents/security-auditor.md` — Security auditor agent prompt (delegates to skill-agents)
+- `src/agents/code-quality-auditor.md` — Code quality auditor agent prompt (delegates to skill-agents)
+- `src/agents/documentation-auditor.md` — Documentation auditor agent prompt
+- `src/agents/cross-verifier.md` — Cross-verifier agent prompt
+- `src/agents/challenger.md` — Challenger agent prompt
+- `src/agents/feedback-analyzer.md` — Feedback analyzer subagent prompt
+- `src/agents/fix-auto.md` — Auto-fix subagent prompt
+- `src/agents/skill-secret-scanner.md` — Secret scanning skill-agent
+- `src/agents/skill-sast-analyzer.md` — SAST analysis skill-agent
+- `src/agents/skill-dependency-scanner.md` — Dependency scanning skill-agent
+- `src/agents/skill-architecture-analyzer.md` — Architecture analysis skill-agent
+- `src/agents/skill-linter-integrator.md` — Linter integration skill-agent
 - `scripts/copy-assets.mjs` — Build step that copies markdown files to `dist/`
