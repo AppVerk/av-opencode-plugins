@@ -24,7 +24,7 @@ npm run check          # typecheck + test + build
 # Individual steps
 npm run typecheck      # tsc --noEmit at root + each workspace
 npm run test           # vitest at root + each workspace
-npm run build          # tsup ESM + DTS for both packages
+npm run build          # tsup ESM + DTS for all packages
 ```
 
 ### Per-package commands

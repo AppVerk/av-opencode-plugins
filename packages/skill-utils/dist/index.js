@@ -1,8 +1,4 @@
 // src/index.ts
-import path3 from "path";
-import { fileURLToPath as fileURLToPath2 } from "url";
-
-// ../skill-utils/dist/index.js
 import { readFileSync } from "fs";
 import path from "path";
 import { tool } from "@opencode-ai/plugin";
@@ -36,15 +32,15 @@ function createLazyFileLoader(packaged, source) {
   };
 }
 function createSkillLoader(options) {
-  const { namespace, availableSkills, moduleDirectory: moduleDirectory3 } = options;
+  const { namespace, availableSkills, moduleDirectory } = options;
   const skillCache = /* @__PURE__ */ new Map();
   function loadSkillContent(name) {
     const candidates = [
-      path.resolve(moduleDirectory3, "skills", `${name}.md`),
+      path.resolve(moduleDirectory, "skills", `${name}.md`),
       // packaged build (dist/skills/)
-      path.resolve(moduleDirectory3, "../src/skills", `${name}.md`),
+      path.resolve(moduleDirectory, "../src/skills", `${name}.md`),
       // from dist/ in repo (src/skills/)
-      path.resolve(moduleDirectory3, "../skills", `${name}.md`)
+      path.resolve(moduleDirectory, "../skills", `${name}.md`)
       // from src/tools/ in vitest (src/skills/)
     ];
     let lastError;
@@ -80,17 +76,17 @@ function createSkillPlugin(options) {
     commandDescription,
     loadSkill,
     availableSkills,
-    moduleDirectory: moduleDirectory3,
+    moduleDirectory,
     mode = "primary"
   } = options;
-  const packagedAgentPath = path.resolve(moduleDirectory3, "agent-prompt.md");
-  const sourceAgentPath = path.resolve(moduleDirectory3, "../src/agent-prompt.md");
+  const packagedAgentPath = path.resolve(moduleDirectory, "agent-prompt.md");
+  const sourceAgentPath = path.resolve(moduleDirectory, "../src/agent-prompt.md");
   const packagedCommandPath = path.resolve(
-    moduleDirectory3,
+    moduleDirectory,
     `commands/${commandName}.md`
   );
   const sourceCommandPath = path.resolve(
-    moduleDirectory3,
+    moduleDirectory,
     `../src/commands/${commandName}.md`
   );
   const getAgentPrompt = createLazyFileLoader(packagedAgentPath, sourceAgentPath);
@@ -130,49 +126,7 @@ function createSkillPlugin(options) {
     }
   });
 }
-
-// src/tools/load-skill.ts
-import path2 from "path";
-import { fileURLToPath } from "url";
-var moduleDirectory = path2.dirname(fileURLToPath(import.meta.url));
-var loadFrontendSkill = createSkillLoader({
-  namespace: "frontend-developer",
-  availableSkills: [
-    "coding-standards",
-    "tdd-workflow",
-    "tailwind-patterns",
-    "zustand-patterns",
-    "tanstack-query-patterns",
-    "form-patterns",
-    "tanstack-router-patterns",
-    "pnpm-package-manager"
-  ],
-  moduleDirectory
-});
-
-// src/index.ts
-var moduleDirectory2 = path3.dirname(fileURLToPath2(import.meta.url));
-var AppVerkFrontendDeveloperPlugin = createSkillPlugin({
-  namespace: "frontend",
-  agentName: "frontend-developer",
-  commandName: "frontend",
-  agentDescription: "Expert TypeScript + React developer enforcing AppVerk coding standards, TDD workflow, and stack-specific patterns.",
-  commandDescription: "TypeScript + React development workflow enforcing coding standards, TDD, and stack-specific patterns.",
-  loadSkill: loadFrontendSkill,
-  availableSkills: [
-    "coding-standards",
-    "tdd-workflow",
-    "tailwind-patterns",
-    "zustand-patterns",
-    "tanstack-query-patterns",
-    "form-patterns",
-    "tanstack-router-patterns",
-    "pnpm-package-manager"
-  ],
-  moduleDirectory: moduleDirectory2
-});
-var index_default = AppVerkFrontendDeveloperPlugin;
 export {
-  AppVerkFrontendDeveloperPlugin,
-  index_default as default
+  createSkillLoader,
+  createSkillPlugin
 };

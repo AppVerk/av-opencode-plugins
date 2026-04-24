@@ -22,15 +22,22 @@
     "uuid": ">=14.0.0"
   },
   "scripts": {
-    "build": "npm run build --workspace @appverk/opencode-commit && npm run build --workspace @appverk/opencode-python-developer && npm run build --workspace @appverk/opencode-code-review && npm run build --workspace @appverk/opencode-frontend-developer",
-    "test": "vitest run --config vitest.config.ts && npm run test --workspace @appverk/opencode-commit && npm run test --workspace @appverk/opencode-python-developer && npm run test --workspace @appverk/opencode-code-review && npm run test --workspace @appverk/opencode-frontend-developer",
-    "typecheck": "tsc -p tsconfig.json --noEmit && npm run typecheck --workspace @appverk/opencode-commit && npm run typecheck --workspace @appverk/opencode-python-developer && npm run typecheck --workspace @appverk/opencode-code-review && npm run typecheck --workspace @appverk/opencode-frontend-developer",
-    "check": "npm run typecheck && npm run test && npm run build"
+    "build:root": "tsc -p tsconfig.build.json && cp .tmp-build/src/index.js src/index.js && cp .tmp-build/src/index.d.ts src/index.d.ts && rm -rf .tmp-build",
+    "build": "npm run build:root && npm run build --workspace @appverk/opencode-skill-utils && npm run build --workspace @appverk/opencode-commit && npm run build --workspace @appverk/opencode-python-developer && npm run build --workspace @appverk/opencode-code-review && npm run build --workspace @appverk/opencode-frontend-developer",
+    "test": "npm run build:root && npm run build --workspace @appverk/opencode-skill-utils && vitest run --config vitest.config.ts && npm run test --workspace @appverk/opencode-commit && npm run test --workspace @appverk/opencode-python-developer && npm run test --workspace @appverk/opencode-code-review && npm run test --workspace @appverk/opencode-frontend-developer",
+    "typecheck": "tsc -p tsconfig.json --noEmit && npm run build --workspace @appverk/opencode-skill-utils && npm run typecheck --workspace @appverk/opencode-commit && npm run typecheck --workspace @appverk/opencode-skill-utils && npm run typecheck --workspace @appverk/opencode-python-developer && npm run typecheck --workspace @appverk/opencode-code-review && npm run typecheck --workspace @appverk/opencode-frontend-developer",
+    "check": "npm run typecheck && npm run test && npm run build",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
   },
   "devDependencies": {
     "@types/node": "^22.15.3",
+    "eslint": "^9.25.1",
+    "prettier": "^3.5.3",
     "tsup": "^8.5.0",
     "typescript": "^5.8.3",
+    "typescript-eslint": "^8.31.0",
     "vitest": "^3.1.2"
   },
   "types": "./src/index.d.ts"

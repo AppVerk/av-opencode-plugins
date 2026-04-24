@@ -20,7 +20,7 @@ Add the root plugin package to your OpenCode config:
 }
 ```
 
-Restart OpenCode after updating the config. The root plugin installs the AppVerk plugin bundle and registers `/commit`, `/python`, and `/frontend` automatically.
+Restart OpenCode after updating the config. The root plugin installs the AppVerk plugin bundle and registers `/commit`, `/python`, `/frontend`, `/review`, `/fix`, `/fix-report`, and `/analyze-feedback` automatically.
 
 ## Usage
 

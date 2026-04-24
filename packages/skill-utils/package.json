@@ -1,5 +1,5 @@
 {
-  "name": "@appverk/opencode-python-developer",
+  "name": "@appverk/opencode-skill-utils",
   "version": "0.2.7",
   "type": "module",
   "main": "./dist/index.js",
@@ -14,15 +14,14 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsup src/index.ts --format esm --dts && node ./scripts/copy-skills.mjs",
-    "test": "npm run build && vitest run --config vitest.config.ts",
+    "build": "tsup src/index.ts --format esm --dts",
+    "test": "vitest run --config vitest.config.ts",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
     "@opencode-ai/plugin": "^1.14.19"
   },
   "devDependencies": {
-    "@appverk/opencode-skill-utils": "*",
     "@types/node": "^22.15.3",
     "tsup": "^8.5.0",
     "typescript": "^5.8.3",

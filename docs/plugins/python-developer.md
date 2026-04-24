@@ -55,7 +55,7 @@ The plugin registers three elements through its `config` hook:
 | Element | OpenCode Mechanism | Purpose |
 |---|---|---|
 | `agent.python-developer` | `config.agent` | Core persona with Python/TDD expertise. Registered with `mode: "primary"` so it appears in TUI tab-completion. System prompt lists available skills and instructs the agent when to call `load_python_skill`. |
-| `command.develop` | `config.command` | Prompt template with `agent: python-developer` frontmatter. Orchestrates stack detection → core skill loading → conditional skill loading → TDD cycle. |
+| `command.python` | `config.command` | Prompt template with `agent: python-developer` frontmatter. Orchestrates stack detection → core skill loading → conditional skill loading → TDD cycle. |
 | `tool.load_python_skill` | `tool` (custom tool) | AI-callable tool returning the markdown content of a named skill file bundled with the plugin. |
 
 ### How Skills Are Loaded

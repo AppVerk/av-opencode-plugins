@@ -8,6 +8,8 @@ dist/
 !packages/code-review/dist/**
 !packages/frontend-developer/dist/
 !packages/frontend-developer/dist/**
+!packages/skill-utils/dist/
+!packages/skill-utils/dist/**
 coverage/
 .DS_Store
 .serena/

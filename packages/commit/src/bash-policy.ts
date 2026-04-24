@@ -19,11 +19,24 @@ function tokenizeShellCommand(command: string): string[] {
   return matches ?? []
 }
 
+function normalizeToken(token: string | undefined): string {
+  if (!token) {
+    return ""
+  }
+  if (
+    (token.startsWith('"') && token.endsWith('"')) ||
+    (token.startsWith("'") && token.endsWith("'"))
+  ) {
+    token = token.slice(1, -1)
+  }
+  return token.replace(/\\(.)/g, "$1")
+}
+
 function classifyGitSubcommand(command: string): BashPolicyDecision {
   const tokens = tokenizeShellCommand(command)
 
   for (let index = 0; index < tokens.length; index += 1) {
-    if (tokens[index] !== "git") {
+    if (normalizeToken(tokens[index]) !== "git") {
       continue
     }
 
@@ -51,7 +64,7 @@ function classifyGitSubcommand(command: string): BashPolicyDecision {
       }
     }
 
-    const subcommand = tokens[subcommandIndex]
+    const subcommand = normalizeToken(tokens[subcommandIndex])
 
     if (subcommand === "push") {
       return "block-push"

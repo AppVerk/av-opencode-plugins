@@ -29,4 +29,24 @@ describe("classifyBashCommand", () => {
   it("allows safe git inspection commands", () => {
     expect(classifyBashCommand("git status --short")).toBe("allow")
   })
+
+  it("blocks quoted git command tokens", () => {
+    expect(classifyBashCommand('"git" commit -m "feat: bad"')).toBe(
+      "block-direct-commit",
+    )
+    expect(classifyBashCommand("'git' commit -m 'feat: bad'")).toBe(
+      "block-direct-commit",
+    )
+  })
+
+  it("blocks quoted subcommand tokens", () => {
+    expect(classifyBashCommand('git "commit" -m "feat: bad"')).toBe(
+      "block-direct-commit",
+    )
+    expect(classifyBashCommand("git 'commit' -m 'feat: bad'")).toBe(
+      "block-direct-commit",
+    )
+    expect(classifyBashCommand('git "push" origin main')).toBe("block-push")
+    expect(classifyBashCommand("git 'push' origin main")).toBe("block-push")
+  })
 })

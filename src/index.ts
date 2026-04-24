@@ -5,7 +5,7 @@ import { AppVerkCodeReviewPlugin } from "../packages/code-review/dist/index.js"
 import { AppVerkFrontendDeveloperPlugin } from "../packages/frontend-developer/dist/index.js"
 type PluginHooks = Awaited<ReturnType<Plugin>>
 type HookKey = Exclude<keyof PluginHooks, "config" | "tool">
-type MergedHook = (...args: any[]) => Promise<void>
+type MergedHook = (...args: unknown[]) => Promise<void>
 type ToolExecuteBefore = NonNullable<Hooks["tool.execute.before"]>
 type ToolExecuteAfter = NonNullable<Hooks["tool.execute.after"]>
 
@@ -93,13 +93,21 @@ function isHookKey(key: keyof PluginHooks, value: PluginHooks[keyof PluginHooks]
   return key !== "config" && key !== "tool" && typeof value === "function"
 }
 
+function assignHook<K extends HookKey>(
+  merged: Partial<PluginHooks>,
+  key: K,
+  hook: NonNullable<PluginHooks[K]>,
+): void {
+  merged[key] = hook
+}
+
 export function createAppVerkPlugins(pluginFactories: Plugin[] = defaultPluginFactories): Plugin {
   return async (context) => {
     const plugins = await Promise.all(
       pluginFactories.map((factory) => factory(context)),
     )
 
-    const merged: PluginHooks = {
+    const merged: Partial<PluginHooks> = {
       tool: mergeTools(plugins),
     }
 
@@ -125,11 +133,11 @@ export function createAppVerkPlugins(pluginFactories: Plugin[] = defaultPluginFa
       const hook = mergeHook(plugins, key)
 
       if (hook) {
-        ;(merged as Record<string, unknown>)[key] = hook
+        assignHook(merged, key, hook)
       }
     }
 
-    return merged
+    return merged as PluginHooks
   }
 }
 

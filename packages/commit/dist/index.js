@@ -1,5 +1,5 @@
 // src/index.ts
-import { existsSync, readFileSync } from "fs";
+import { readFileSync } from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import { tool } from "@opencode-ai/plugin";
@@ -19,10 +19,19 @@ function tokenizeShellCommand(command) {
   const matches = command.match(/"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|&&|\|\||[;|()]|[^\s;|()]+/g);
   return matches ?? [];
 }
+function normalizeToken(token) {
+  if (!token) {
+    return "";
+  }
+  if (token.startsWith('"') && token.endsWith('"') || token.startsWith("'") && token.endsWith("'")) {
+    token = token.slice(1, -1);
+  }
+  return token.replace(/\\(.)/g, "$1");
+}
 function classifyGitSubcommand(command) {
   const tokens = tokenizeShellCommand(command);
   for (let index = 0; index < tokens.length; index += 1) {
-    if (tokens[index] !== "git") {
+    if (normalizeToken(tokens[index]) !== "git") {
       continue;
     }
     let subcommandIndex = index + 1;
@@ -39,7 +48,7 @@ function classifyGitSubcommand(command) {
         subcommandIndex += 1;
       }
     }
-    const subcommand = tokens[subcommandIndex];
+    const subcommand = normalizeToken(tokens[subcommandIndex]);
     if (subcommand === "push") {
       return "block-push";
     }
@@ -140,17 +149,31 @@ var moduleDirectory = path.dirname(fileURLToPath(import.meta.url));
 var packagedCommandPath = path.resolve(moduleDirectory, "commands/commit.md");
 var sourceCommandPath = path.resolve(moduleDirectory, "../src/commands/commit.md");
 function loadCommitCommandTemplate() {
-  const commandPath = existsSync(packagedCommandPath) ? packagedCommandPath : sourceCommandPath;
-  return readFileSync(commandPath, "utf8");
+  try {
+    return readFileSync(packagedCommandPath, "utf8");
+  } catch {
+    return readFileSync(sourceCommandPath, "utf8");
+  }
 }
-var COMMIT_COMMAND_TEMPLATE = loadCommitCommandTemplate();
+function createLazyCommitTemplateLoader() {
+  let cached;
+  return () => {
+    if (cached === void 0) {
+      cached = loadCommitCommandTemplate();
+    }
+    return cached;
+  };
+}
 var AppVerkCommitPlugin = async () => {
+  const getCommitTemplate = createLazyCommitTemplateLoader();
   return {
     config: async (config) => {
       config.command = config.command ?? {};
       config.command.commit = {
         description: COMMIT_COMMAND_DESCRIPTION,
-        template: COMMIT_COMMAND_TEMPLATE
+        get template() {
+          return getCommitTemplate();
+        }
       };
     },
     tool: {

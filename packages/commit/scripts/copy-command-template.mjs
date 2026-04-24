@@ -1,12 +1,12 @@
-import { copyFileSync, mkdirSync } from "node:fs"
-import path from "node:path"
 import { fileURLToPath } from "node:url"
+import path from "node:path"
+import { copyAssets } from "../../../scripts/copy-assets.mjs"
 
-const scriptDirectory = path.dirname(fileURLToPath(import.meta.url))
-const packageDirectory = path.resolve(scriptDirectory, "..")
-const sourcePath = path.join(packageDirectory, "src", "commands", "commit.md")
-const outputDirectory = path.join(packageDirectory, "dist", "commands")
-const outputPath = path.join(outputDirectory, "commit.md")
+const root = path.dirname(fileURLToPath(import.meta.url))
 
-mkdirSync(outputDirectory, { recursive: true })
-copyFileSync(sourcePath, outputPath)
+copyAssets(
+  [
+    { from: "src/commands/commit.md", to: "dist/commands/commit.md" },
+  ],
+  path.resolve(root, "..")
+)

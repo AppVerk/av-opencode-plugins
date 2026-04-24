@@ -1,21 +1,13 @@
-import { cpSync, mkdirSync } from "node:fs"
-import path from "node:path"
 import { fileURLToPath } from "node:url"
+import path from "node:path"
+import { copyAssets } from "../../../scripts/copy-assets.mjs"
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url))
-const projectRoot = path.resolve(__dirname, "..")
-const distDir = path.resolve(projectRoot, "dist")
+const root = path.dirname(fileURLToPath(import.meta.url))
 
-function copyDir(src, dest) {
-  const srcCommands = path.resolve(projectRoot, "src", "commands")
-  const srcAgents = path.resolve(projectRoot, "src", "agents")
-  if (src !== srcCommands && src !== srcAgents) return
-  mkdirSync(dest, { recursive: true })
-  cpSync(src, dest, { recursive: true })
-}
-
-// Copy commands and agents markdown files to dist/
-copyDir(path.resolve(projectRoot, "src/commands"), path.resolve(distDir, "commands"))
-copyDir(path.resolve(projectRoot, "src/agents"), path.resolve(distDir, "agents"))
-
-console.log("Assets copied to dist/")
+copyAssets(
+  [
+    { from: "src/commands", to: "dist/commands", type: "dir" },
+    { from: "src/agents", to: "dist/agents", type: "dir" },
+  ],
+  path.resolve(root, "..")
+)

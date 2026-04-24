@@ -1,5 +1,5 @@
 // src/index.ts
-import { existsSync, readFileSync } from "fs";
+import { readFileSync } from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 var moduleDirectory = path.dirname(fileURLToPath(import.meta.url));
@@ -9,12 +9,22 @@ function loadMarkdownFile(name) {
   if (!filePath.startsWith(baseDir)) {
     throw new Error("Invalid path: traversal detected");
   }
-  if (!existsSync(filePath)) {
+  try {
+    return readFileSync(filePath, "utf8");
+  } catch {
     throw new Error(
       `Markdown asset not found: ${name} (looked in ${filePath}). Ensure the package is built so that copy-assets.mjs copies assets into dist/.`
     );
   }
-  return readFileSync(filePath, "utf8");
+}
+function createLazyMarkdownLoader(name) {
+  let cached;
+  return () => {
+    if (cached === void 0) {
+      cached = loadMarkdownFile(name);
+    }
+    return cached;
+  };
 }
 var AGENTS = [
   {
@@ -104,11 +114,24 @@ var AppVerkCodeReviewPlugin = async () => ({
   config: async (config) => {
     config.agent ??= {};
     for (const a of AGENTS) {
-      config.agent[a.name] = { description: a.description, prompt: loadMarkdownFile(a.path), mode: "subagent" };
+      const getPrompt = createLazyMarkdownLoader(a.path);
+      config.agent[a.name] = {
+        description: a.description,
+        get prompt() {
+          return getPrompt();
+        },
+        mode: "subagent"
+      };
     }
     config.command ??= {};
     for (const c of COMMANDS) {
-      config.command[c.name] = { description: c.description, template: loadMarkdownFile(c.path) };
+      const getTemplate = createLazyMarkdownLoader(c.path);
+      config.command[c.name] = {
+        description: c.description,
+        get template() {
+          return getTemplate();
+        }
+      };
     }
   }
 });

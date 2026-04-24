@@ -1,4 +1,4 @@
-import { existsSync, readFileSync } from "node:fs"
+import { readFileSync } from "node:fs"
 import path from "node:path"
 import { fileURLToPath } from "node:url"
 import type { Plugin } from "@opencode-ai/plugin"
@@ -11,13 +11,24 @@ function loadMarkdownFile(name: string): string {
   if (!filePath.startsWith(baseDir)) {
     throw new Error("Invalid path: traversal detected")
   }
-  if (!existsSync(filePath)) {
+  try {
+    return readFileSync(filePath, "utf8")
+  } catch {
     throw new Error(
       `Markdown asset not found: ${name} (looked in ${filePath}). ` +
         `Ensure the package is built so that copy-assets.mjs copies assets into dist/.`
     )
   }
-  return readFileSync(filePath, "utf8")
+}
+
+function createLazyMarkdownLoader(name: string): () => string {
+  let cached: string | undefined
+  return () => {
+    if (cached === undefined) {
+      cached = loadMarkdownFile(name)
+    }
+    return cached
+  }
 }
 
 const AGENTS: { name: string; description: string; path: string }[] = [
@@ -122,12 +133,25 @@ export const AppVerkCodeReviewPlugin: Plugin = async () => ({
   config: async (config) => {
     config.agent ??= {}
     for (const a of AGENTS) {
-      config.agent[a.name] = { description: a.description, prompt: loadMarkdownFile(a.path), mode: "subagent" }
+      const getPrompt = createLazyMarkdownLoader(a.path)
+      config.agent[a.name] = {
+        description: a.description,
+        get prompt() {
+          return getPrompt()
+        },
+        mode: "subagent",
+      }
     }
 
     config.command ??= {}
     for (const c of COMMANDS) {
-      config.command[c.name] = { description: c.description, template: loadMarkdownFile(c.path) }
+      const getTemplate = createLazyMarkdownLoader(c.path)
+      config.command[c.name] = {
+        description: c.description,
+        get template() {
+          return getTemplate()
+        },
+      }
     }
   },
 })

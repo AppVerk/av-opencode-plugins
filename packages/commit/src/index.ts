@@ -1,4 +1,4 @@
-import { existsSync, readFileSync } from "node:fs"
+import { readFileSync } from "node:fs"
 import path from "node:path"
 import { fileURLToPath } from "node:url"
 import type { Plugin } from "@opencode-ai/plugin"
@@ -13,23 +13,35 @@ const moduleDirectory = path.dirname(fileURLToPath(import.meta.url))
 const packagedCommandPath = path.resolve(moduleDirectory, "commands/commit.md")
 const sourceCommandPath = path.resolve(moduleDirectory, "../src/commands/commit.md")
 
-function loadCommitCommandTemplate() {
-  const commandPath = existsSync(packagedCommandPath)
-    ? packagedCommandPath
-    : sourceCommandPath
-
-  return readFileSync(commandPath, "utf8")
+function loadCommitCommandTemplate(): string {
+  try {
+    return readFileSync(packagedCommandPath, "utf8")
+  } catch {
+    return readFileSync(sourceCommandPath, "utf8")
+  }
 }
 
-const COMMIT_COMMAND_TEMPLATE = loadCommitCommandTemplate()
+function createLazyCommitTemplateLoader(): () => string {
+  let cached: string | undefined
+  return () => {
+    if (cached === undefined) {
+      cached = loadCommitCommandTemplate()
+    }
+    return cached
+  }
+}
 
 export const AppVerkCommitPlugin: Plugin = async () => {
+  const getCommitTemplate = createLazyCommitTemplateLoader()
+
   return {
     config: async (config) => {
       config.command = config.command ?? {}
       config.command.commit = {
         description: COMMIT_COMMAND_DESCRIPTION,
-        template: COMMIT_COMMAND_TEMPLATE,
+        get template() {
+          return getCommitTemplate()
+        },
       }
     },
     tool: {

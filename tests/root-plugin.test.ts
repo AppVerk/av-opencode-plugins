@@ -101,6 +101,12 @@ describe("AppVerkPlugins", () => {
         "packages/frontend-developer/dist/index.js",
         "packages/frontend-developer/dist/index.d.ts",
         "packages/frontend-developer/dist/commands/frontend.md",
+        "packages/python-developer/dist/index.js",
+        "packages/python-developer/dist/index.d.ts",
+        "packages/python-developer/dist/commands/python.md",
+        "packages/code-review/dist/index.js",
+        "packages/code-review/dist/index.d.ts",
+        "packages/code-review/dist/commands/review.md",
       ]),
     )
   })
