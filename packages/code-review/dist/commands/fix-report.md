@@ -162,7 +162,7 @@ Mark remaining tasks as completed using `todowrite` and stop.
 For each selected issue, **sequentially** (one at a time, wait for completion):
 
 1. Use the Task tool with these parameters:
-   - subagent_type: "code-review:fix-auto"
+   - subagent_type: "fix-auto"
    - run_in_background: false
    - description: "Auto-fix: [SEVERITY] Issue title"
    - prompt: The full issue block from the report (everything extracted in Step 1.3 for this issue — including severity, title, location, category, OWASP, CWE, effort, problem, impact, remediation with code examples)

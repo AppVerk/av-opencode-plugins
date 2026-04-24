@@ -83,7 +83,7 @@ Store result: `has_documentation = true/false`
 
 ```
 Task(
-  subagent_type: "general",
+  subagent_type: "security-auditor",
   prompt: "You are the security-auditor agent. Perform a comprehensive security audit of this codebase.
 
 Execute: secret scanning, SAST analysis, dependency scanning, and AI threat modeling.
@@ -100,7 +100,7 @@ Return findings as a structured markdown report with a JSON array of findings."
 
 ```
 Task(
-  subagent_type: "general",
+  subagent_type: "code-quality-auditor",
   prompt: "You are the code-quality-auditor agent. Perform a comprehensive code quality audit.
 
 Execute: standards discovery, linter integration, architecture analysis, and AI design review.
@@ -119,7 +119,7 @@ Return findings as a structured markdown report with a JSON array of findings."
 
 ```
 Task(
-  subagent_type: "general",
+  subagent_type: "documentation-auditor",
   prompt: "You are the documentation-auditor agent. Perform a documentation audit of this codebase.
 
 Check if code changes are reflected in project documentation.
@@ -219,7 +219,7 @@ findings = {
 
 ```
 Task(
-  subagent_type: "code-review:cross-verifier",
+  subagent_type: "cross-verifier",
   prompt: "Analyze the following findings from a code review.
 
 Here are the findings from all auditors:
@@ -235,7 +235,7 @@ Follow your output format exactly."
 
 ```
 Task(
-  subagent_type: "code-review:challenger",
+  subagent_type: "challenger",
   prompt: "Review the following findings from a code review.
 
 Here are the findings from all auditors:

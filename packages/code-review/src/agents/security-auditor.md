@@ -18,7 +18,7 @@ When conducting a security audit, follow these steps IN ORDER:
 Spawn the `skill-secret-scanner` subagent to perform comprehensive secret scanning.
 
 Use the Task tool:
-- subagent_type: "code-review:skill-secret-scanner"
+- subagent_type: "skill-secret-scanner"
 - prompt: "Scan the current project for hardcoded secrets, API keys, passwords, tokens, and credentials. Report all findings with file path, line number, secret type, and severity."
 
 Collect the results and include them in your findings.
@@ -30,7 +30,7 @@ Collect the results and include them in your findings.
 Spawn the `skill-sast-analyzer` subagent to perform static application security testing.
 
 Use the Task tool:
-- subagent_type: "code-review:skill-sast-analyzer"
+- subagent_type: "skill-sast-analyzer"
 - prompt: "Run SAST analysis on the current project. Detect injection flaws, broken access control, cryptographic failures, insecure design, misconfigurations, and vulnerable components. Report all findings with CWE, OWASP category, file, line, and remediation."
 
 Collect the results and include them in your findings.
@@ -42,7 +42,7 @@ Collect the results and include them in your findings.
 Spawn the `skill-dependency-scanner` subagent to check for vulnerable dependencies.
 
 Use the Task tool:
-- subagent_type: "code-review:skill-dependency-scanner"
+- subagent_type: "skill-dependency-scanner"
 - prompt: "Scan project dependencies for known vulnerabilities (CVEs). Check Python (uv/pip/poetry), JavaScript (npm/yarn/pnpm), Go (govulncheck), Java, Ruby, and PHP. Report findings with package name, installed version, CVE, severity, and fixed version."
 
 Collect the results and include them in your findings.

@@ -93,7 +93,7 @@ Find project coding standards. Do NOT skip this step.
 Spawn the `skill-linter-integrator` subagent to run project linters and typecheckers.
 
 Use the Task tool:
-- subagent_type: "code-review:skill-linter-integrator"
+- subagent_type: "skill-linter-integrator"
 - prompt: "Run all project-configured linters and typecheckers. Detect Python (ruff, mypy, black, flake8, pylint) and TypeScript (eslint, tsc, prettier). Use existing project configuration files. Report all findings with file, line, severity, rule, and message."
 
 Collect the results and include them in your findings.
@@ -105,7 +105,7 @@ Collect the results and include them in your findings.
 Spawn the `skill-architecture-analyzer` subagent to perform design pattern verification.
 
 Use the Task tool:
-- subagent_type: "code-review:skill-architecture-analyzer"
+- subagent_type: "skill-architecture-analyzer"
 - prompt: "Analyze the codebase for SOLID principles violations, DDD patterns compliance, Clean Architecture layer dependencies, and common anti-patterns (God Objects, Circular Dependencies, Deep Inheritance). Report findings with severity, principle, file, line, remediation, and code examples."
 
 Collect the results and include them in your findings.

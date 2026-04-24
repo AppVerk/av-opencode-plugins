@@ -214,7 +214,7 @@ For each comment, use Task tool:
 
 ```
 Task tool parameters:
-- subagent_type: "code-review:feedback-analyzer"
+- subagent_type: "feedback-analyzer"
 - prompt: <context bundle from Step 4.1>
 - run_in_background: false (analyze sequentially for consistency)
 ```
