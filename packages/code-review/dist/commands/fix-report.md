@@ -115,10 +115,10 @@ Display the issues using the `question` tool, **4 issues per page**.
 **For each page**, use the `question` tool with these parameters:
 
 - question: "Select issues to fix (page X of Y):" (or "Select issues to fix:" if only one page)
-- multiple: true
-- options: up to 4 issues, each formatted as:
-  - label: "[SEVERITY] Short title"
-  - description: "path/to/file.py:line — first sentence of the Problem field"
+  multiple: true
+  options:
+    - label: "[SEVERITY] Short title"
+      description: "path/to/file.py:line — first sentence of the Problem field"
 
 **IDs in checklist:**
 

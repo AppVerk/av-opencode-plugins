@@ -43,6 +43,25 @@ describe("build output", () => {
   })
 })
 
+describe("fix-report.md multiple selection", () => {
+  const fixReportPath = path.resolve(distDir, "commands/fix-report.md")
+  let content: string
+
+  beforeAll(() => {
+    content = readFileSync(fixReportPath, "utf8")
+  })
+
+  it("includes multiple: true for question tool", () => {
+    expect(content).toMatch(/multiple:\s*true/)
+  })
+
+  it("places multiple: true inside question parameters (indented under question)", () => {
+    // Match "- question:" line followed by indented "multiple: true"
+    const match = content.match(/- question:.*?\n\s+multiple:\s*true/s)
+    expect(match).toBeDefined()
+  })
+})
+
 describe("review.md verification tracking", () => {
   const reviewPath = path.resolve(distDir, "commands/review.md")
   let content: string
