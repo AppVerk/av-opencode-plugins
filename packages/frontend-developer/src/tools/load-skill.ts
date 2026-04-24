@@ -1,4 +1,4 @@
-import { existsSync, readFileSync } from "node:fs"
+import { readFileSync } from "node:fs"
 import path from "node:path"
 import { fileURLToPath } from "node:url"
 
@@ -15,18 +15,22 @@ const AVAILABLE_SKILLS = [
 
 const moduleDirectory = path.dirname(fileURLToPath(import.meta.url))
 
-function resolveSkillPath(name: string): string | null {
+const skillCache = new Map<string, string>()
+
+function loadSkillContent(name: string): string {
   const candidates = [
     path.resolve(moduleDirectory, "skills", `${name}.md`), // packaged build (dist/skills/)
     path.resolve(moduleDirectory, "../src/skills", `${name}.md`), // from dist/ in repo (src/skills/)
     path.resolve(moduleDirectory, "../skills", `${name}.md`), // from src/tools/ in vitest (src/skills/)
   ]
   for (const candidate of candidates) {
-    if (existsSync(candidate)) {
-      return candidate
+    try {
+      return readFileSync(candidate, "utf8")
+    } catch {
+      /* continue to next candidate */
     }
   }
-  return null
+  throw new Error(`frontend-developer skill file not found for: ${name}`)
 }
 
 export function loadFrontendSkill(name: string): string {
@@ -36,13 +40,11 @@ export function loadFrontendSkill(name: string): string {
     )
   }
 
-  const skillPath = resolveSkillPath(name)
-
-  if (!skillPath) {
-    throw new Error(
-      `frontend-developer skill file not found for: ${name}. Tried: skills/${name}.md and ../src/skills/${name}.md`,
-    )
+  if (skillCache.has(name)) {
+    return skillCache.get(name)!
   }
 
-  return readFileSync(skillPath, "utf8")
+  const content = loadSkillContent(name)
+  skillCache.set(name, content)
+  return content
 }

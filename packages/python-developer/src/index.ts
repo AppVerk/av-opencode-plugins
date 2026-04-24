@@ -1,4 +1,4 @@
-import { existsSync, readFileSync } from "node:fs"
+import { readFileSync } from "node:fs"
 import path from "node:path"
 import { fileURLToPath } from "node:url"
 import type { Plugin } from "@opencode-ai/plugin"
@@ -18,8 +18,18 @@ const packagedCommandPath = path.resolve(moduleDirectory, "commands/python.md")
 const sourceCommandPath = path.resolve(moduleDirectory, "../src/commands/python.md")
 
 function loadFile(packaged: string, source: string): string {
-  const filePath = existsSync(packaged) ? packaged : source
-  return readFileSync(filePath, "utf8")
+  try {
+    return readFileSync(packaged, "utf8")
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code === "ENOENT") {
+      try {
+        return readFileSync(source, "utf8")
+      } catch {
+        throw new Error("Failed to load plugin template")
+      }
+    }
+    throw new Error("Failed to load plugin template")
+  }
 }
 
 const AGENT_PROMPT = loadFile(packagedAgentPath, sourceAgentPath)

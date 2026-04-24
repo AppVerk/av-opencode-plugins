@@ -55,7 +55,7 @@ npm run test  --workspace @appverk/opencode-commit
 - **Root tests:** `tests/root-plugin.test.ts` validates plugin merging and packaging via `npm pack --dry-run`.
 - **Package tests:** Located in `packages/*/tests/**/*.test.ts`.
 - **Integration tests:** `packages/commit/tests/controlled-commit.integration.test.ts` exercises real git operations.
-- All three vitest configs use `include: ["tests/**/*.test.ts"]`.
+- All workspace vitest configs use `include: ["tests/**/*.test.ts"]`.
 
 ## Root Entrypoint Registration
 

@@ -1,11 +1,11 @@
 // src/index.ts
-import { existsSync as existsSync2, readFileSync as readFileSync2 } from "fs";
+import { readFileSync as readFileSync2 } from "fs";
 import path2 from "path";
 import { fileURLToPath as fileURLToPath2 } from "url";
 import { tool } from "@opencode-ai/plugin";
 
 // src/tools/load-skill.ts
-import { existsSync, readFileSync } from "fs";
+import { readFileSync } from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 var AVAILABLE_SKILLS = [
@@ -21,7 +21,8 @@ var AVAILABLE_SKILLS = [
   "celery-patterns"
 ];
 var moduleDirectory = path.dirname(fileURLToPath(import.meta.url));
-function resolveSkillPath(name) {
+var skillCache = /* @__PURE__ */ new Map();
+function loadSkillContent(name) {
   const candidates = [
     path.resolve(moduleDirectory, "skills", `${name}.md`),
     // packaged build (dist/skills/)
@@ -31,11 +32,12 @@ function resolveSkillPath(name) {
     // from src/tools/ in vitest (src/skills/)
   ];
   for (const candidate of candidates) {
-    if (existsSync(candidate)) {
-      return candidate;
+    try {
+      return readFileSync(candidate, "utf8");
+    } catch {
     }
   }
-  return null;
+  throw new Error(`python-developer skill file not found for: ${name}`);
 }
 function loadPythonSkill(name) {
   if (!AVAILABLE_SKILLS.includes(name)) {
@@ -43,13 +45,12 @@ function loadPythonSkill(name) {
       `python-developer skill not found: ${name}. Available: ${AVAILABLE_SKILLS.join(", ")}`
     );
   }
-  const skillPath = resolveSkillPath(name);
-  if (!skillPath) {
-    throw new Error(
-      `python-developer skill file not found for: ${name}. Tried: skills/${name}.md and ../src/skills/${name}.md`
-    );
+  if (skillCache.has(name)) {
+    return skillCache.get(name);
   }
-  return readFileSync(skillPath, "utf8");
+  const content = loadSkillContent(name);
+  skillCache.set(name, content);
+  return content;
 }
 
 // src/index.ts
@@ -61,8 +62,18 @@ var sourceAgentPath = path2.resolve(moduleDirectory2, "../src/agent-prompt.md");
 var packagedCommandPath = path2.resolve(moduleDirectory2, "commands/python.md");
 var sourceCommandPath = path2.resolve(moduleDirectory2, "../src/commands/python.md");
 function loadFile(packaged, source) {
-  const filePath = existsSync2(packaged) ? packaged : source;
-  return readFileSync2(filePath, "utf8");
+  try {
+    return readFileSync2(packaged, "utf8");
+  } catch (error) {
+    if (error.code === "ENOENT") {
+      try {
+        return readFileSync2(source, "utf8");
+      } catch {
+        throw new Error("Failed to load plugin template");
+      }
+    }
+    throw new Error("Failed to load plugin template");
+  }
 }
 var AGENT_PROMPT = loadFile(packagedAgentPath, sourceAgentPath);
 var COMMAND_TEMPLATE = loadFile(packagedCommandPath, sourceCommandPath);
