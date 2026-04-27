@@ -32,9 +32,9 @@ describe("AppVerkPythonDeveloperPlugin", () => {
     expect(config.command!.python!.agent).toBe("python-developer")
   })
 
-  it("registers load_python_skill tool", async () => {
+  it("does not register load_python_skill tool (now global)", async () => {
     const plugin = await AppVerkPythonDeveloperPlugin({} as never)
-    expect(plugin.tool?.load_python_skill).toBeDefined()
+    expect(plugin.tool?.load_python_skill).toBeUndefined()
   })
 })
 

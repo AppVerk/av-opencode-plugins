@@ -1,6 +1,6 @@
 # AppVerk OpenCode Plugins
 
-[![Package](https://img.shields.io/badge/package-4-blue.svg)](#available-packages)
+[![Package](https://img.shields.io/badge/package-5-blue.svg)](#available-packages)
 
 OpenCode plugin packages for AppVerk. The root plugin loads the AppVerk plugin bundle from this repository, which currently provides:
 
@@ -8,6 +8,7 @@ OpenCode plugin packages for AppVerk. The root plugin loads the AppVerk plugin b
 - A **Python development workflow** (`/python`) with TDD, coding standards, and stack-specific patterns (FastAPI, Django, Celery, SQLAlchemy, Pydantic).
 - A **TypeScript + React development workflow** (`/frontend`) with TDD, coding standards, and stack-specific patterns (Tailwind, Zustand, TanStack Query, React Hook Form, TanStack Router).
 - A **code review workflow** (`/review`) with parallel security and quality audits, verification agents, fix commands, feedback analysis, and skill-agent integration.
+- A **global skill registry** that makes all AppVerk development skills available to every OpenCode agent via a single `load_appverk_skill` tool, with mandatory activation rules injected into every agent's system prompt.
 
 ## Installation
 
@@ -16,7 +17,7 @@ Add the root plugin package to your OpenCode config:
 ```json
 {
   "$schema": "https://opencode.ai/config.json",
-  "plugin": ["av-opencode-plugins@git+https://github.com/AppVerk/av-opencode-plugins.git#v0.2.8"]
+  "plugin": ["av-opencode-plugins@git+https://github.com/AppVerk/av-opencode-plugins.git#v0.2.10"]
 }
 ```
 
@@ -82,6 +83,20 @@ You can also invoke the agent directly:
 opencode agent frontend-developer "Refactor auth store to use Zustand"
 ```
 
+### Global Skill Registry
+
+All AppVerk development skills are automatically available to every OpenCode agent (built-in and custom) through the `load_appverk_skill` tool. When any agent starts a chat session, mandatory activation rules are injected into its system prompt.
+
+Load a skill manually at any time:
+
+```text
+Use the load_appverk_skill tool with name "python-coding-standards"
+```
+
+Available skills include:
+- `python-coding-standards`, `python-tdd-workflow`, `fastapi-patterns`, `sqlalchemy-patterns`, `pydantic-patterns`, `async-python-patterns`, `uv-package-manager`, `django-web-patterns`, `django-orm-patterns`, `celery-patterns`
+- `frontend-coding-standards`, `frontend-tdd-workflow`, `tailwind-patterns`, `zustand-patterns`, `tanstack-query-patterns`, `form-patterns`, `tanstack-router-patterns`, `pnpm-package-manager`
+
 ### Code review workflow
 
 Run a comprehensive code review with parallel security and quality audits:
@@ -140,6 +155,7 @@ Classifies each comment as "Address" or "Reject" and optionally publishes respon
 | `/fix` | Fix a single issue by ID or pasted issue block from a saved review report. | — | [Guide](docs/plugins/code-review.md) |
 | `/fix-report` | Batch-fix issues from a saved review report with interactive selection. | — | [Guide](docs/plugins/code-review.md) |
 | `/analyze-feedback` | Analyze PR feedback comments, classify validity, and generate response drafts. | — | [Guide](docs/plugins/code-review.md) |
+| `load_appverk_skill` | Load any AppVerk development skill by name. Available to all agents globally. | — | [Guide](docs/plugins/skill-registry.md) |
 | `@python-developer` | Direct agent invocation for Python tasks outside of `/python`. | `primary` | [Guide](docs/plugins/python-developer.md) |
 | `@frontend-developer` | Direct agent invocation for TypeScript + React tasks outside of `/frontend`. | `primary` | [Guide](docs/plugins/frontend-developer.md) |
 | `@security-auditor` | Direct agent invocation for security audits with skill-agent delegation. | `subagent` | [Guide](docs/plugins/code-review.md) |
@@ -163,6 +179,8 @@ Classifies each comment as "Address" or "Reject" and optionally publishes respon
 - `docs/plugins/code-review.md` - package-level behavior and usage guide.
 - `packages/frontend-developer` - plugin source, tests, skill files, and build scripts for the TypeScript + React development workflow.
 - `docs/plugins/frontend-developer.md` - package-level behavior and usage guide.
+- `packages/skill-registry` - global skill registry source, tests, and build scripts.
+- `docs/plugins/skill-registry.md` - package-level behavior and usage guide.
 - `package.json` - workspace definition and shared validation commands.
 
 ## Local Development
@@ -188,6 +206,7 @@ npm run check
 - [Python Developer Plugin Guide](docs/plugins/python-developer.md)
 - [Code Review Plugin Guide](docs/plugins/code-review.md)
 - [Frontend Developer Plugin Guide](docs/plugins/frontend-developer.md)
+- [Skill Registry Plugin Guide](docs/plugins/skill-registry.md)
 
 ## License
 

@@ -20,7 +20,7 @@ You are executing a structured Python development workflow. Follow every step in
 Before doing anything else, load the base coding standards skill:
 
 ```
-Call the tool `load_python_skill` with name `coding-standards`
+Call the tool `load_appverk_skill` with name `python-coding-standards`
 ```
 
 **You MUST load this skill first. All code you write must follow its HARD-RULES.**
@@ -60,55 +60,55 @@ Based on Step 2 findings, load the relevant skills using the Skill tool. **Only 
 ### If writing or modifying code (almost always):
 
 ```
-Call the tool `load_python_skill` with name `tdd-workflow`
+Call the tool `load_appverk_skill` with name `python-tdd-workflow`
 ```
 
 ### If FastAPI detected OR task involves endpoints/routes/API:
 
 ```
-Call the tool `load_python_skill` with name `fastapi-patterns`
+Call the tool `load_appverk_skill` with name `fastapi-patterns`
 ```
 
 ### If SQLAlchemy detected OR task involves database/models/migrations:
 
 ```
-Call the tool `load_python_skill` with name `sqlalchemy-patterns`
+Call the tool `load_appverk_skill` with name `sqlalchemy-patterns`
 ```
 
 ### If Pydantic detected OR task involves schemas/validation/settings:
 
 ```
-Call the tool `load_python_skill` with name `pydantic-patterns`
+Call the tool `load_appverk_skill` with name `pydantic-patterns`
 ```
 
 ### If task involves async code OR project uses asyncio/uvicorn:
 
 ```
-Call the tool `load_python_skill` with name `async-python-patterns`
+Call the tool `load_appverk_skill` with name `async-python-patterns`
 ```
 
 ### If task involves adding/removing/updating dependencies:
 
 ```
-Call the tool `load_python_skill` with name `uv-package-manager`
+Call the tool `load_appverk_skill` with name `uv-package-manager`
 ```
 
 ### If Django detected OR task involves views/viewsets/serializers:
 
 ```
-Call the tool `load_python_skill` with name `django-web-patterns`
+Call the tool `load_appverk_skill` with name `django-web-patterns`
 ```
 
 ### If Django ORM detected OR task involves Django models/queries/migrations:
 
 ```
-Call the tool `load_python_skill` with name `django-orm-patterns`
+Call the tool `load_appverk_skill` with name `django-orm-patterns`
 ```
 
 ### If Celery detected OR task involves background tasks/workers:
 
 ```
-Call the tool `load_python_skill` with name `celery-patterns`
+Call the tool `load_appverk_skill` with name `celery-patterns`
 ```
 
 **Important:** Django and FastAPI skills are mutually exclusive. If both are detected, load skills for the framework most relevant to the current task; if ambiguous, ask the user. When Django is detected, do NOT load `fastapi-patterns` or `sqlalchemy-patterns`. `celery-patterns` and `pydantic-patterns` can load with either stack.

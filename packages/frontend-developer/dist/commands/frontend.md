@@ -20,8 +20,8 @@ You are executing a structured TypeScript + React development workflow. Follow e
 Before doing anything else, load the base coding standards skill:
 
 ```
-Use the load_frontend_skill tool with:
-  name: "coding-standards"
+Use the load_appverk_skill tool with:
+  name: "frontend-coding-standards"
 ```
 
 **You MUST load this skill first. All code you write must follow its HARD-RULES.**
@@ -67,48 +67,48 @@ Read `tsconfig.json` and confirm:
 
 ## Step 3: Load Context-Specific Skills
 
-Based on Step 2 findings, load the relevant skills using `load_frontend_skill`. **Only load skills that are actually needed.**
+Based on Step 2 findings, load the relevant skills using `load_appverk_skill`. **Only load skills that are actually needed.**
 
 ### Always load TDD workflow:
 
 ```
-Use the load_frontend_skill tool with:
-  name: "tdd-workflow"
+Use the load_appverk_skill tool with:
+  name: "frontend-tdd-workflow"
 ```
 
 ### If `tailwindcss` in dependencies:
 ```
-Use the load_frontend_skill tool with:
+Use the load_appverk_skill tool with:
   name: "tailwind-patterns"
 ```
 
 ### If `zustand` in dependencies:
 ```
-Use the load_frontend_skill tool with:
+Use the load_appverk_skill tool with:
   name: "zustand-patterns"
 ```
 
 ### If `@tanstack/react-query` in dependencies:
 ```
-Use the load_frontend_skill tool with:
+Use the load_appverk_skill tool with:
   name: "tanstack-query-patterns"
 ```
 
 ### If `react-hook-form` in dependencies:
 ```
-Use the load_frontend_skill tool with:
+Use the load_appverk_skill tool with:
   name: "form-patterns"
 ```
 
 ### If `@tanstack/react-router` in dependencies:
 ```
-Use the load_frontend_skill tool with:
+Use the load_appverk_skill tool with:
   name: "tanstack-router-patterns"
 ```
 
 ### If `pnpm-lock.yaml` exists AND task involves dependency changes:
 ```
-Use the load_frontend_skill tool with:
+Use the load_appverk_skill tool with:
   name: "pnpm-package-manager"
 ```
 

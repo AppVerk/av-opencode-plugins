@@ -28,8 +28,8 @@ Before launching agents, detect the project tech stack:
    - `**/*.py` files present in project
 
 2. If Python detected, load relevant python-developer skills:
-   - `coding-standards` (always)
-   - `tdd-workflow` (always)
+   - `python-coding-standards` (always)
+   - `python-tdd-workflow` (always)
    - Check `pyproject.toml` dependencies for:
      - `fastapi` → load `fastapi-patterns`
      - `sqlalchemy` → load `sqlalchemy-patterns`
@@ -39,9 +39,9 @@ Before launching agents, detect the project tech stack:
      - `asyncio`, `uvicorn`, or `anyio` → load `async-python-patterns`
      - `uv` → load `uv-package-manager`
 
-   Load each using the `load_python_skill` tool:
+   Load each using the `load_appverk_skill` tool:
    ```
-   Call the tool `load_python_skill` with name `<skill-name>`
+   Call the tool `load_appverk_skill` with name `<skill-name>`
    ```
 
 3. Check for Frontend project markers:
@@ -57,7 +57,7 @@ Before launching agents, detect the project tech stack:
 
 6. Store the list of successfully loaded skills in `skills_to_load`.
 
-**Graceful degradation:** If `load_python_skill` is unavailable, or no Python is detected, set `skills_to_load = []` and proceed normally. Stack detection is additive only.
+**Graceful degradation:** If `load_appverk_skill` is unavailable, or no Python is detected, set `skills_to_load = []` and proceed normally. Stack detection is additive only.
 
 ---
 

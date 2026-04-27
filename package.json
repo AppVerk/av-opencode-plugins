@@ -1,6 +1,6 @@
 {
   "name": "av-opencode-plugins",
-  "version": "0.2.8",
+  "version": "0.2.10",
   "private": true,
   "type": "module",
   "main": "./src/index.js",
@@ -11,7 +11,8 @@
     "packages/python-developer/dist",
     "packages/code-review/dist",
     "packages/frontend-developer/dist",
-    "packages/skill-utils/dist"
+    "packages/skill-utils/dist",
+    "packages/skill-registry/dist"
   ],
   "workspaces": [
     "packages/*"
@@ -24,9 +25,9 @@
   },
   "scripts": {
     "build:root": "tsc -p tsconfig.build.json && cp .tmp-build/src/index.js src/index.js && cp .tmp-build/src/index.d.ts src/index.d.ts && rm -rf .tmp-build",
-    "build": "npm run build:root && npm run build --workspace @appverk/opencode-skill-utils && npm run build --workspace @appverk/opencode-commit && npm run build --workspace @appverk/opencode-python-developer && npm run build --workspace @appverk/opencode-code-review && npm run build --workspace @appverk/opencode-frontend-developer",
-    "test": "npm run build:root && npm run build --workspace @appverk/opencode-skill-utils && vitest run --config vitest.config.ts && npm run test --workspace @appverk/opencode-commit && npm run test --workspace @appverk/opencode-python-developer && npm run test --workspace @appverk/opencode-code-review && npm run test --workspace @appverk/opencode-frontend-developer",
-    "typecheck": "tsc -p tsconfig.json --noEmit && npm run build --workspace @appverk/opencode-skill-utils && npm run typecheck --workspace @appverk/opencode-commit && npm run typecheck --workspace @appverk/opencode-skill-utils && npm run typecheck --workspace @appverk/opencode-python-developer && npm run typecheck --workspace @appverk/opencode-code-review && npm run typecheck --workspace @appverk/opencode-frontend-developer",
+    "build": "npm run build:root && npm run build --workspace @appverk/opencode-skill-utils && npm run build --workspace @appverk/opencode-commit && npm run build --workspace @appverk/opencode-python-developer && npm run build --workspace @appverk/opencode-code-review && npm run build --workspace @appverk/opencode-frontend-developer && npm run build --workspace @appverk/opencode-skill-registry",
+    "test": "npm run build:root && npm run build --workspace @appverk/opencode-skill-utils && vitest run --config vitest.config.ts && npm run test --workspace @appverk/opencode-commit && npm run test --workspace @appverk/opencode-python-developer && npm run test --workspace @appverk/opencode-code-review && npm run test --workspace @appverk/opencode-frontend-developer && npm run test --workspace @appverk/opencode-skill-registry",
+    "typecheck": "tsc -p tsconfig.json --noEmit && npm run build --workspace @appverk/opencode-skill-utils && npm run typecheck --workspace @appverk/opencode-commit && npm run typecheck --workspace @appverk/opencode-skill-utils && npm run typecheck --workspace @appverk/opencode-python-developer && npm run typecheck --workspace @appverk/opencode-code-review && npm run typecheck --workspace @appverk/opencode-frontend-developer && npm run typecheck --workspace @appverk/opencode-skill-registry",
     "check": "npm run typecheck && npm run test && npm run build",
     "lint": "eslint .",
     "format": "prettier --write .",

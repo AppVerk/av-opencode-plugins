@@ -1,6 +1,7 @@
 ---
-name: coding-standards
+name: frontend-coding-standards
 description: TypeScript + React coding standards, architecture patterns, naming conventions, ESLint configuration
+activation: MUST load when writing or reviewing TypeScript/React code
 ---
 
 # Coding Standards — TypeScript + React

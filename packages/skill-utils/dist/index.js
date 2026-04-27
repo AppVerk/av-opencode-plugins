@@ -94,7 +94,7 @@ function createSkillPlugin(options) {
     packagedCommandPath,
     sourceCommandPath
   );
-  return async () => ({
+  const plugin = {
     config: async (config) => {
       config.agent = config.agent ?? {};
       config.agent[agentName] = {
@@ -112,8 +112,10 @@ function createSkillPlugin(options) {
         },
         agent: agentName
       };
-    },
-    tool: {
+    }
+  };
+  if (loadSkill) {
+    plugin.tool = {
       [`load_${namespace}_skill`]: tool({
         description: `Load a ${namespace} development skill by name. Returns the full markdown content of the skill's rules and patterns.`,
         args: {
@@ -123,8 +125,9 @@ function createSkillPlugin(options) {
           return loadSkill(args.name);
         }
       })
-    }
-  });
+    };
+  }
+  return async () => plugin;
 }
 export {
   createSkillLoader,

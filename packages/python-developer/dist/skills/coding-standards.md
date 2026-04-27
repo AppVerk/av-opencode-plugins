@@ -1,6 +1,7 @@
 ---
-name: coding-standards
-description: Enforces Python coding rules: type hints, imports, naming, error handling, and project conventions for AppVerk projects. Activates when writing or reviewing Python code.
+name: python-coding-standards
+description: Enforces Python coding rules - type hints, imports, naming, error handling, and project conventions for AppVerk projects.
+activation: MUST load when writing or reviewing Python code
 allowed-tools: Read, Grep, Glob, Bash(ruff:*), Bash(mypy:*), Bash(basedpyright:*), Bash(make:*), Bash(uv:*), Bash(python:*)
 ---
 
@@ -132,7 +133,7 @@ Use blank lines to visually separate logical sections of code, improving scanabi
 
 ## Testing
 
-See the `tdd-workflow` skill for all testing rules, patterns, and conventions.
+See the `python-tdd-workflow` skill for all testing rules, patterns, and conventions.
 
 ## Additional Guidelines
 

@@ -32,9 +32,9 @@ describe("AppVerkFrontendDeveloperPlugin", () => {
     expect(config.command!.frontend!.agent).toBe("frontend-developer")
   })
 
-  it("registers load_frontend_skill tool", async () => {
+  it("does not register load_frontend_skill tool (now global)", async () => {
     const plugin = await AppVerkFrontendDeveloperPlugin({} as never)
-    expect(plugin.tool?.load_frontend_skill).toBeDefined()
+    expect(plugin.tool?.load_frontend_skill).toBeUndefined()
   })
 })
 

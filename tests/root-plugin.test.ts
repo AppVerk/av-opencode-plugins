@@ -61,7 +61,7 @@ describe("AppVerkPlugins", () => {
     expect(config.command?.frontend?.agent).toBe("frontend-developer")
     expect(config.agent?.["frontend-developer"]?.description).toContain("TypeScript")
     expect(config.agent?.["frontend-developer"]?.mode).toBe("primary")
-    expect(plugin.tool?.load_frontend_skill).toBeDefined()
+    expect(plugin.tool?.load_appverk_skill).toBeDefined()
   })
 
   it("packages a self-contained git-install surface", () => {
@@ -107,8 +107,25 @@ describe("AppVerkPlugins", () => {
         "packages/code-review/dist/index.js",
         "packages/code-review/dist/index.d.ts",
         "packages/code-review/dist/commands/review.md",
+        "packages/skill-registry/dist/index.js",
+        "packages/skill-registry/dist/index.d.ts",
       ]),
     )
+  })
+
+  it("injects skill activation rules via system prompt transform", async () => {
+    const { AppVerkPlugins } = await loadRootModule()
+    const plugin = await AppVerkPlugins({} as never)
+
+    const output = { system: [] as string[] }
+    await plugin["experimental.chat.system.transform"]?.(
+      { model: {} as never } as never,
+      output as never,
+    )
+
+    expect(output.system.length).toBeGreaterThan(0)
+    expect(output.system[0]).toContain("AppVerk Skills")
+    expect(output.system[0]).toContain("load_appverk_skill")
   })
 
   it("preserves commit bash protections through the aggregated hook", async () => {

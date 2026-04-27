@@ -1,6 +1,7 @@
 ---
-name: tdd-workflow
+name: frontend-tdd-workflow
 description: Test-driven development workflow with Vitest, React Testing Library, MSW v2, and Playwright
+activation: MUST load when writing tests, fixing bugs, or refactoring TypeScript/React code
 ---
 
 # TDD Workflow — Testing Strategy

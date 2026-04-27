@@ -1240,4 +1240,4 @@ async def client(app):
 - **Endpoint tests**: use `FakeUnitOfWork` via `dependency_overrides`. Test HTTP interface.
 - Create tables once per session (`scope="session"`) for performance.
 - Use factories for complex test data, not raw model construction.
-- See the `tdd-workflow` skill for full testing rules.
+- See the `python-tdd-workflow` skill for full testing rules.

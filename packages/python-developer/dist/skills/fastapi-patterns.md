@@ -1000,5 +1000,5 @@ def test_health_check(app):
 - Each test class targets one endpoint or related group of endpoints.
 - Always clear `dependency_overrides` after tests (use `yield` fixtures).
 - No `@pytest.mark.asyncio` needed — `asyncio_mode = "auto"` handles it.
-- See the `tdd-workflow` skill for full testing rules and Fake vs Mock guidance.
+- See the `python-tdd-workflow` skill for full testing rules and Fake vs Mock guidance.
 - See the `sqlalchemy-patterns` skill for `FakeUnitOfWork` and `FakeRepository` patterns.

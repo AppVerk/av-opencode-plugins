@@ -1,6 +1,7 @@
 ---
-name: tdd-workflow
-description: Enforces test-driven development: writes tests before code, uses fakes over mocks, maintains 80%+ coverage. Activates when writing new features, fixing bugs, or refactoring Python code.
+name: python-tdd-workflow
+description: Enforces test-driven development - writes tests before code, uses fakes over mocks, maintains 80%+ coverage.
+activation: MUST load when writing tests, fixing bugs, or refactoring Python code
 allowed-tools: Read, Grep, Glob, Bash(pytest:*), Bash(make:*), Bash(uv:*), Bash(python:*), Bash(coverage:*)
 ---
 
@@ -669,7 +670,7 @@ repos:
 
 ## Test Code Standards
 
-These standards extend the HARD-RULES above with organizational and structural guidance (absorbed from coding-standards):
+These standards extend the HARD-RULES above with organizational and structural guidance (absorbed from python-coding-standards):
 
 ### General Testing Principles
 

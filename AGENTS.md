@@ -12,6 +12,7 @@ This is an **OpenCode plugin monorepo** that bundles multiple workspace plugins:
 | `packages/code-review` | Code-review plugin source, tests, agent prompts, command templates, skill-agents, build scripts. Output shipped at `packages/code-review/dist/`. |
 | `packages/frontend-developer` | Frontend-developer plugin source, tests, skills, build scripts. Output shipped at `packages/frontend-developer/dist/`. |
 | `packages/skill-utils` | Shared helpers for creating skill-based plugins. Output shipped at `packages/skill-utils/dist/`. |
+| `packages/skill-registry` | Global skill registry — scans skill folders, parses frontmatter, registers unified `load_appverk_skill` tool, injects activation rules into every agent's system prompt. Output shipped at `packages/skill-registry/dist/`. |
 | `.opencode/` | Local OpenCode config for this repo (separate `package.json`). |
 
 **Important:** `dist/` is usually ignored, but `packages/*/dist/` is **committed and published** (see `.gitignore`). Do not delete those `dist/` trees.
@@ -43,7 +44,7 @@ npm run test  --workspace @appverk/opencode-commit
 - **Package builds:** `tsup src/index.ts --format esm --dts`.
 - **Post-build asset copying:** Each package runs a Node script to copy markdown templates/skills into `dist/` (e.g., `dist/commands/commit.md`, `dist/skills/*.md`).
 - **Root entrypoint:** `src/index.js` is the runtime file consumed by tests and published consumers; `src/index.ts` is the typed source. When changing merge logic, update both `src/index.ts` and `src/index.js`, then run `npm run build` so the package-level tests still pass.
-- **Published files:** Only `src/index.js`, `src/index.d.ts`, and the five `packages/*/dist/` directories (see root `package.json` `files`).
+- **Published files:** Only `src/index.js`, `src/index.d.ts`, and the six `packages/*/dist/` directories (see root `package.json` `files`).
 
 ## TypeScript Configuration
 
@@ -169,7 +170,7 @@ Example config:
 ```json
 {
   "plugin": [
-    "av-opencode-plugins@git+https://github.com/AppVerk/av-opencode-plugins.git#v0.2.8"
+    "av-opencode-plugins@git+https://github.com/AppVerk/av-opencode-plugins.git#v0.2.10"
   ]
 }
 ```

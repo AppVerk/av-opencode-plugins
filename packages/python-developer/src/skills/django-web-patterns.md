@@ -512,4 +512,4 @@ def test_get_queryset_filters_by_user() -> None:
 - Use `APIClient.force_authenticate()` for auth — never create real tokens in unit tests.
 - Use `factory_boy` `Factory` classes for all test data — never use `Model.objects.create()` directly in tests.
 - Test the HTTP interface (status codes, response shape) for view tests; test domain logic in `test_models.py` / `test_services.py`.
-- See the `tdd-workflow` skill for full testing rules and factory patterns.
+- See the `python-tdd-workflow` skill for full testing rules and factory patterns.

@@ -6,7 +6,7 @@ interface CreateSkillPluginOptions {
     commandName: string;
     agentDescription: string;
     commandDescription: string;
-    loadSkill: (name: string) => string;
+    loadSkill: ((name: string) => string) | null;
     availableSkills: readonly string[];
     moduleDirectory: string;
     mode?: "primary" | "subagent";

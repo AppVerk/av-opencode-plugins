@@ -9,7 +9,7 @@ export interface CreateSkillPluginOptions {
   commandName: string
   agentDescription: string
   commandDescription: string
-  loadSkill: (name: string) => string
+  loadSkill: ((name: string) => string) | null
   availableSkills: readonly string[]
   moduleDirectory: string
   mode?: "primary" | "subagent"
@@ -121,7 +121,7 @@ export function createSkillPlugin(options: CreateSkillPluginOptions): Plugin {
     sourceCommandPath,
   )
 
-  return async () => ({
+  const plugin: Awaited<ReturnType<Plugin>> = {
     config: async (config) => {
       config.agent = config.agent ?? {}
       config.agent[agentName] = {
@@ -141,7 +141,10 @@ export function createSkillPlugin(options: CreateSkillPluginOptions): Plugin {
         agent: agentName,
       }
     },
-    tool: {
+  }
+
+  if (loadSkill) {
+    plugin.tool = {
       [`load_${namespace}_skill`]: tool({
         description: `Load a ${namespace} development skill by name. Returns the full markdown content of the skill's rules and patterns.`,
         args: {
@@ -153,6 +156,8 @@ export function createSkillPlugin(options: CreateSkillPluginOptions): Plugin {
           return loadSkill(args.name)
         },
       }),
-    },
-  })
+    }
+  }
+
+  return async () => plugin
 }

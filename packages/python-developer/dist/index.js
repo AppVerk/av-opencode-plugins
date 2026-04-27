@@ -1,6 +1,6 @@
 // src/index.ts
-import path3 from "path";
-import { fileURLToPath as fileURLToPath2 } from "url";
+import path2 from "path";
+import { fileURLToPath } from "url";
 
 // ../skill-utils/dist/index.js
 import { readFileSync } from "fs";
@@ -35,42 +35,6 @@ function createLazyFileLoader(packaged, source) {
     return cached;
   };
 }
-function createSkillLoader(options) {
-  const { namespace, availableSkills, moduleDirectory: moduleDirectory3 } = options;
-  const skillCache = /* @__PURE__ */ new Map();
-  function loadSkillContent(name) {
-    const candidates = [
-      path.resolve(moduleDirectory3, "skills", `${name}.md`),
-      // packaged build (dist/skills/)
-      path.resolve(moduleDirectory3, "../src/skills", `${name}.md`),
-      // from dist/ in repo (src/skills/)
-      path.resolve(moduleDirectory3, "../skills", `${name}.md`)
-      // from src/tools/ in vitest (src/skills/)
-    ];
-    let lastError;
-    for (const candidate of candidates) {
-      try {
-        return readFileSync(candidate, "utf8");
-      } catch (error) {
-        lastError = error;
-      }
-    }
-    throw new Error(`${namespace} skill file not found for: ${name}`, { cause: lastError });
-  }
-  return function loadSkill(name) {
-    if (!availableSkills.includes(name)) {
-      throw new Error(
-        `${namespace} skill not found: ${name}. Available: ${availableSkills.join(", ")}`
-      );
-    }
-    if (skillCache.has(name)) {
-      return skillCache.get(name);
-    }
-    const content = loadSkillContent(name);
-    skillCache.set(name, content);
-    return content;
-  };
-}
 function createSkillPlugin(options) {
   const {
     namespace,
@@ -80,17 +44,17 @@ function createSkillPlugin(options) {
     commandDescription,
     loadSkill,
     availableSkills,
-    moduleDirectory: moduleDirectory3,
+    moduleDirectory: moduleDirectory2,
     mode = "primary"
   } = options;
-  const packagedAgentPath = path.resolve(moduleDirectory3, "agent-prompt.md");
-  const sourceAgentPath = path.resolve(moduleDirectory3, "../src/agent-prompt.md");
+  const packagedAgentPath = path.resolve(moduleDirectory2, "agent-prompt.md");
+  const sourceAgentPath = path.resolve(moduleDirectory2, "../src/agent-prompt.md");
   const packagedCommandPath = path.resolve(
-    moduleDirectory3,
+    moduleDirectory2,
     `commands/${commandName}.md`
   );
   const sourceCommandPath = path.resolve(
-    moduleDirectory3,
+    moduleDirectory2,
     `../src/commands/${commandName}.md`
   );
   const getAgentPrompt = createLazyFileLoader(packagedAgentPath, sourceAgentPath);
@@ -98,7 +62,7 @@ function createSkillPlugin(options) {
     packagedCommandPath,
     sourceCommandPath
   );
-  return async () => ({
+  const plugin = {
     config: async (config) => {
       config.agent = config.agent ?? {};
       config.agent[agentName] = {
@@ -116,8 +80,10 @@ function createSkillPlugin(options) {
         },
         agent: agentName
       };
-    },
-    tool: {
+    }
+  };
+  if (loadSkill) {
+    plugin.tool = {
       [`load_${namespace}_skill`]: tool({
         description: `Load a ${namespace} development skill by name. Returns the full markdown content of the skill's rules and patterns.`,
         args: {
@@ -127,53 +93,22 @@ function createSkillPlugin(options) {
           return loadSkill(args.name);
         }
       })
-    }
-  });
+    };
+  }
+  return async () => plugin;
 }
 
-// src/tools/load-skill.ts
-import path2 from "path";
-import { fileURLToPath } from "url";
-var moduleDirectory = path2.dirname(fileURLToPath(import.meta.url));
-var loadPythonSkill = createSkillLoader({
-  namespace: "python-developer",
-  availableSkills: [
-    "coding-standards",
-    "tdd-workflow",
-    "fastapi-patterns",
-    "sqlalchemy-patterns",
-    "pydantic-patterns",
-    "async-python-patterns",
-    "uv-package-manager",
-    "django-web-patterns",
-    "django-orm-patterns",
-    "celery-patterns"
-  ],
-  moduleDirectory
-});
-
 // src/index.ts
-var moduleDirectory2 = path3.dirname(fileURLToPath2(import.meta.url));
+var moduleDirectory = path2.dirname(fileURLToPath(import.meta.url));
 var AppVerkPythonDeveloperPlugin = createSkillPlugin({
   namespace: "python",
   agentName: "python-developer",
   commandName: "python",
   agentDescription: "Expert Python developer enforcing AppVerk coding standards, TDD workflow, and stack-specific patterns.",
   commandDescription: "Python development workflow enforcing coding standards, TDD, and stack-specific patterns.",
-  loadSkill: loadPythonSkill,
-  availableSkills: [
-    "coding-standards",
-    "tdd-workflow",
-    "fastapi-patterns",
-    "sqlalchemy-patterns",
-    "pydantic-patterns",
-    "async-python-patterns",
-    "uv-package-manager",
-    "django-web-patterns",
-    "django-orm-patterns",
-    "celery-patterns"
-  ],
-  moduleDirectory: moduleDirectory2
+  loadSkill: null,
+  availableSkills: [],
+  moduleDirectory
 });
 var index_default = AppVerkPythonDeveloperPlugin;
 export {
