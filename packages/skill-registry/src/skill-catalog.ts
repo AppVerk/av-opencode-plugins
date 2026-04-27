@@ -55,13 +55,17 @@ export function buildSkillCatalog(directories: readonly string[]): Map<string, S
 
     const entries = readdirSync(dir, { withFileTypes: true })
     for (const entry of entries) {
-      if (!entry.isFile() || !entry.name.endsWith(".md")) {
+      if (!entry.isDirectory()) {
         continue
       }
 
-      const filePath = path.join(dir, entry.name)
-      const content = readFileSync(filePath, "utf8")
-      const parsed = parseSkillFrontmatter(content, filePath)
+      const skillFilePath = path.join(dir, entry.name, "SKILL.md")
+      if (!existsSync(skillFilePath)) {
+        continue
+      }
+
+      const content = readFileSync(skillFilePath, "utf8")
+      const parsed = parseSkillFrontmatter(content, skillFilePath)
 
       if (!parsed) {
         continue
@@ -69,7 +73,7 @@ export function buildSkillCatalog(directories: readonly string[]): Map<string, S
 
       if (catalog.has(parsed.name)) {
         throw new Error(
-          `Duplicate skill name "${parsed.name}" found in ${filePath}. ` +
+          `Duplicate skill name "${parsed.name}" found in ${skillFilePath}. ` +
             `Already defined in ${catalog.get(parsed.name)!.filePath}.`,
         )
       }

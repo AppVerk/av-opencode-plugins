@@ -59,9 +59,9 @@ export function createSkillLoader(options: CreateSkillLoaderOptions): (name: str
 
   function loadSkillContent(name: string): string {
     const candidates = [
-      path.resolve(moduleDirectory, "skills", `${name}.md`), // packaged build (dist/skills/)
-      path.resolve(moduleDirectory, "../src/skills", `${name}.md`), // from dist/ in repo (src/skills/)
-      path.resolve(moduleDirectory, "../skills", `${name}.md`), // from src/tools/ in vitest (src/skills/)
+      path.resolve(moduleDirectory, "skills", name, "SKILL.md"), // packaged build (dist/skills/)
+      path.resolve(moduleDirectory, "../src/skills", name, "SKILL.md"), // from dist/ in repo (src/skills/)
+      path.resolve(moduleDirectory, "../skills", name, "SKILL.md"), // from src/tools/ in vitest (src/skills/)
     ]
     let lastError: Error | undefined
     for (const candidate of candidates) {

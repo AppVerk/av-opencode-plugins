@@ -19,9 +19,15 @@ export const AppVerkSkillRegistryPlugin: Plugin = async () => {
   const activationRules = generateActivationRules(catalog)
 
   return {
-    config: async () => {
-      // Skill discovery is handled via experimental.chat.system.transform
-      // and the load_appverk_skill tool. No additional config needed.
+    config: async (config: any) => {
+      // Register skill directories so OpenCode discovers them natively.
+      config.skills = config.skills || {}
+      config.skills.paths = config.skills.paths || []
+      for (const dir of skillDirectories) {
+        if (!config.skills.paths.includes(dir)) {
+          config.skills.paths.push(dir)
+        }
+      }
     },
     tool: {
       load_appverk_skill: tool({

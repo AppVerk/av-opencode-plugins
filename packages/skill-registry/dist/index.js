@@ -45,18 +45,21 @@ function buildSkillCatalog(directories) {
     }
     const entries = readdirSync(dir, { withFileTypes: true });
     for (const entry of entries) {
-      if (!entry.isFile() || !entry.name.endsWith(".md")) {
+      if (!entry.isDirectory()) {
         continue;
       }
-      const filePath = path.join(dir, entry.name);
-      const content = readFileSync(filePath, "utf8");
-      const parsed = parseSkillFrontmatter(content, filePath);
+      const skillFilePath = path.join(dir, entry.name, "SKILL.md");
+      if (!existsSync(skillFilePath)) {
+        continue;
+      }
+      const content = readFileSync(skillFilePath, "utf8");
+      const parsed = parseSkillFrontmatter(content, skillFilePath);
       if (!parsed) {
         continue;
       }
       if (catalog.has(parsed.name)) {
         throw new Error(
-          `Duplicate skill name "${parsed.name}" found in ${filePath}. Already defined in ${catalog.get(parsed.name).filePath}.`
+          `Duplicate skill name "${parsed.name}" found in ${skillFilePath}. Already defined in ${catalog.get(parsed.name).filePath}.`
         );
       }
       catalog.set(parsed.name, parsed);
@@ -146,7 +149,14 @@ var AppVerkSkillRegistryPlugin = async () => {
   const loadSkill = createSkillLoader(catalog);
   const activationRules = generateActivationRules(catalog);
   return {
-    config: async () => {
+    config: async (config) => {
+      config.skills = config.skills || {};
+      config.skills.paths = config.skills.paths || [];
+      for (const dir of skillDirectories) {
+        if (!config.skills.paths.includes(dir)) {
+          config.skills.paths.push(dir);
+        }
+      }
     },
     tool: {
       load_appverk_skill: tool({

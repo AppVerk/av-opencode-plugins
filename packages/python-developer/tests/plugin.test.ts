@@ -40,7 +40,7 @@ describe("AppVerkPythonDeveloperPlugin", () => {
 
 describe("loadPythonSkill", () => {
   it("loads a valid skill successfully", () => {
-    const content = loadPythonSkill("coding-standards")
+    const content = loadPythonSkill("python-coding-standards")
     expect(content).toContain("Python")
     expect(content.length).toBeGreaterThan(0)
   })
@@ -50,8 +50,8 @@ describe("loadPythonSkill", () => {
   })
 
   it("caches loaded skills", () => {
-    const first = loadPythonSkill("coding-standards")
-    const second = loadPythonSkill("coding-standards")
+    const first = loadPythonSkill("python-coding-standards")
+    const second = loadPythonSkill("python-coding-standards")
     expect(first).toBe(second)
   })
 

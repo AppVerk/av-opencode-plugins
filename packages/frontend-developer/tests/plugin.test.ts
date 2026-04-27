@@ -40,7 +40,7 @@ describe("AppVerkFrontendDeveloperPlugin", () => {
 
 describe("loadFrontendSkill", () => {
   it("loads a valid skill successfully", () => {
-    const content = loadFrontendSkill("coding-standards")
+    const content = loadFrontendSkill("frontend-coding-standards")
     expect(content).toContain("TypeScript")
     expect(content.length).toBeGreaterThan(0)
   })
@@ -50,8 +50,8 @@ describe("loadFrontendSkill", () => {
   })
 
   it("caches loaded skills", () => {
-    const first = loadFrontendSkill("coding-standards")
-    const second = loadFrontendSkill("coding-standards")
+    const first = loadFrontendSkill("frontend-coding-standards")
+    const second = loadFrontendSkill("frontend-coding-standards")
     expect(first).toBe(second)
   })
 

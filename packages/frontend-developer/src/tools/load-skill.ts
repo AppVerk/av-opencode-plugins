@@ -7,8 +7,8 @@ const moduleDirectory = path.dirname(fileURLToPath(import.meta.url))
 export const loadFrontendSkill = createSkillLoader({
   namespace: "frontend-developer",
   availableSkills: [
-    "coding-standards",
-    "tdd-workflow",
+    "frontend-coding-standards",
+    "frontend-tdd-workflow",
     "tailwind-patterns",
     "zustand-patterns",
     "tanstack-query-patterns",

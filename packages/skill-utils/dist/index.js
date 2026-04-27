@@ -36,11 +36,11 @@ function createSkillLoader(options) {
   const skillCache = /* @__PURE__ */ new Map();
   function loadSkillContent(name) {
     const candidates = [
-      path.resolve(moduleDirectory, "skills", `${name}.md`),
+      path.resolve(moduleDirectory, "skills", name, "SKILL.md"),
       // packaged build (dist/skills/)
-      path.resolve(moduleDirectory, "../src/skills", `${name}.md`),
+      path.resolve(moduleDirectory, "../src/skills", name, "SKILL.md"),
       // from dist/ in repo (src/skills/)
-      path.resolve(moduleDirectory, "../skills", `${name}.md`)
+      path.resolve(moduleDirectory, "../skills", name, "SKILL.md")
       // from src/tools/ in vitest (src/skills/)
     ];
     let lastError;

@@ -7,8 +7,8 @@ const moduleDirectory = path.dirname(fileURLToPath(import.meta.url))
 export const loadPythonSkill = createSkillLoader({
   namespace: "python-developer",
   availableSkills: [
-    "coding-standards",
-    "tdd-workflow",
+    "python-coding-standards",
+    "python-tdd-workflow",
     "fastapi-patterns",
     "sqlalchemy-patterns",
     "pydantic-patterns",

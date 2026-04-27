@@ -52,7 +52,7 @@ describe("buildSkillCatalog", () => {
     expect(skill.name).toBe("python-coding-standards")
     expect(skill.description).toContain("Python")
     expect(skill.activation).toBeTruthy()
-    expect(skill.filePath).toContain("coding-standards.md")
+    expect(skill.filePath).toContain("python-coding-standards/SKILL.md")
   })
 
   it("throws on duplicate skill names across directories", () => {

@@ -2,14 +2,14 @@ import { describe, expect, it } from "vitest"
 import { loadPythonSkill } from "../src/tools/load-skill.js"
 
 describe("loadPythonSkill", () => {
-  it("returns coding-standards skill markdown", () => {
-    const content = loadPythonSkill("coding-standards")
+  it("returns python-coding-standards skill markdown", () => {
+    const content = loadPythonSkill("python-coding-standards")
     expect(content).toContain("HARD-RULES")
     expect(content).toContain("Python Coding Rules")
   })
 
-  it("returns tdd-workflow skill markdown", () => {
-    const content = loadPythonSkill("tdd-workflow")
+  it("returns python-tdd-workflow skill markdown", () => {
+    const content = loadPythonSkill("python-tdd-workflow")
     expect(content).toContain("TDD")
     expect(content).toContain("Red-Green-Refactor")
   })
@@ -21,8 +21,8 @@ describe("loadPythonSkill", () => {
 
   it("returns all 10 skills without error", () => {
     const skills = [
-      "coding-standards",
-      "tdd-workflow",
+      "python-coding-standards",
+      "python-tdd-workflow",
       "fastapi-patterns",
       "sqlalchemy-patterns",
       "pydantic-patterns",
