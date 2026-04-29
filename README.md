@@ -170,18 +170,18 @@ The `/run-qa` command:
 
 1. Loads the test plan or creates a quick checklist for the given path
 2. Detects whether the scope is frontend, backend, or both
-3. Launches the appropriate testing agent (`@fe-tester` or `@be-tester`)
+3. Launches the appropriate testing agent (`@qa-fe-tester` or `@qa-be-tester`)
 4. Executes tests using Playwright (frontend) or curl + DB CLI (backend)
 5. Collects results into a markdown report with pass/fail status
 
 You can also invoke testing agents directly:
 
 ```bash
-opencode agent fe-tester "Run accessibility checks on the checkout page"
+opencode agent qa-fe-tester "Run accessibility checks on the checkout page"
 ```
 
 ```bash
-opencode agent be-tester "Test GET /api/v1/orders with pagination"
+opencode agent qa-be-tester "Test GET /api/v1/orders with pagination"
 ```
 
 ## Available Commands & Agents
@@ -206,8 +206,8 @@ opencode agent be-tester "Test GET /api/v1/orders with pagination"
 | `@cross-verifier` | Cross-domain correlation agent — finds intersections between findings. | `subagent` | [Guide](docs/plugins/code-review.md) |
 | `@challenger` | Adversarial review agent — challenges findings for false positives. | `subagent` | [Guide](docs/plugins/code-review.md) |
 | `@synthesis-agent` | **Planned** — deduplicates and groups findings into actionable PRs. Not yet implemented. | `subagent` | [Guide](docs/plugins/code-review.md) |
-| `@fe-tester` | Frontend testing subagent — runs Playwright tests, accessibility checks, and visual regression. | `subagent` | [Guide](docs/plugins/qa.md) |
-| `@be-tester` | Backend testing subagent — tests API endpoints and validates database state via HTTP + DB CLI. | `subagent` | [Guide](docs/plugins/qa.md) |
+| `@qa-fe-tester` | Frontend testing subagent — runs Playwright tests, accessibility checks, and visual regression. | `subagent` | [Guide](docs/plugins/qa.md) |
+| `@qa-be-tester` | Backend testing subagent — tests API endpoints and validates database state via HTTP + DB CLI. | `subagent` | [Guide](docs/plugins/qa.md) |
 | `@feedback-analyzer` | Per-comment classification agent for PR feedback analysis. | `subagent` | [Guide](docs/plugins/code-review.md) |
 | `@fix-auto` | Auto-fix subagent — performs fixes without user confirmation. | `subagent` | [Guide](docs/plugins/code-review.md) |
 

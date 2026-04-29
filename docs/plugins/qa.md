@@ -26,7 +26,7 @@ Examples:
 /create-qa-plan Fix pagination on the user list page
 ```
 
-The command creates a `docs/qa/YYYY-MM-DD-<branch>-test-plan.md` file with test cases, preconditions, and expected results.
+The command creates a `docs/testing/plans/YYYY-MM-DD-<topic>-test-plan.md` file with test cases, preconditions, and expected results.
 
 ### Run a QA session
 
@@ -39,7 +39,7 @@ Execute a saved test plan or run a quick ad-hoc QA check:
 Examples:
 
 ```text
-/run-qa docs/qa/2026-04-29-feature-auth-test-plan.md
+/run-qa docs/testing/plans/2026-04-29-feature-auth-test-plan.md
 ```
 
 ```text
@@ -48,23 +48,23 @@ Examples:
 
 The `/run-qa` command:
 
-1. Loads the test plan or creates a quick checklist for the provided path
+1. Loads the test plan file or finds the most recent plan in `docs/testing/plans/`
 2. Detects whether the scope is frontend, backend, or both
-3. Launches the appropriate testing agent (`@fe-tester` or `@be-tester`)
+3. Launches the appropriate testing agent (`@qa-fe-tester` or `@qa-be-tester`)
 4. Executes tests using Playwright (FE) or curl + DB CLI (BE)
 5. Collects results into a markdown report with pass/fail status
-6. Generates `docs/qa/YYYY-MM-DD-<branch>-report.md`
+6. Generates `docs/testing/reports/YYYY-MM-DD-<topic>-report.md`
 
 ## Direct Agent Use
 
 You can also invoke testing agents directly for ad-hoc checks:
 
 ```bash
-opencode agent fe-tester "Run accessibility checks on the checkout page"
+opencode agent qa-fe-tester "Run accessibility checks on the checkout page"
 ```
 
 ```bash
-opencode agent be-tester "Test the GET /api/v1/orders endpoint with pagination"
+opencode agent qa-be-tester "Test the GET /api/v1/orders endpoint with pagination"
 ```
 
 ## Architecture
@@ -73,8 +73,8 @@ opencode agent be-tester "Test the GET /api/v1/orders endpoint with pagination"
 |---------|------|-------------|
 | `/create-qa-plan` | Command | Generates structured test plans from PR descriptions or tickets |
 | `/run-qa` | Command | Executes test plans or ad-hoc QA checks, delegates to agents |
-| `@fe-tester` | Agent | Subagent for frontend testing via Playwright (bash CLI fallback) |
-| `@be-tester` | Agent | Subagent for backend testing via HTTP requests and DB assertions |
+| `@qa-fe-tester` | Agent | Subagent for frontend testing via Playwright (bash CLI fallback) |
+| `@qa-be-tester` | Agent | Subagent for backend testing via HTTP requests and DB assertions |
 | `test-plan-format` | Skill | Rules for writing test plans with Given/When/Then, IDs, metadata |
 | `report-format` | Skill | Rules for writing QA reports with status, evidence, traceability |
 | `fe-testing` | Skill | Frontend testing patterns: Playwright CLI, selectors, assertions |

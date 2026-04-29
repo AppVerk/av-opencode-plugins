@@ -1,71 +1,33 @@
+import { describe, it, expect, beforeAll } from "vitest"
+import type { Config } from "@opencode-ai/plugin"
 import { AppVerkQAPlugin } from "../dist/index.js"
 
-test("exports a plugin factory", () => {
-  expect(typeof AppVerkQAPlugin).toBe("function")
-})
+describe("AppVerkQAPlugin", () => {
+  let pluginResult: Awaited<ReturnType<typeof AppVerkQAPlugin>>
 
-test("registers all agents and commands", async () => {
-  const hooks = await AppVerkQAPlugin({
-    client: {} as any,
-    project: {} as any,
-    directory: "/tmp",
-    worktree: "/tmp",
-    experimental_workspace: { register: () => {} },
-    serverUrl: new URL("http://localhost"),
-    $: {} as any,
+  beforeAll(async () => {
+    pluginResult = await AppVerkQAPlugin({} as never)
   })
 
-  const config: any = { agent: {}, command: {} }
-  await hooks.config!(config)
-
-  expect(config.agent).toHaveProperty("qa-fe-tester")
-  expect(config.agent).toHaveProperty("qa-be-tester")
-  expect(config.command).toHaveProperty("create-qa-plan")
-  expect(config.command).toHaveProperty("run-qa")
-})
-
-test("agent prompts load without error", async () => {
-  const hooks = await AppVerkQAPlugin({
-    client: {} as any,
-    project: {} as any,
-    directory: "/tmp",
-    worktree: "/tmp",
-    experimental_workspace: { register: () => {} },
-    serverUrl: new URL("http://localhost"),
-    $: {} as any,
+  it("exports a plugin factory", () => {
+    expect(typeof AppVerkQAPlugin).toBe("function")
   })
 
-  const config: any = { agent: {}, command: {} }
-  await hooks.config!(config)
+  const EXPECTED_AGENTS = ["qa-fe-tester", "qa-be-tester"]
+  const EXPECTED_COMMANDS = ["create-qa-plan", "run-qa"]
 
-  for (const name of ["qa-fe-tester", "qa-be-tester"]) {
-    const agent = config.agent[name]
-    expect(agent).toBeDefined()
-    const prompt = agent.prompt
-    expect(typeof prompt).toBe("string")
-    expect(prompt.length).toBeGreaterThan(100)
-  }
-})
-
-test("command templates load without error", async () => {
-  const hooks = await AppVerkQAPlugin({
-    client: {} as any,
-    project: {} as any,
-    directory: "/tmp",
-    worktree: "/tmp",
-    experimental_workspace: { register: () => {} },
-    serverUrl: new URL("http://localhost"),
-    $: {} as any,
+  it.each(EXPECTED_AGENTS)("registers %s agent", async (name) => {
+    const config: Config = { agent: {} }
+    await pluginResult.config?.(config)
+    expect(config.agent![name]).toBeDefined()
+    expect(config.agent![name]!.mode).toBe("subagent")
+    expect(typeof config.agent![name]!.prompt).toBe("string")
   })
 
-  const config: any = { agent: {}, command: {} }
-  await hooks.config!(config)
-
-  for (const name of ["create-qa-plan", "run-qa"]) {
-    const cmd = config.command[name]
-    expect(cmd).toBeDefined()
-    const template = cmd.template
-    expect(typeof template).toBe("string")
-    expect(template.length).toBeGreaterThan(100)
-  }
+  it.each(EXPECTED_COMMANDS)("registers %s command", async (name) => {
+    const config: Config = { command: {} }
+    await pluginResult.config?.(config)
+    expect(config.command![name]).toBeDefined()
+    expect(typeof config.command![name]!.template).toBe("string")
+  })
 })

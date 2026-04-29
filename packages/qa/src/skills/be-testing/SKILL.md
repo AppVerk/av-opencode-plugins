@@ -153,6 +153,14 @@ echo "$RESPONSE" | grep -q '"status":"active"' && echo "PASS" || echo "FAIL"
 
 ---
 
+## Credential Safety Rules
+
+- NEVER log full DATABASE_URL, DB_PASSWORD, or connection strings in reports.
+- Mask passwords: `postgres://admin:***@host/db`
+- Prefer test/local DB connections. If production credentials detected, abort and mark SKIP.
+
+---
+
 ## Database Verification Patterns
 
 ### PostgreSQL (psql)
@@ -190,7 +198,7 @@ sqlite3 db.sqlite3 "SELECT status FROM resources WHERE id = 1;"
 
 ```bash
 # Check record exists
-mysql -h localhost -u user -ppassword dbname -N -e "SELECT COUNT(*) FROM resources WHERE name = 'test';"
+mysql -h localhost -u user -p$DB_PASS dbname -N -e "SELECT COUNT(*) FROM resources WHERE name = 'test';"
 ```
 
 Flag: `-N` (skip column names).

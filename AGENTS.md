@@ -13,7 +13,7 @@ This is an **OpenCode plugin monorepo** that bundles multiple workspace plugins:
 | `packages/frontend-developer` | Frontend-developer plugin source, tests, skills, build scripts. Output shipped at `packages/frontend-developer/dist/`. |
 | `packages/skill-utils` | Shared helpers for creating skill-based plugins. Output shipped at `packages/skill-utils/dist/`. |
 | `packages/skill-registry` | Global skill registry — scans skill folders, parses frontmatter, registers unified `load_appverk_skill` tool, injects activation rules into every agent's system prompt. Output shipped at `packages/skill-registry/dist/`. |
-| `packages/qa` | QA plugin — end-to-end testing workflow. Registers `/create-qa-plan` and `/run-qa` commands, plus `@fe-tester` and `@be-tester` subagents. Ships with test-plan and report-format skills. Output shipped at `packages/qa/dist/`. |
+| `packages/qa` | QA plugin — end-to-end testing workflow. Registers `/create-qa-plan` and `/run-qa` commands, plus `qa-fe-tester` and `qa-be-tester` subagents. Ships with test-plan and report-format skills. Output shipped at `packages/qa/dist/`. |
 | `.opencode/` | Local OpenCode config for this repo (separate `package.json`). |
 
 **Important:** `dist/` is usually ignored, but `packages/*/dist/` is **committed and published** (see `.gitignore`). Do not delete those `dist/` trees.
