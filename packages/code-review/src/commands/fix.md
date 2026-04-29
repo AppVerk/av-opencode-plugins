@@ -3,6 +3,17 @@ description: Apply fix for a single code review issue with verification and repo
 argument-hint: <issue-id | full issue block from /review report>
 ---
 
+## Pre-Analysis Step: Discover Project Standards
+
+Before analyzing code, ensure project-specific standards are loaded:
+1. Use the `load_appverk_skill` tool with name "standards-discovery"
+2. Follow the discovery workflow to locate CONTRIBUTING.md, CODING_STANDARDS.md, ARCHITECTURE.md, docs/*.md, and similar files
+3. Apply discovered standards as additional review criteria throughout your analysis
+
+If no explicit standards are found, proceed with industry best practices and note the absence in your report.
+
+---
+
 ## Input Handling
 
 Parse the input argument to determine mode:

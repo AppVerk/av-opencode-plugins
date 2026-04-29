@@ -96,6 +96,7 @@ Use the load_appverk_skill tool with name "python-coding-standards"
 Available skills include:
 - `python-coding-standards`, `python-tdd-workflow`, `fastapi-patterns`, `sqlalchemy-patterns`, `pydantic-patterns`, `async-python-patterns`, `uv-package-manager`, `django-web-patterns`, `django-orm-patterns`, `celery-patterns`
 - `frontend-coding-standards`, `frontend-tdd-workflow`, `tailwind-patterns`, `zustand-patterns`, `tanstack-query-patterns`, `form-patterns`, `tanstack-router-patterns`, `pnpm-package-manager`
+- `standards-discovery` (code review)
 
 ### Code review workflow
 

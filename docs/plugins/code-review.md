@@ -162,6 +162,10 @@ Skill-agents are dedicated subagents for heavy analysis tasks, invoked by main a
 | `agent.skill-architecture-analyzer` | `config.agent` | Analyzes SOLID principles, DDD patterns, Clean Architecture boundaries, and anti-patterns. |
 | `agent.skill-linter-integrator` | `config.agent` | Auto-detects and runs project-configured linters and typecheckers. Supports Python and TypeScript. |
 
+### Skills
+
+The plugin includes a `standards-discovery` skill available globally via `load_appverk_skill("standards-discovery")`. All code-review agents and commands load this skill during their pre-analysis step to discover project-specific coding standards, style guides, and architecture documentation before starting their work.
+
 ### How Agents Work
 
 1. The `/review` command starts by detecting the project tech stack (Python, Frontend, PHP).
@@ -199,4 +203,5 @@ Skill-agents are dedicated subagents for heavy analysis tasks, invoked by main a
 - `src/agents/skill-dependency-scanner.md` — Dependency scanning skill-agent
 - `src/agents/skill-architecture-analyzer.md` — Architecture analysis skill-agent
 - `src/agents/skill-linter-integrator.md` — Linter integration skill-agent
+- `src/skills/standards-discovery/SKILL.md` — Standards discovery skill (global via skill-registry)
 - `scripts/copy-assets.mjs` — Build step that copies markdown files to `dist/`

@@ -11,6 +11,7 @@ const moduleDirectory = path.dirname(fileURLToPath(import.meta.url))
 const skillDirectories = [
   path.resolve(moduleDirectory, "../../python-developer/dist/skills"),
   path.resolve(moduleDirectory, "../../frontend-developer/dist/skills"),
+  path.resolve(moduleDirectory, "../../code-review/dist/skills"),
 ]
 
 export const AppVerkSkillRegistryPlugin: Plugin = async () => {

@@ -32,6 +32,7 @@ describe("build output", () => {
     "agents/skill-dependency-scanner.md",
     "agents/skill-architecture-analyzer.md",
     "agents/skill-linter-integrator.md",
+    "skills/standards-discovery/SKILL.md",
   ]
 
   it.each(EXPECTED_FILES)("dist/$path exists and has structural content", (p) => {
