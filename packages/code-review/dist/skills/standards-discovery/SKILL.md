@@ -79,7 +79,7 @@ Look for patterns like:
 
 ```bash
 # Search for naming convention mentions
-grep -rni "naming convention\|camelCase\|snake_case\|PascalCase\|kebab-case\|UPPER_CASE" --include="*.md" . 2>/dev/null
+grep -rni "naming convention\|camelCase\|snake_case\|PascalCase\|kebab-case\|UPPER_CASE" --include="*.md" --exclude-dir={.git,node_modules,.venv,vendor} . 2>/dev/null
 ```
 
 **Common patterns to identify:**
@@ -94,10 +94,10 @@ grep -rni "naming convention\|camelCase\|snake_case\|PascalCase\|kebab-case\|UPP
 
 ```bash
 # Search for architecture mentions
-grep -rni "clean architecture\|hexagonal\|DDD\|domain.driven\|layered\|SOLID\|microservice" --include="*.md" . 2>/dev/null
+grep -rni "clean architecture\|hexagonal\|DDD\|domain.driven\|layered\|SOLID\|microservice" --include="*.md" --exclude-dir={.git,node_modules,.venv,vendor} . 2>/dev/null
 
 # Check for layer structure documentation
-grep -rni "domain layer\|application layer\|infrastructure\|presentation layer\|use.case" --include="*.md" . 2>/dev/null
+grep -rni "domain layer\|application layer\|infrastructure\|presentation layer\|use.case" --include="*.md" --exclude-dir={.git,node_modules,.venv,vendor} . 2>/dev/null
 ```
 
 **Common architectures to identify:**
@@ -111,10 +111,10 @@ grep -rni "domain layer\|application layer\|infrastructure\|presentation layer\|
 
 ```bash
 # Search for testing standards
-grep -rni "test coverage\|unit test\|integration test\|pytest\|jest\|testing" --include="*.md" . 2>/dev/null
+grep -rni "test coverage\|unit test\|integration test\|pytest\|jest\|testing" --include="*.md" --exclude-dir={.git,node_modules,.venv,vendor} . 2>/dev/null
 
 # Look for coverage requirements
-grep -rni "coverage.*%\|minimum.*coverage\|100%\|80%\|90%" --include="*.md" . 2>/dev/null
+grep -rni "coverage.*%\|minimum.*coverage\|100%\|80%\|90%" --include="*.md" --exclude-dir={.git,node_modules,.venv,vendor} . 2>/dev/null
 ```
 
 **Common requirements to identify:**
@@ -128,7 +128,7 @@ grep -rni "coverage.*%\|minimum.*coverage\|100%\|80%\|90%" --include="*.md" . 2>
 
 ```bash
 # Search for import guidelines
-grep -rni "import\|absolute import\|relative import\|circular\|dependency" --include="*.md" . 2>/dev/null
+grep -rni "import\|absolute import\|relative import\|circular\|dependency" --include="*.md" --exclude-dir={.git,node_modules,.venv,vendor} . 2>/dev/null
 ```
 
 **Common rules to identify:**

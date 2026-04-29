@@ -1,6 +1,6 @@
 {
   "name": "av-opencode-plugins",
-  "version": "0.2.13",
+  "version": "0.2.14",
   "private": true,
   "type": "module",
   "main": "./src/index.js",
@@ -18,8 +18,7 @@
     "packages/*"
   ],
   "dependencies": {
-    "@opencode-ai/plugin": "^1.14.19",
-    "av-opencode-plugins": "github:AppVerk/av-opencode-plugins#v0.2.12"
+    "@opencode-ai/plugin": "^1.14.19"
   },
   "overrides": {
     "uuid": ">=14.0.0"
