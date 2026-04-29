@@ -1,0 +1,6 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "plugin": [
+    "file:///Users/mef1st0/Projects/AppVerk/av-opencode-plugins"
+  ]
+}
