@@ -1,6 +1,6 @@
 # AppVerk OpenCode Plugins — Agent Guide
 
-This is an **OpenCode plugin monorepo** that bundles multiple workspace plugins: a controlled `/commit` workflow, a Python `/python` workflow, a TypeScript + React `/frontend` workflow, a `/review` code review workflow, and shared `skill-utils` helpers. The root package re-exports all of them and handles plugin merging.
+This is an **OpenCode plugin monorepo** that bundles multiple workspace plugins: a controlled `/commit` workflow, a Python `/python` workflow, a TypeScript + React `/frontend` workflow, a `/review` code review workflow, a QA testing workflow (`/create-qa-plan`, `/run-qa`), and shared `skill-utils` helpers. The root package re-exports all of them and handles plugin merging.
 
 ## Monorepo Layout
 
@@ -13,6 +13,7 @@ This is an **OpenCode plugin monorepo** that bundles multiple workspace plugins:
 | `packages/frontend-developer` | Frontend-developer plugin source, tests, skills, build scripts. Output shipped at `packages/frontend-developer/dist/`. |
 | `packages/skill-utils` | Shared helpers for creating skill-based plugins. Output shipped at `packages/skill-utils/dist/`. |
 | `packages/skill-registry` | Global skill registry — scans skill folders, parses frontmatter, registers unified `load_appverk_skill` tool, injects activation rules into every agent's system prompt. Output shipped at `packages/skill-registry/dist/`. |
+| `packages/qa` | QA plugin — end-to-end testing workflow. Registers `/create-qa-plan` and `/run-qa` commands, plus `@fe-tester` and `@be-tester` subagents. Ships with test-plan and report-format skills. Output shipped at `packages/qa/dist/`. |
 | `.opencode/` | Local OpenCode config for this repo (separate `package.json`). |
 
 **Important:** `dist/` is usually ignored, but `packages/*/dist/` is **committed and published** (see `.gitignore`). Do not delete those `dist/` trees.
@@ -44,7 +45,7 @@ npm run test  --workspace @appverk/opencode-commit
 - **Package builds:** `tsup src/index.ts --format esm --dts`.
 - **Post-build asset copying:** Each package runs a Node script to copy markdown templates/skills into `dist/` (e.g., `dist/commands/commit.md`, `dist/skills/*.md`).
 - **Root entrypoint:** `src/index.js` is the runtime file consumed by tests and published consumers; `src/index.ts` is the typed source. When changing merge logic, update both `src/index.ts` and `src/index.js`, then run `npm run build` so the package-level tests still pass.
-- **Published files:** Only `src/index.js`, `src/index.d.ts`, and the six `packages/*/dist/` directories (see root `package.json` `files`).
+- **Published files:** Only `src/index.js`, `src/index.d.ts`, and the seven `packages/*/dist/` directories (see root `package.json` `files`).
 
 ## TypeScript Configuration
 

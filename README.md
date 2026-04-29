@@ -1,6 +1,6 @@
 # AppVerk OpenCode Plugins
 
-[![Package](https://img.shields.io/badge/package-5-blue.svg)](#available-packages)
+[![Package](https://img.shields.io/badge/package-6-blue.svg)](#available-packages)
 
 OpenCode plugin packages for AppVerk. The root plugin loads the AppVerk plugin bundle from this repository, which currently provides:
 
@@ -8,6 +8,7 @@ OpenCode plugin packages for AppVerk. The root plugin loads the AppVerk plugin b
 - A **Python development workflow** (`/python`) with TDD, coding standards, and stack-specific patterns (FastAPI, Django, Celery, SQLAlchemy, Pydantic).
 - A **TypeScript + React development workflow** (`/frontend`) with TDD, coding standards, and stack-specific patterns (Tailwind, Zustand, TanStack Query, React Hook Form, TanStack Router).
 - A **code review workflow** (`/review`) with parallel security and quality audits, verification agents, fix commands, feedback analysis, and skill-agent integration.
+- A **QA workflow** (`/create-qa-plan`, `/run-qa`) for end-to-end testing — generates test plans from PR descriptions and executes them via Playwright (frontend) or HTTP + DB (backend).
 - A **global skill registry** that makes all AppVerk development skills available to every OpenCode agent via a single `load_appverk_skill` tool, with mandatory activation rules injected into every agent's system prompt.
 
 ## Installation
@@ -145,6 +146,44 @@ Analyze PR comments and generate response drafts:
 
 Classifies each comment as "Address" or "Reject" and optionally publishes responses via GitHub CLI.
 
+### QA workflow
+
+Generate a structured test plan from a PR description or ticket:
+
+```text
+/create-qa-plan Add two-factor authentication to the login flow
+```
+
+The `/create-qa-plan` command:
+
+1. Parses the feature description or ticket text
+2. Generates test cases with preconditions, steps, and expected results
+3. Writes the plan to `docs/qa/YYYY-MM-DD-<branch>-test-plan.md`
+
+Run a saved test plan or perform an ad-hoc QA check:
+
+```text
+/run-qa docs/qa/2026-04-29-feature-auth-test-plan.md
+```
+
+The `/run-qa` command:
+
+1. Loads the test plan or creates a quick checklist for the given path
+2. Detects whether the scope is frontend, backend, or both
+3. Launches the appropriate testing agent (`@fe-tester` or `@be-tester`)
+4. Executes tests using Playwright (frontend) or curl + DB CLI (backend)
+5. Collects results into a markdown report with pass/fail status
+
+You can also invoke testing agents directly:
+
+```bash
+opencode agent fe-tester "Run accessibility checks on the checkout page"
+```
+
+```bash
+opencode agent be-tester "Test GET /api/v1/orders with pagination"
+```
+
 ## Available Commands & Agents
 
 | Command / Agent | Description | Mode | Docs |
@@ -156,6 +195,8 @@ Classifies each comment as "Address" or "Reject" and optionally publishes respon
 | `/fix` | Fix a single issue by ID or pasted issue block from a saved review report. | — | [Guide](docs/plugins/code-review.md) |
 | `/fix-report` | Batch-fix issues from a saved review report with interactive selection. | — | [Guide](docs/plugins/code-review.md) |
 | `/analyze-feedback` | Analyze PR feedback comments, classify validity, and generate response drafts. | — | [Guide](docs/plugins/code-review.md) |
+| `/create-qa-plan` | Generate a structured QA test plan from a PR description or ticket. | — | [Guide](docs/plugins/qa.md) |
+| `/run-qa` | Execute a saved test plan or ad-hoc QA check via Playwright or HTTP + DB. | — | [Guide](docs/plugins/qa.md) |
 | `load_appverk_skill` | Load any AppVerk development skill by name. Available to all agents globally. | — | [Guide](docs/plugins/skill-registry.md) |
 | `@python-developer` | Direct agent invocation for Python tasks outside of `/python`. | `primary` | [Guide](docs/plugins/python-developer.md) |
 | `@frontend-developer` | Direct agent invocation for TypeScript + React tasks outside of `/frontend`. | `primary` | [Guide](docs/plugins/frontend-developer.md) |
@@ -165,6 +206,8 @@ Classifies each comment as "Address" or "Reject" and optionally publishes respon
 | `@cross-verifier` | Cross-domain correlation agent — finds intersections between findings. | `subagent` | [Guide](docs/plugins/code-review.md) |
 | `@challenger` | Adversarial review agent — challenges findings for false positives. | `subagent` | [Guide](docs/plugins/code-review.md) |
 | `@synthesis-agent` | **Planned** — deduplicates and groups findings into actionable PRs. Not yet implemented. | `subagent` | [Guide](docs/plugins/code-review.md) |
+| `@fe-tester` | Frontend testing subagent — runs Playwright tests, accessibility checks, and visual regression. | `subagent` | [Guide](docs/plugins/qa.md) |
+| `@be-tester` | Backend testing subagent — tests API endpoints and validates database state via HTTP + DB CLI. | `subagent` | [Guide](docs/plugins/qa.md) |
 | `@feedback-analyzer` | Per-comment classification agent for PR feedback analysis. | `subagent` | [Guide](docs/plugins/code-review.md) |
 | `@fix-auto` | Auto-fix subagent — performs fixes without user confirmation. | `subagent` | [Guide](docs/plugins/code-review.md) |
 
@@ -182,6 +225,8 @@ Classifies each comment as "Address" or "Reject" and optionally publishes respon
 - `docs/plugins/frontend-developer.md` - package-level behavior and usage guide.
 - `packages/skill-registry` - global skill registry source, tests, and build scripts.
 - `docs/plugins/skill-registry.md` - package-level behavior and usage guide.
+- `packages/qa` - QA plugin source, tests, command templates, agent prompts, skills, and build scripts.
+- `docs/plugins/qa.md` - package-level behavior and usage guide.
 - `package.json` - workspace definition and shared validation commands.
 
 ## Local Development
@@ -208,6 +253,7 @@ npm run check
 - [Code Review Plugin Guide](docs/plugins/code-review.md)
 - [Frontend Developer Plugin Guide](docs/plugins/frontend-developer.md)
 - [Skill Registry Plugin Guide](docs/plugins/skill-registry.md)
+- [QA Plugin Guide](docs/plugins/qa.md)
 
 ## License
 

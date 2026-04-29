@@ -3,12 +3,14 @@ import { AppVerkPythonDeveloperPlugin } from "../packages/python-developer/dist/
 import { AppVerkCodeReviewPlugin } from "../packages/code-review/dist/index.js";
 import { AppVerkFrontendDeveloperPlugin } from "../packages/frontend-developer/dist/index.js";
 import { AppVerkSkillRegistryPlugin } from "../packages/skill-registry/dist/index.js";
+import { AppVerkQAPlugin } from "../packages/qa/dist/index.js";
 const defaultPluginFactories = [
     AppVerkCommitPlugin,
     AppVerkPythonDeveloperPlugin,
     AppVerkCodeReviewPlugin,
     AppVerkFrontendDeveloperPlugin,
     AppVerkSkillRegistryPlugin,
+    AppVerkQAPlugin,
 ];
 function mergeTools(plugins) {
     const merged = {};

@@ -143,7 +143,8 @@ var moduleDirectory = path2.dirname(fileURLToPath(import.meta.url));
 var skillDirectories = [
   path2.resolve(moduleDirectory, "../../python-developer/dist/skills"),
   path2.resolve(moduleDirectory, "../../frontend-developer/dist/skills"),
-  path2.resolve(moduleDirectory, "../../code-review/dist/skills")
+  path2.resolve(moduleDirectory, "../../code-review/dist/skills"),
+  path2.resolve(moduleDirectory, "../../qa/dist/skills")
 ];
 var AppVerkSkillRegistryPlugin = async () => {
   const catalog = buildSkillCatalog(skillDirectories);
