@@ -164,7 +164,7 @@ Skill-agents are dedicated subagents for heavy analysis tasks, invoked by main a
 
 ### Skills
 
-The plugin includes a `standards-discovery` skill available globally via `load_appverk_skill("standards-discovery")`. All code-review agents and commands load this skill during their pre-analysis step to discover project-specific coding standards, style guides, and architecture documentation before starting their work.
+The plugin includes a `standards-discovery` skill available globally via `load_appverk_skill("standards-discovery")`. The `src/index.ts` entrypoint injects a Pre-Analysis block into every agent and command prompt, instructing them to load this skill before starting work. This discovers project-specific coding standards, style guides, and architecture documentation automatically — no manual copy-pasting into markdown files needed.
 
 ### How Agents Work
 

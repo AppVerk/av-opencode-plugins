@@ -5,6 +5,27 @@ import type { Plugin } from "@opencode-ai/plugin"
 
 const moduleDirectory = path.dirname(fileURLToPath(import.meta.url))
 
+const PRE_ANALYSIS_BLOCK = `## Pre-Analysis Step: Discover Project Standards
+
+Before starting any analysis, load the \`standards-discovery\` skill to identify project-specific standards. This ensures your review respects the project's conventions for imports, error handling, naming, architecture, and testing.
+`
+
+function injectPreAnalysis(content: string): string {
+  // If content already contains the pre-analysis block, don't inject again
+  if (content.includes("## Pre-Analysis Step: Discover Project Standards")) {
+    return content
+  }
+
+  const match = content.match(/^---\n[\s\S]*?\n---\n/)
+  if (!match) {
+    // No frontmatter — prepend at top of file
+    return PRE_ANALYSIS_BLOCK + "\n" + content
+  }
+
+  const endIndex = match[0].length
+  return content.slice(0, endIndex) + PRE_ANALYSIS_BLOCK + "\n" + content.slice(endIndex)
+}
+
 function loadMarkdownFile(name: string): string {
   const filePath = path.resolve(moduleDirectory, name)
   const baseDir = path.resolve(moduleDirectory, "..")
@@ -25,7 +46,7 @@ function createLazyMarkdownLoader(name: string): () => string {
   let cached: string | undefined
   return () => {
     if (cached === undefined) {
-      cached = loadMarkdownFile(name)
+      cached = injectPreAnalysis(loadMarkdownFile(name))
     }
     return cached
   }

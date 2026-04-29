@@ -20,11 +20,18 @@ Load these skills: python-coding-standards, python-tdd-workflow, fastapi-pattern
 
 ## What it does
 
-1. **Scans skill directories** at plugin initialization — reads `packages/python-developer/dist/skills/` and `packages/frontend-developer/dist/skills/`.
+1. **Scans skill directories** at plugin initialization — reads
+   `packages/python-developer/dist/skills/`,
+   `packages/frontend-developer/dist/skills/`, and
+   `packages/code-review/dist/skills/`.
 2. **Parses frontmatter** from every `.md` file to extract `name`, `description`, and `activation` fields.
 3. **Validates uniqueness** — throws if two skills share the same `name`.
 4. **Registers `load_appverk_skill`** as a global OpenCode tool available to all agents.
 5. **Injects activation rules** into every agent's system prompt via `experimental.chat.system.transform`, instructing agents when to load which skill.
+
+## Consumers
+
+The `code-review` plugin consumes `standards-discovery` by injecting a Pre-Analysis block into every agent and command prompt at runtime. This ensures all review workflows discover project-specific standards before analysis begins.
 
 ## Direct tool use
 

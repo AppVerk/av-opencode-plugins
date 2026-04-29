@@ -62,4 +62,52 @@ describe("AppVerkCodeReviewPlugin", () => {
     await pluginResult.config?.(config)
     expect(pluginResult.tool).toBeUndefined()
   })
+
+  describe("pre-analysis injection", () => {
+    it("injects pre-analysis block into all agent prompts", async () => {
+      const config: Config = { agent: {} }
+      await pluginResult.config?.(config)
+
+      for (const name of EXPECTED_AGENTS) {
+        const prompt = config.agent![name]!.prompt!
+        expect(prompt).toContain("## Pre-Analysis Step: Discover Project Standards")
+        expect(prompt).toContain("load the `standards-discovery` skill")
+      }
+    })
+
+    it("injects pre-analysis block into all command templates", async () => {
+      const config: Config = { command: {} }
+      await pluginResult.config?.(config)
+
+      for (const name of EXPECTED_COMMANDS) {
+        const template = config.command![name]!.template!
+        expect(template).toContain("## Pre-Analysis Step: Discover Project Standards")
+        expect(template).toContain("load the `standards-discovery` skill")
+      }
+    })
+
+    it("places pre-analysis block after frontmatter", async () => {
+      const config: Config = { agent: {} }
+      await pluginResult.config?.(config)
+
+      // Check a file known to have frontmatter
+      const prompt = config.agent!["security-auditor"]!.prompt!
+      const frontmatterEnd = prompt.indexOf("---\n", 4) // Find end of frontmatter
+      expect(frontmatterEnd).toBeGreaterThan(-1)
+
+      const preAnalysisIndex = prompt.indexOf("## Pre-Analysis Step: Discover Project Standards")
+      expect(preAnalysisIndex).toBeGreaterThan(frontmatterEnd)
+    })
+
+    it("does not duplicate pre-analysis block", async () => {
+      const config: Config = { agent: {} }
+      await pluginResult.config?.(config)
+
+      for (const name of EXPECTED_AGENTS) {
+        const prompt = config.agent![name]!.prompt!
+        const matches = prompt.match(/## Pre-Analysis Step: Discover Project Standards/g)
+        expect(matches?.length ?? 0).toBe(1)
+      }
+    })
+  })
 })

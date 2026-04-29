@@ -3,6 +3,21 @@ import { readFileSync } from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 var moduleDirectory = path.dirname(fileURLToPath(import.meta.url));
+var PRE_ANALYSIS_BLOCK = `## Pre-Analysis Step: Discover Project Standards
+
+Before starting any analysis, load the \`standards-discovery\` skill to identify project-specific standards. This ensures your review respects the project's conventions for imports, error handling, naming, architecture, and testing.
+`;
+function injectPreAnalysis(content) {
+  if (content.includes("## Pre-Analysis Step: Discover Project Standards")) {
+    return content;
+  }
+  const match = content.match(/^---\n[\s\S]*?\n---\n/);
+  if (!match) {
+    return PRE_ANALYSIS_BLOCK + "\n" + content;
+  }
+  const endIndex = match[0].length;
+  return content.slice(0, endIndex) + PRE_ANALYSIS_BLOCK + "\n" + content.slice(endIndex);
+}
 function loadMarkdownFile(name) {
   const filePath = path.resolve(moduleDirectory, name);
   const baseDir = path.resolve(moduleDirectory, "..");
@@ -21,7 +36,7 @@ function createLazyMarkdownLoader(name) {
   let cached;
   return () => {
     if (cached === void 0) {
-      cached = loadMarkdownFile(name);
+      cached = injectPreAnalysis(loadMarkdownFile(name));
     }
     return cached;
   };
