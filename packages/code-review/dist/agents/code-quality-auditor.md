@@ -313,7 +313,7 @@ For findings from developer skills, use the same JSON report format but with:
 
 2. Based on the sequential-thinking output:
    - If the finding is **confirmed**, include it in the report with the tag `**Verified by deep analysis**`.
-   - If the finding is a **false positive**, mark it as `false-positive` and skip it.
+    - If the finding is a **false-positive**, mark it as `false-positive` and skip it.
 
 **Graceful degradation:** If `sequential_thinking_sequentialthinking` is unavailable, report the finding normally without deep verification.
 
