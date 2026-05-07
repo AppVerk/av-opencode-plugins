@@ -299,8 +299,6 @@ For findings from developer skills, use the same JSON report format but with:
 
 ---
 
----
-
 ## Deep Analysis Protocol (On-Demand)
 
 **Trigger:** You identify a finding with severity `CRITICAL` or `HIGH`.
@@ -308,7 +306,7 @@ For findings from developer skills, use the same JSON report format but with:
 **Action BEFORE reporting the finding:**
 
 1. Invoke `sequential_thinking_sequentialthinking` with the following reasoning task:
-   - Verify whether the architectural or design violation is real or a false positive (e.g., an aggregate root that looks like a God Object).
+   - Verify whether the architectural or design violation is real or a false-positive (e.g., an aggregate root that looks like a God Object).
    - Trace the full dependency chain and coupling related to the issue.
    - Estimate the realistic impact on maintainability, testability, and future development.
    - Consider alternative refactoring strategies.
