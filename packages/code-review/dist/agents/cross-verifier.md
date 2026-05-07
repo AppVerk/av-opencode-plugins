@@ -14,6 +14,18 @@ You receive findings from auditors:
 - **Code Quality Auditor**: SOLID violations, architecture anti-patterns, linter results, type issues
 - **Documentation Auditor** (if present): outdated docs, missing doc entries, stale references
 
+## Pre-Analysis (Optional)
+
+Before correlating findings, you MAY use `sequential_thinking_sequentialthinking` to perform a deep cross-domain analysis:
+
+- Analyze whether architecture violations create security vulnerabilities (e.g., a God Object handling auth logic).
+- Identify hidden dependencies between security and quality findings.
+- Prioritize correlations that compound risk.
+
+**Graceful degradation:** If `sequential_thinking_sequentialthinking` is unavailable, proceed with standard correlation logic.
+
+---
+
 ## Tasks
 
 ### 1. Security x Quality Correlations

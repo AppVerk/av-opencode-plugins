@@ -14,6 +14,18 @@ You receive findings from auditors:
 - **Code Quality Auditor**: SOLID violations, architecture anti-patterns, linter results, type issues
 - **Documentation Auditor** (if present): outdated docs, missing doc entries, stale references
 
+## Pre-Analysis (Optional)
+
+Before challenging findings, you MAY use `sequential_thinking_sequentialthinking` to construct rigorous counter-arguments:
+
+- For each CRITICAL/HIGH finding, reason through why it might be a false-positive.
+- Check if the finding contradicts project-specific standards or architectural patterns.
+- Verify the severity calibration logic.
+
+**Graceful degradation:** If `sequential_thinking_sequentialthinking` is unavailable, proceed with standard challenge logic.
+
+---
+
 ## Tasks
 
 ### 1. Challenge Security Findings
