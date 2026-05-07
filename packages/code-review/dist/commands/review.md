@@ -75,9 +75,7 @@ Store result: `has_documentation = true/false`
 
 ---
 
----
-
-## Step 1.75: Strategic Pre-Analysis (Optional)
+## Step 1.75: Strategic Pre-Analysis
 
 Before launching agents, perform strategic pre-analysis using `sequential_thinking_sequentialthinking`:
 
@@ -88,7 +86,7 @@ Before launching agents, perform strategic pre-analysis using `sequential_thinki
 **Prompt for sequential-thinking:**
 > "I am about to conduct a code review with the following context: [summarize stack, documentation presence, and $ARGUMENTS]. What are the 3 highest-risk areas I should prioritize? Which agents should be emphasized, and in what order?"
 
-Store the result in `strategic_context` and inject it into the agent prompts in Step 2 under the `{{skills_to_load}}` section or as a dedicated paragraph.
+Store the result in `strategic_context` and append it to the agent prompts in Step 2, either within the `{{skills_to_load}}` section or as a dedicated paragraph.
 
 **Graceful degradation:** If `sequential_thinking_sequentialthinking` is unavailable, set `strategic_context = ""` and proceed.
 
