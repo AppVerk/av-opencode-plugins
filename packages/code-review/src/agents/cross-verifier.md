@@ -20,11 +20,9 @@ Before correlating findings, you MAY use `sequential_thinking_sequentialthinking
 
 - Analyze whether architecture violations create security vulnerabilities (e.g., a God Object handling auth logic).
 - Identify hidden dependencies between security and quality findings.
-- Prioritize correlations that compound risk.
+- Prioritize correlations where risks compound.
 
 **Graceful degradation:** If `sequential_thinking_sequentialthinking` is unavailable, proceed with standard correlation logic.
-
----
 
 ## Tasks
 

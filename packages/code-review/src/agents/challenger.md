@@ -16,15 +16,13 @@ You receive findings from auditors:
 
 ## Pre-Analysis (Optional)
 
-Before challenging findings, you MAY use `sequential_thinking_sequentialthinking` to construct rigorous counter-arguments:
+Before challenging findings, you MAY use `sequential_thinking_sequentialthinking` to construct rigorous counterarguments:
 
 - For each CRITICAL/HIGH finding, reason through why it might be a false-positive.
 - Check if the finding contradicts project-specific standards or architectural patterns.
 - Verify the severity calibration logic.
 
 **Graceful degradation:** If `sequential_thinking_sequentialthinking` is unavailable, proceed with standard challenge logic.
-
----
 
 ## Tasks
 
