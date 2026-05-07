@@ -75,6 +75,25 @@ Store result: `has_documentation = true/false`
 
 ---
 
+---
+
+## Step 1.75: Strategic Pre-Analysis (Optional)
+
+Before launching agents, perform strategic pre-analysis using `sequential_thinking_sequentialthinking`:
+
+1. Analyze the review scope described in `$ARGUMENTS`. Is it a PR, a full codebase, or specific files?
+2. Based on the detected tech stack and documentation, identify the highest-risk areas.
+3. Propose agent prioritization and focus areas.
+
+**Prompt for sequential-thinking:**
+> "I am about to conduct a code review with the following context: [summarize stack, documentation presence, and $ARGUMENTS]. What are the 3 highest-risk areas I should prioritize? Which agents should be emphasized, and in what order?"
+
+Store the result in `strategic_context` and inject it into the agent prompts in Step 2 under the `{{skills_to_load}}` section or as a dedicated paragraph.
+
+**Graceful degradation:** If `sequential_thinking_sequentialthinking` is unavailable, set `strategic_context = ""` and proceed.
+
+---
+
 ## Step 2: Launch Agents (Parallel)
 
 **You MUST launch both agents in your FIRST response.** Use the Task tool for each:
