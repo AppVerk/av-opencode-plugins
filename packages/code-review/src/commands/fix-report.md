@@ -1,11 +1,11 @@
 ---
-description: Parse a saved review report, present issues as a checklist, fix selected issues, and mark them resolved in the report.
-argument-hint: [<path-to-review-report>]
+description: Parse review and QA reports (auto-merge by default), present issues as a checklist, fix selected issues, and mark them resolved in their source reports.
+argument-hint: [path-to-review-or-qa-report]
 ---
 
 # Fix Issues From Review Report
 
-You are an expert code fixer that reads a saved code review report, presents unfixed issues for selection, and fixes them one by one using the fix-auto subagent.
+You are an expert code fixer that reads a saved code review report (and optionally QA test reports), presents unfixed issues for selection, and fixes them one by one using the fix-auto subagent.
 
 ## Input
 
@@ -38,32 +38,41 @@ Use the `todowrite` tool to create the following tasks:
 
    > Error: Invalid path `<path>`. Path traversal is not allowed.
 
-**If `$ARGUMENTS` is empty or not provided:**
+4. Set `files = [$ARGUMENTS]` and proceed to Step 1.2.
 
-Automatically locate the most recent review report:
+**If `$ARGUMENTS` is empty or not provided (auto-merge mode):**
 
 ```bash
-ls -t docs/reviews/*.md 2>/dev/null | head -1
+newest_review=$(ls -t docs/reviews/*.md 2>/dev/null | head -1)
+newest_qa=$(ls -t docs/testing/reports/*.md 2>/dev/null | head -1)
 ```
 
-- If a file is found, use it as the report path.
-- If no files are found, display an error and stop:
+Build the `files` list including only non-empty paths:
 
-  > Error: No saved review reports found in `docs/reviews/`. Run `/review` and save a report first, or provide a path explicitly: `/fix-report <path-to-report>`.
+- Both non-empty → `files = [newest_review, newest_qa]`
+- Only one non-empty → `files = [<the existing one>]`
+- Both empty:
+  > Error: No reports found in `docs/reviews/` or `docs/testing/reports/`. Run `/review` or `/run-qa` first.
+  
+  Mark all tasks as `completed` using `todowrite` and stop.
 
-### Step 1.2: Read the report file
+### Step 1.2: Read report file(s)
 
-Use the Read tool to read the file at the determined path.
+For **each file** in the `files` list:
 
-**If the file does not exist or cannot be read:**
+1. Use the Read tool to read the file.
+2. **If a file does not exist or cannot be read:**
+   Display a warning and continue with remaining files.
 
-Display an error and stop:
+If no files could be read, display an error and stop:
 
-> Error: Could not read file `<path>`. Make sure the path is correct and the file exists.
+> Error: Could not read any report files. Make sure the paths are correct and the files exist.
 
-### Step 1.3: Extract issues
+### Step 1.3: Extract issues with source mapping
 
-Scan the report for issue sections. Each issue starts with a heading matching this pattern:
+For **each file** in the `files` list:
+
+1. Scan the content for issue sections. Each issue starts with a heading matching:
 
 ```
 ### [SEVERITY] Title
@@ -71,7 +80,11 @@ Scan the report for issue sections. Each issue starts with a heading matching th
 
 Where SEVERITY is one of: CRITICAL, HIGH, MEDIUM, LOW.
 
-For each found issue section, extract the full block — everything from the `### [SEVERITY] Title` line until the next `###` heading or `---` separator or end of file.
+2. For each found issue section, extract the full block — everything from the `### [SEVERITY] Title` line until the next `###` heading or `---` separator or end of file.
+
+3. **Tag each extracted issue with `source_file = <path of the file currently being read>`.** This mapping is used in Step 4.1 when writing back the `**Status:**` line to the originating file.
+
+Aggregate all tagged issues across all files into a single list before applying the filtering steps below.
 
 ### Step 1.4: Filter out already-fixed issues
 
@@ -129,6 +142,14 @@ Issues now include their unique ID in the checklist labels. For example:
 
 This makes it easy to reference issues when using `/fix SEC-001` directly.
 
+**Auto-merge mode hint:** When `files` (from Step 1.1) contains more than one path, append a separator and the basename of `issue.source_file` to each option's description so the user can tell which report each issue came from. Example:
+
+```
+description: "src/db/queries.py:42 — Code directly concatenates user input · 2026-05-07-feature-auth.md"
+```
+
+In single-file mode (one entry in `files`), omit this hint.
+
 **If there are more pages after the current one**, add as the last option:
 
 - label: "Skip remaining"
@@ -182,9 +203,9 @@ For each selected issue, **sequentially** (one at a time, wait for completion):
 
 ## Step 4: Update Report and Summarize
 
-### Step 4.1: Mark fixed issues in the report
+### Step 4.1: Mark fixed issues in their source reports
 
-For each issue that was Fixed or Partially Fixed, edit the report file to add a `**Status:**` line immediately after the issue's `###` heading.
+For each issue that was Fixed or Partially Fixed, edit **its `source_file`** (from the mapping established in Step 1.3) to add a `**Status:**` line immediately after the issue's `###` heading. In auto-merge mode this means the Edit tool may be invoked against multiple files in a single run; in single-file mode it edits the single source file.
 
 **For Fixed issues**, insert after the `### [SEVERITY] Title` line:
 
@@ -202,7 +223,7 @@ For each issue that was Fixed or Partially Fixed, edit the report file to add a 
 
 Use today's date in YYYY-MM-DD format.
 
-Use the Edit tool to insert each status line. The `old_string` should be the `### [SEVERITY] Title` line followed by a newline, and the `new_string` should be the same title line followed by a newline, the status line, and another newline.
+Use the Edit tool to insert each status line. The `old_string` should be the `### [SEVERITY] Title` line followed by a newline, and the `new_string` should be the same title line followed by a newline, the status line, and another newline. Pass the issue's `source_file` as the `file_path` parameter.
 
 ### Step 4.2: Display fix summary
 
@@ -215,7 +236,9 @@ Use the Edit tool to insert each status line. The `old_string` should be the `##
 | 2 | [SEVERITY] Title — path:line | STATUS_ICON STATUS_TEXT |
 
 **Fixed:** N | **Partially Fixed:** N | **Failed:** N
-**Report updated:** <report-file-path>
+**Reports updated:**
+- <source-file-1>
+- <source-file-2>
 ```
 
 Status icons: Fixed = ✅, Partially Fixed = ⚠️, Failed = ❌
