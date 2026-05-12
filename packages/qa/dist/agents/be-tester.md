@@ -1,5 +1,5 @@
 ---
-allowed-tools: Read, Write, Bash(curl:*), Bash(httpie:*), Bash(psql:*), Bash(sqlite3:*), Bash(jq:*), Bash(grep:*), Bash(mkdir:*), Bash(command:*), Bash(echo:*), skill
+allowed-tools: Read, Write, Bash(curl:*), Bash(httpie:*), Bash(http:*), Bash(wget:*), Bash(psql:*), Bash(sqlite3:*), Bash(mysql:*), Bash(mongosh:*), Bash(redis-cli:*), Bash(jq:*), Bash(grep:*), Bash(cat:*), Bash(head:*), Bash(tail:*), Bash(mkdir:*), Bash(command:*), Bash(echo:*), skill
 description: Backend testing agent that executes BE test scenarios from a QA test plan. Tests API endpoints, verifies response codes and bodies, checks database state, and handles error scenarios.
 ---
 
@@ -34,6 +34,13 @@ This provides you with API testing patterns, DB verification, and error handling
 Run the tool detection from the be-testing skill. Record which HTTP client and DB client are available.
 
 If no HTTP client is available, return ALL scenarios as SKIP with reason "No HTTP client available".
+
+If the test plan doesn't specify DB connection details, look for them in:
+
+1. `.env` or `.env.local` files
+2. `docker-compose.yml` (service ports, credentials)
+3. Framework config files (`settings.py`, `database.yml`, `config/database.php`)
+4. Environment variables: `DATABASE_URL`, `DB_HOST`, `DB_NAME`, `DB_USER`, `DB_PASSWORD`
 
 ### Step 3: Execute scenarios in order
 
