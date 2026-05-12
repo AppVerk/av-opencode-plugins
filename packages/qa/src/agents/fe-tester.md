@@ -29,15 +29,15 @@ This provides you with Playwright patterns for navigation, interaction, assertio
 
 ### Step 2: Verify Playwright availability
 
-**First, try bash playwright:**
+**First, try OpenCode native Playwright tools:**
+Attempt a simple navigation using the `playwright_browser_navigate` tool to any URL. If available, use native OpenCode Playwright tools as your primary method.
+
+**If native tools are unavailable, try bash playwright CLI:**
 ```bash
 command -v playwright >/dev/null 2>&1 && echo "available" || echo "unavailable"
 ```
 
-If available, use `playwright screenshot`, `playwright open`, and evaluate JS via node for assertions.
-
-**If bash playwright is unavailable, try MCP Playwright:**
-Attempt to use browser navigation tools if they are available in your session. Do not hardcode tool names — try common patterns and fall back gracefully.
+If the CLI is available, use `playwright screenshot`, `playwright open`, and evaluate JS via node for assertions.
 
 **If neither is available:**
 Return ALL scenarios as SKIP with reason "Playwright unavailable".
@@ -47,8 +47,8 @@ Return ALL scenarios as SKIP with reason "Playwright unavailable".
 For each FE scenario (FE-01, FE-02, ...):
 
 1. Read the scenario steps and expected result
-2. Execute each step using available Playwright method
-3. Verify result after each action
+2. Execute each step using available Playwright tool (prefer `playwright_browser_*` native tools over CLI)
+3. After each action, take a snapshot using `playwright_browser_snapshot()` to verify state
 4. If expected result is met → record as PASS
 5. If expected result is NOT met → take screenshot, record as FAIL
 6. Execute each edge case as a sub-test
