@@ -39,6 +39,8 @@ The command:
 /fix SEC-001
 ```
 
+`/fix` also resolves QA issues from test reports. Use `/fix QA-001` to fix an issue found by `/run-qa`.
+
 Or paste the full issue block:
 
 ```text
@@ -47,9 +49,19 @@ Or paste the full issue block:
 
 ### Batch fix from report
 
+Pass a specific report path to fix issues from that report only:
+
 ```text
 /fix-report docs/reviews/2026-04-22-feature-auth.md
 ```
+
+Or run without arguments to **auto-merge** the newest review and QA reports:
+
+```text
+/fix-report
+```
+
+When run without arguments, it automatically discovers the latest review report (`docs/reviews/*.md`) and the latest QA report (`docs/testing/reports/*.md`), merges their unfixed issues into a single checklist, and presents them for selection. Issues are tagged with their source report so fixed items are marked resolved in the correct file.
 
 Presents issues as a checklist, fixes selected ones via `fix-auto` subagent, and marks them resolved.
 
@@ -102,6 +114,9 @@ Each issue is assigned a unique ID:
 | Architecture | ARCH | ARCH-003 |
 | Maintainability | MAINT | MAINT-004 |
 | Documentation | DOC | DOC-005 |
+| Testing | QA | QA-001 |
+
+> **Cross-plugin note:** The `QA` prefix is owned by the QA plugin and consumed by the code-review plugin (`/fix` command). Both plugins share the same canonical Category→Prefix table defined in `packages/skill-utils/src/category-prefix-mapping.ts`.
 
 Every issue includes:
 - Severity (CRITICAL / HIGH / MEDIUM / LOW)

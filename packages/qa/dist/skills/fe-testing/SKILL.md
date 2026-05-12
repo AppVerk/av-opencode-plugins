@@ -1,6 +1,7 @@
 ---
 name: fe-testing
 description: Frontend testing patterns using Playwright — navigation, interaction, assertions, screenshots on failure, and common UI testing scenarios.
+activation: Load when testing frontend UI with Playwright
 allowed-tools: playwright_browser_navigate, playwright_browser_click, playwright_browser_fill_form, playwright_browser_snapshot, playwright_browser_take_screenshot, playwright_browser_press_key, playwright_browser_select_option, playwright_browser_hover, playwright_browser_wait_for, playwright_browser_evaluate, playwright_browser_console_messages, playwright_browser_navigate_back, playwright_browser_tabs, playwright_browser_handle_dialog, playwright_browser_resize, playwright_browser_close, playwright_browser_drag, playwright_browser_type, playwright_browser_file_upload, playwright_browser_network_requests, Write, Read, Bash(mkdir:*)
 ---
 
@@ -96,6 +97,16 @@ playwright_browser_navigate(url: "http://localhost:3000/page")
 playwright_browser_snapshot()
 ```
 
+**Navigating back:**
+
+```
+playwright_browser_navigate_back()
+```
+
+- Returns to the previous page in browser history
+- Useful for testing back-button behavior and breadcrumb navigation
+- After navigating back, take a snapshot to verify the correct page loaded
+
 ### Interaction
 
 **Clicking elements:**
@@ -135,6 +146,25 @@ playwright_browser_press_key(key: "Escape")
 playwright_browser_press_key(key: "Tab")
 ```
 
+**File uploads:**
+
+```
+playwright_browser_file_upload(paths: ["/path/to/file.pdf"])
+```
+
+- Provide absolute paths to files on disk
+- Triggered on the currently focused file input element
+- Use after clicking a file input or drop zone to open the chooser
+
+**Drag and drop:**
+
+```
+playwright_browser_drag(startTarget: "<source-ref>", endTarget: "<target-ref>", startElement: "Draggable item", endElement: "Drop zone")
+```
+
+- Simulates dragging one element and dropping it onto another
+- Useful for testing reorderable lists, Kanban boards, or file drop zones
+
 ### Verification
 
 **Primary method — snapshot and inspect:**
@@ -158,6 +188,21 @@ playwright_browser_evaluate(function: "() => document.title")
 playwright_browser_evaluate(function: "() => window.location.pathname")
 ```
 
+### Dialog Handling
+
+**Accept or dismiss dialogs:**
+
+```
+playwright_browser_handle_dialog(accept: true)
+playwright_browser_handle_dialog(accept: false)
+playwright_browser_handle_dialog(accept: true, promptText: "user input")
+```
+
+- Use BEFORE the action that triggers the dialog (dialogs block execution)
+- `accept: true` clicks OK/Yes; `accept: false` clicks Cancel/No
+- For prompt dialogs, provide `promptText` to fill the input field
+- Common triggers: `confirm()`, `alert()`, `prompt()`
+
 ### Waiting
 
 ```
@@ -170,6 +215,18 @@ playwright_browser_wait_for(textGone: ".loading-spinner", time: 10)
 ```
 playwright_browser_take_screenshot(type: "png")
 ```
+
+### Session Cleanup
+
+**Close the browser:**
+
+```
+playwright_browser_close()
+```
+
+- Closes the current browser page/context
+- Call at the end of a test session to release resources
+- Always close after taking final screenshots to avoid leaks
 
 ---
 

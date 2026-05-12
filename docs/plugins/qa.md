@@ -73,18 +73,35 @@ opencode agent qa-be-tester "Test the GET /api/v1/orders endpoint with paginatio
 |---------|------|-------------|
 | `/create-qa-plan` | Command | Generates structured test plans from PR descriptions or tickets |
 | `/run-qa` | Command | Executes test plans or ad-hoc QA checks, delegates to agents |
-| `@qa-fe-tester` | Agent | Subagent for frontend testing via Playwright (bash CLI fallback) |
-| `@qa-be-tester` | Agent | Subagent for backend testing via HTTP requests and DB assertions |
+| `@qa-fe-tester` | Agent | Subagent for frontend testing via native Playwright tools (bash CLI fallback) |
+| `@qa-be-tester` | Agent | Subagent for backend testing via HTTP requests (`curl`, `httpie`, `wget`) and DB assertions (`psql`, `mysql`, `sqlite3`, `mongosh`, `redis-cli`) |
 | `test-plan-format` | Skill | Rules for writing test plans with Given/When/Then, IDs, metadata |
-| `report-format` | Skill | Rules for writing QA reports with status, evidence, traceability |
+| `report-format` | Skill | QA report structure with QA-XXX IDs, canonical code-review-compatible fields (ID, Location, Category, Problem, Impact, Remediation), /fix and /fix-report integration |
 | `fe-testing` | Skill | Frontend testing patterns: Playwright CLI, selectors, assertions |
 | `be-testing` | Skill | Backend testing patterns: HTTP requests, DB validation, curl |
 
+### Skill Frontmatter Format
+
+Each skill is a markdown file with YAML frontmatter:
+
+```yaml
+---
+name: skill-name
+description: What the skill does
+activation: When to load the skill
+---
+```
+
+- **`name`** — Unique identifier used with `load_appverk_skill("skill-name")`
+- **`description`** — Brief explanation of the skill's purpose
+- **`activation`** — Rule for when the skill should be loaded (e.g., "Load when creating QA test plans")
+
 ## Limitations
 
-- **MVP (v0.1):** Sequential agent execution (FE then BE). Parallel execution is planned for a future release.
-- **MCP Playwright:** If the user has the Playwright MCP server installed, the agent will use it automatically. Otherwise, it falls back to the `playwright` bash CLI.
-- **Database CLI tools:** The BE tester attempts to use the project's native DB tool (`psql`, `mysql`, `sqlite3`, etc.). It does not spin up test databases automatically.
+- FE and BE agents launch in parallel when both exist in a test plan.
+- **Playwright tools:** The FE tester prioritizes OpenCode's native `playwright_browser_*` tools. Falls back to the `playwright` bash CLI if native tools are unavailable.
+- **Database CLI tools:** The BE tester attempts to use the project's native DB tool (`psql`, `mysql`, `sqlite3`, `mongosh`, `redis-cli`, etc.). If DB connection details are not in the test plan, it auto-detects them from `.env`, `.env.local`, `docker-compose.yml`, framework config files, and environment variables. It does not spin up test databases automatically.
+- **Cross-plugin integration:** QA reports use QA-XXX IDs and are compatible with `/fix` and `/fix-report` commands from the code-review plugin.
 - **No CI integration:** Reports are local markdown files only. CI pipeline integration is planned.
 
 ## Project Structure

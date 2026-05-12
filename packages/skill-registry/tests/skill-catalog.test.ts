@@ -28,6 +28,53 @@ describe("parseSkillFrontmatter", () => {
     const content = `---\ndescription: Missing name\n---\n`
     expect(() => parseSkillFrontmatter(content, "noname.md")).toThrow(/name/)
   })
+
+  it("parses allowed-tools as a comma-separated list", () => {
+    const content = `---\nname: test-skill\nallowed-tools: Read, Write, Bash(curl:*)\n---\n\n# Test Skill\n`
+    const parsed = parseSkillFrontmatter(content, "test.md")
+    expect(parsed).not.toBeNull()
+    expect(parsed!.allowedTools).toEqual(["Read", "Write", "Bash(curl:*)"])
+  })
+
+  it("leaves allowed-tools undefined when missing", () => {
+    const content = `---\nname: minimal\ndescription: Minimal skill\n---\n\nContent\n`
+    const parsed = parseSkillFrontmatter(content, "minimal.md")
+    expect(parsed).not.toBeNull()
+    expect(parsed!.allowedTools).toBeUndefined()
+  })
+})
+
+import { isToolSubset } from "../src/skill-catalog.js"
+
+describe("isToolSubset", () => {
+  it("returns true for an exact match", () => {
+    expect(isToolSubset(["Read", "Write"], ["Read", "Write", "Bash"])).toBe(true)
+  })
+
+  it("returns true when subset is empty", () => {
+    expect(isToolSubset([], ["Read", "Write"])).toBe(true)
+  })
+
+  it("returns false when a tool is missing from superset", () => {
+    expect(isToolSubset(["Read", "Delete"], ["Read", "Write"])).toBe(false)
+  })
+
+  it("returns false for broader Bash patterns in subset", () => {
+    // Agent restricts to cat:./* but skill allows cat:* — skill is NOT a subset
+    expect(isToolSubset(["Bash(cat:*)"], ["Bash(cat:./*)"])).toBe(false)
+  })
+
+  it("returns true for exact Bash pattern match", () => {
+    expect(isToolSubset(["Bash(curl:*)"], ["Bash(curl:*)", "Read"])).toBe(true)
+  })
+
+  it("ignores whitespace around tools", () => {
+    expect(isToolSubset([" Read ", " Write "], ["Read", "Write"])).toBe(true)
+  })
+
+  it("returns true when superset has extra tools", () => {
+    expect(isToolSubset(["Read"], ["Read", "Write", "Bash"])).toBe(true)
+  })
 })
 
 describe("buildSkillCatalog", () => {

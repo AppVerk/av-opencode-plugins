@@ -133,7 +133,7 @@ command -v http >/dev/null 2>&1 && echo "httpie: available" || echo "httpie: una
 command -v psql >/dev/null 2>&1 && echo "psql: available" || echo "psql: unavailable"
 command -v sqlite3 >/dev/null 2>&1 && echo "sqlite3: available" || echo "sqlite3: unavailable"
 command -v mysql >/dev/null 2>&1 && echo "mysql: available" || echo "mysql: unavailable"
-command -v playwright >/dev/null 2>&1 && echo "Playwright CLI: available" || echo "Playwright CLI: unavailable (checking native tools...)"
+command -v playwright >/dev/null 2>&1 && echo "Playwright CLI: available" || echo "Playwright CLI: unavailable"
 ```
 
 **Task Update:** Mark task 4 as `completed`, task 5 as `in_progress` using `todowrite`.

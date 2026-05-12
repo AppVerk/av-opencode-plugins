@@ -1,6 +1,7 @@
 ---
 name: report-format
 description: Test report format with QA-XXX issue IDs compatible with code-review plugin. Defines report structure, severity levels, issue format with canonical fields, and detailed results.
+activation: Load when generating or formatting QA test reports
 ---
 
 # Test Report Format
@@ -64,7 +65,20 @@ Every test report MUST follow this exact structure:
 
 ## Issue ID Assignment
 
-**Prefix:** `QA` (all issues use the same prefix, mapped to `Category: Testing` in the code-review Category→Prefix table)
+**Prefix:** `QA` (all issues use the same prefix)
+
+**Category → Prefix mapping (canonical):**
+
+| Category        | Prefix |
+|-----------------|--------|
+| Security        | SEC    |
+| Performance     | PERF   |
+| Architecture    | ARCH   |
+| Maintainability | MAINT  |
+| Documentation   | DOC    |
+| **Testing**     | **QA** |
+
+> **Ownership note:** The `QA` prefix is owned by the QA plugin (this document) and consumed by the code-review plugin (`/fix` command). Both plugins share the same canonical Category→Prefix table. If this mapping changes, both plugins must be updated together.
 
 **Algorithm:**
 1. Initialize counter: `qa_count = 0`

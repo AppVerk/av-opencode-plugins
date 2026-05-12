@@ -1,5 +1,5 @@
 ---
-allowed-tools: Read, Write, Bash(curl:*), Bash(httpie:*), Bash(http:*), Bash(wget:*), Bash(psql:*), Bash(sqlite3:*), Bash(mysql:*), Bash(mongosh:*), Bash(redis-cli:*), Bash(jq:*), Bash(grep:*), Bash(cat:*), Bash(head:*), Bash(tail:*), Bash(mkdir:*), Bash(command:*), Bash(echo:*), skill
+allowed-tools: Read, Write, Bash(curl:*), Bash(httpie:*), Bash(http:*), Bash(psql:*), Bash(sqlite3:*), Bash(mysql:*), Bash(mongosh:*), Bash(redis-cli:*), Bash(jq:*), Bash(grep:*), Bash(cat:./*), Bash(head:./*), Bash(tail:./*), Bash(mkdir:*), Bash(command:*), Bash(echo:*), skill
 description: Backend testing agent that executes BE test scenarios from a QA test plan. Tests API endpoints, verifies response codes and bodies, checks database state, and handles error scenarios.
 ---
 

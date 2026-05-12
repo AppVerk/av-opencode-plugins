@@ -319,6 +319,7 @@ Before rendering the final report, assign unique identifiers:
 | Architecture    | ARCH   |
 | Maintainability | MAINT  |
 | Documentation   | DOC    |
+| Testing         | QA     |
 
 ---
 

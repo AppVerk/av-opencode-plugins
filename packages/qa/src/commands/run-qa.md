@@ -61,7 +61,7 @@ Create tasks based on what needs to run using `todowrite`:
 | 2 | Sanitize test plan | Sanitizing test plan content... | Always |
 | 3 | Execute FE tests | Running FE tests... | If has FE tests |
 | 4 | Execute BE tests | Running BE tests... | If has BE tests |
-| 5 | Collect test results | Collecting test results... | Always |
+| 5 | Execute and collect results | Executing and collecting results... | Always |
 | 6 | Generate test report | Generating test report... | Always |
 | 7 | Save test report | Saving test report... | Always |
 
@@ -111,6 +111,16 @@ If the sanitized plan contains no valid scenarios after filtering, abort the run
 
 Use the `task` tool to launch both agents in a **single message** with two `task` calls. This enables parallel execution.
 
+**To prevent race conditions when both agents write findings, assign each agent a dedicated findings file:**
+
+- FE findings file: `docs/testing/reports/.tmp-fe-findings.md`
+- BE findings file: `docs/testing/reports/.tmp-be-findings.md`
+
+Create the reports directory first:
+```bash
+mkdir -p docs/testing/reports
+```
+
 **If has FE tests AND has BE tests, launch BOTH in a single message:**
 
 ```
@@ -124,9 +134,12 @@ Base URL: <detect from test plan or project config>
 FE Test Scenarios:
 <paste all sanitized FE-XX scenarios>
 
-Follow the fe-testing skill for Playwright patterns. Return results for every scenario."
+Follow the fe-testing skill for Playwright patterns. Return results for every scenario.
+
+Write your findings to the dedicated file: docs/testing/reports/.tmp-fe-findings.md
+  Use append-only writes. Do not overwrite or read the BE findings file."
 )
-------------------------------------------------------------------------------------------------
+# Second task launched in the same message for parallel execution
 task(
   subagent_type: "qa-be-tester",
   description: "Execute BE test scenarios",
@@ -139,18 +152,25 @@ Available tools: <list from environment validation>
 BE Test Scenarios:
 <paste all sanitized BE-XX scenarios>
 
-Follow the be-testing skill for API and DB testing patterns. Return results for every scenario."
+Follow the be-testing skill for API and DB testing patterns. Return results for every scenario.
+
+Write your findings to the dedicated file: docs/testing/reports/.tmp-be-findings.md
+Use append-only writes. Do not overwrite or read the FE findings file."
 )
 ```
 
-**If only FE tests:** Launch only the FE agent.
-**If only BE tests:** Launch only the BE agent.
+**If only FE tests:** Launch only the FE agent (use `.tmp-fe-findings.md`).
+**If only BE tests:** Launch only the BE agent (use `.tmp-be-findings.md`).
 
 **Task Update:** Mark task 3 and/or 4 as `completed` using `todowrite`. Mark task 5 as `in_progress`.
 
 ### Step 6: Collect Results
 
-Combine FE and BE results into a unified structure.
+Read the per-agent findings files after both agents complete:
+- `docs/testing/reports/.tmp-fe-findings.md` (if FE tests ran)
+- `docs/testing/reports/.tmp-be-findings.md` (if BE tests ran)
+
+Combine FE and BE results into a unified structure. Merge by concatenating findings in order: FE first, then BE.
 
 **Task Update:** Mark task 5 as `completed`. Mark task 6 as `in_progress` using `todowrite`.
 

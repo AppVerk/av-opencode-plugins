@@ -30,11 +30,13 @@ function parseSkillFrontmatter(content, fileName) {
   if (!fields.name) {
     throw new Error(`Skill file ${fileName} is missing required 'name' in frontmatter`);
   }
+  const allowedTools = fields["allowed-tools"] ? fields["allowed-tools"].split(",").map((t) => t.trim()).filter(Boolean) : void 0;
   return {
     name: fields.name,
     description: fields.description || "",
     activation: fields.activation || "Load when relevant to the task",
-    filePath: fileName
+    filePath: fileName,
+    allowedTools
   };
 }
 function buildSkillCatalog(directories) {

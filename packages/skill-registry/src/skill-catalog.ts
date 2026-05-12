@@ -6,6 +6,7 @@ export interface SkillEntry {
   description: string
   activation: string
   filePath: string
+  allowedTools?: string[]
 }
 
 export function parseSkillFrontmatter(content: string, fileName: string): SkillEntry | null {
@@ -37,12 +38,37 @@ export function parseSkillFrontmatter(content: string, fileName: string): SkillE
     throw new Error(`Skill file ${fileName} is missing required 'name' in frontmatter`)
   }
 
+  const allowedTools = fields["allowed-tools"]
+    ? fields["allowed-tools"].split(",").map((t) => t.trim()).filter(Boolean)
+    : undefined
+
   return {
     name: fields.name,
     description: fields.description || "",
     activation: fields.activation || "Load when relevant to the task",
     filePath: fileName,
+    allowedTools,
   }
+}
+
+/**
+ * Validates that every tool in `subset` is present in `superset`.
+ * This enforces the security rule that a skill's `allowed-tools` must be
+ * a subset of the agent's own tool set to prevent privilege escalation.
+ *
+ * Matching is exact (after trimming). Future enhancements could add
+ * wildcard-aware comparison for Bash tool patterns.
+ */
+export function isToolSubset(subset: readonly string[], superset: readonly string[]): boolean {
+  const supersetNormalized = new Set(superset.map((t) => t.trim()).filter(Boolean))
+  for (const tool of subset) {
+    const normalized = tool.trim()
+    if (!normalized) continue
+    if (!supersetNormalized.has(normalized)) {
+      return false
+    }
+  }
+  return true
 }
 
 export function buildSkillCatalog(directories: readonly string[]): Map<string, SkillEntry> {

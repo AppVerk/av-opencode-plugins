@@ -1,6 +1,7 @@
 ---
 name: test-plan-format
 description: Test plan structure, naming conventions, edge case generation rules, and file saving conventions for QA test plans.
+activation: Load when creating or formatting QA test plans
 ---
 
 # Test Plan Format

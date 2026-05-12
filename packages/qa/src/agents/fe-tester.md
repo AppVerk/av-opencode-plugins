@@ -1,5 +1,5 @@
 ---
-allowed-tools: Read, Write, Bash(playwright:*), Bash(mkdir:*), Bash(command:*), Bash(echo:*), skill
+allowed-tools: Read, Write, playwright_browser_navigate, playwright_browser_click, playwright_browser_fill_form, playwright_browser_snapshot, playwright_browser_take_screenshot, playwright_browser_press_key, playwright_browser_select_option, playwright_browser_hover, playwright_browser_wait_for, playwright_browser_evaluate, playwright_browser_console_messages, playwright_browser_navigate_back, playwright_browser_tabs, playwright_browser_handle_dialog, playwright_browser_resize, playwright_browser_close, playwright_browser_drag, playwright_browser_type, playwright_browser_file_upload, playwright_browser_network_requests, Bash(playwright:*), Bash(mkdir:*), Bash(command:*), Bash(echo:*), skill
 description: Frontend testing agent that executes FE test scenarios from a QA test plan using Playwright. Navigates pages, interacts with UI elements, verifies states, and takes screenshots on failure.
 ---
 
@@ -30,7 +30,7 @@ This provides you with Playwright patterns for navigation, interaction, assertio
 ### Step 2: Verify Playwright availability
 
 **First, try OpenCode native Playwright tools:**
-Attempt a simple navigation using the `playwright_browser_navigate` tool to any URL. If available, use native OpenCode Playwright tools as your primary method.
+Attempt a simple navigation using the `playwright_browser_navigate` tool to `about:blank`. If available, use native OpenCode Playwright tools as your primary method.
 
 **If native tools are unavailable, try bash playwright CLI:**
 ```bash

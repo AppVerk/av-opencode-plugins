@@ -2,6 +2,20 @@
 import { readFileSync } from "fs";
 import path from "path";
 import { tool } from "@opencode-ai/plugin";
+
+// src/category-prefix-mapping.ts
+var CATEGORY_PREFIX_MAPPING = {
+  Security: "SEC",
+  Performance: "PERF",
+  Architecture: "ARCH",
+  Maintainability: "MAINT",
+  Documentation: "DOC",
+  Testing: "QA"
+};
+var VALID_PREFIXES = Object.values(CATEGORY_PREFIX_MAPPING);
+var VALID_CATEGORIES = Object.keys(CATEGORY_PREFIX_MAPPING);
+
+// src/index.ts
 function loadFile(packaged, source) {
   try {
     return readFileSync(packaged, "utf8");
@@ -130,6 +144,9 @@ function createSkillPlugin(options) {
   return async () => plugin;
 }
 export {
+  CATEGORY_PREFIX_MAPPING,
+  VALID_CATEGORIES,
+  VALID_PREFIXES,
   createSkillLoader,
   createSkillPlugin
 };

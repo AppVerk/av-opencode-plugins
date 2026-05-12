@@ -6,6 +6,16 @@ import { fileURLToPath } from "url";
 import { readFileSync } from "fs";
 import path from "path";
 import { tool } from "@opencode-ai/plugin";
+var CATEGORY_PREFIX_MAPPING = {
+  Security: "SEC",
+  Performance: "PERF",
+  Architecture: "ARCH",
+  Maintainability: "MAINT",
+  Documentation: "DOC",
+  Testing: "QA"
+};
+var VALID_PREFIXES = Object.values(CATEGORY_PREFIX_MAPPING);
+var VALID_CATEGORIES = Object.keys(CATEGORY_PREFIX_MAPPING);
 function loadFile(packaged, source) {
   try {
     return readFileSync(packaged, "utf8");

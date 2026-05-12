@@ -1,6 +1,6 @@
 # AppVerk OpenCode Plugins
 
-[![Package](https://img.shields.io/badge/package-6-blue.svg)](#available-packages)
+[![Package](https://img.shields.io/badge/package-7-blue.svg)](#available-packages)
 
 OpenCode plugin packages for AppVerk. The root plugin loads the AppVerk plugin bundle from this repository, which currently provides:
 
@@ -127,7 +127,7 @@ Fix a single issue by ID from a saved report:
 Or paste the full issue block directly:
 
 ```text
-/fix [paste issue block from /review]
+/fix [paste issue block from /review or /run-qa]
 ```
 
 Batch-fix issues from a saved report:
@@ -158,20 +158,20 @@ The `/create-qa-plan` command:
 
 1. Parses the feature description or ticket text
 2. Generates test cases with preconditions, steps, and expected results
-3. Writes the plan to `docs/qa/YYYY-MM-DD-<branch>-test-plan.md`
+3. Writes the plan to `docs/testing/plans/YYYY-MM-DD-<topic>-test-plan.md`
 
 Run a saved test plan or perform an ad-hoc QA check:
 
 ```text
-/run-qa docs/qa/2026-04-29-feature-auth-test-plan.md
+/run-qa docs/testing/plans/2026-04-29-feature-auth-test-plan.md
 ```
 
 The `/run-qa` command:
 
 1. Loads the test plan or creates a quick checklist for the given path
 2. Detects whether the scope is frontend, backend, or both
-3. Launches the appropriate testing agent (`@qa-fe-tester` or `@qa-be-tester`)
-4. Executes tests using Playwright (frontend) or curl + DB CLI (backend)
+3. Launches testing agents in parallel when both scopes exist (`@qa-fe-tester` and/or `@qa-be-tester`)
+4. Executes tests using native Playwright tools (frontend) or native HTTP and DB CLI tools (backend)
 5. Collects results into a markdown report with pass/fail status
 
 You can also invoke testing agents directly:
@@ -192,8 +192,8 @@ opencode agent qa-be-tester "Test GET /api/v1/orders with pagination"
 | `/python` | Python development workflow — TDD, coding standards, and stack-specific patterns (FastAPI, Django, Celery, SQLAlchemy). | — | [Guide](docs/plugins/python-developer.md) |
 | `/frontend` | TypeScript + React development workflow — TDD, coding standards, and stack-specific patterns (Tailwind, Zustand, TanStack Query). | — | [Guide](docs/plugins/frontend-developer.md) |
 | `/review` | Code review workflow — parallel security, quality, and documentation audits with verification and structured reports. | — | [Guide](docs/plugins/code-review.md) |
-| `/fix` | Fix a single issue by ID or pasted issue block from a saved review report. | — | [Guide](docs/plugins/code-review.md) |
-| `/fix-report` | Batch-fix issues from a saved review report with interactive selection. | — | [Guide](docs/plugins/code-review.md) |
+| `/fix` | Fix a single issue by ID or pasted issue block from a saved review or QA report. | — | [Guide](docs/plugins/code-review.md) |
+| `/fix-report` | Batch-fix issues from a saved review or QA report with interactive selection. | — | [Guide](docs/plugins/code-review.md) |
 | `/analyze-feedback` | Analyze PR feedback comments, classify validity, and generate response drafts. | — | [Guide](docs/plugins/code-review.md) |
 | `/create-qa-plan` | Generate a structured QA test plan from a PR description or ticket. | — | [Guide](docs/plugins/qa.md) |
 | `/run-qa` | Execute a saved test plan or ad-hoc QA check via Playwright or HTTP + DB. | — | [Guide](docs/plugins/qa.md) |
