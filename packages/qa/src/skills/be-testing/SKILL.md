@@ -1,3 +1,9 @@
+---
+name: be-testing
+description: Backend testing patterns — API request construction, response verification, database state checks, error handling testing, and adaptive tool detection.
+allowed-tools: Bash(curl:*), Bash(httpie:*), Bash(http:*), Bash(wget:*), Bash(psql:*), Bash(sqlite3:*), Bash(mysql:*), Bash(mongosh:*), Bash(redis-cli:*), Bash(command:*), Bash(echo:*), Bash(jq:*), Bash(grep:*), Bash(cat:*), Bash(head:*), Bash(tail:*), Read, Write, Bash(mkdir:*)
+---
+
 # Backend Testing Patterns
 
 ## Tool Detection
@@ -22,10 +28,16 @@ command -v jq >/dev/null 2>&1 && echo "OK: jq available" || echo "UNAVAILABLE: j
 
 Use the first available tool from each category. If no HTTP client is available, mark all API scenarios as SKIP.
 
+### Database Server Access
+
+In addition to CLI database clients, check if database tools are available. In OpenCode, database access may be provided via shell commands.
+
 **Priority order for DB access:**
-1. MCP server (if available — pre-configured, no connection string needed)
-2. CLI client (psql, sqlite3, mysql — requires connection details)
+1. Configured database CLI (psql, sqlite3, mysql — most common in OpenCode)
+2. Direct shell access to database (e.g., docker exec into a DB container)
 3. SKIP (no access available)
+
+Note: Unlike Claude Code's MCP server pattern, OpenCode typically provides database access through CLI tools installed in the environment. Always prefer CLI clients when available.
 
 ---
 
