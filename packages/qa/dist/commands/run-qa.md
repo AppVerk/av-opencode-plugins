@@ -107,13 +107,11 @@ If the sanitized plan contains no valid scenarios after filtering, abort the run
 
 **Task Update:** Mark task 2 as `completed` using `todowrite`.
 
-### Step 5: Launch Testing Agents
+### Step 5: Launch Testing Agents in Parallel
 
-Launch agents based on what the plan contains.
+Use the `task` tool to launch both agents in a **single message** with two `task` calls. This enables parallel execution.
 
-**If has FE tests:**
-
-**Task Update:** Mark task 3 as `in_progress` using `todowrite`.
+**If has FE tests AND has BE tests, launch BOTH in a single message:**
 
 ```
 task(
@@ -124,41 +122,33 @@ task(
 Base URL: <detect from test plan or project config>
 
 FE Test Scenarios:
-<paste all FE-XX scenarios from the plan>
+<paste all sanitized FE-XX scenarios>
 
 Follow the fe-testing skill for Playwright patterns. Return results for every scenario."
 )
-```
-
-**Task Update:** Mark task 3 as `completed` using `todowrite`.
-
-**If has BE tests:**
-
-**Task Update:** Mark task 4 as `in_progress` using `todowrite`.
-
-```
+------------------------------------------------------------------------------------------------
 task(
   subagent_type: "qa-be-tester",
   description: "Execute BE test scenarios",
   prompt: "Execute the following BE test scenarios by testing API endpoints and verifying database state.
 
 Base URL: <detect from test plan or project config>
-DB connection: <detect from project config if available>
 
 Available tools: <list from environment validation>
 
 BE Test Scenarios:
-<paste all BE-XX scenarios from the plan>
+<paste all sanitized BE-XX scenarios>
 
 Follow the be-testing skill for API and DB testing patterns. Return results for every scenario."
 )
 ```
 
-**Task Update:** Mark task 4 as `completed` using `todowrite`.
+**If only FE tests:** Launch only the FE agent.
+**If only BE tests:** Launch only the BE agent.
+
+**Task Update:** Mark task 3 and/or 4 as `completed` using `todowrite`. Mark task 5 as `in_progress`.
 
 ### Step 6: Collect Results
-
-**Task Update:** Mark task 5 as `in_progress` using `todowrite`.
 
 Combine FE and BE results into a unified structure.
 
@@ -181,8 +171,19 @@ Using the skill's format:
    - Wrong status code, incorrect data → HIGH
    - UI glitch, missing validation message → MEDIUM
    - Cosmetic, minor text issues → LOW
-4. **Build the report** following the exact template from the skill
-5. **Build detailed results** listing all scenarios with status
+4. **Build each issue** with the canonical fields:
+   - **Heading:** `### [SEVERITY] QA-NNN: <title>`
+   - **ID:** `**ID:** QA-NNN`
+   - **Location:** `**Location:** \`<file:line>\`` — best-effort from stack traces, routes, or component paths. Use `unknown:0` when unidentifiable.
+   - **Category:** `**Category:** Testing`
+   - **Problem:** `**Problem:**` with Expected/Actual bullet list
+   - **Impact:** `**Impact:**` — what user-visible flow is broken (optional)
+   - **Remediation:** `**Remediation:**` — one to three sentence suggestion
+   - **Scenario:** `**Scenario:** <FE-XX or BE-XX>`
+   - **Response:** `**Response:** \`<body>\`` (BE failures)
+   - **Screenshot:** `**Screenshot:** <path>` (FE failures)
+5. **Build the report** following the exact template from the report-format skill
+6. **Build detailed results** listing all scenarios with status
 
 ### Step 8: Save Report
 
@@ -218,4 +219,10 @@ After saving, display a summary:
 
 If issues were found:
 
-> Future feature: `/fix QA-001` will allow automated fixing of identified issues.
+> **Found {N} issues.** To fix them:
+>
+> `/fix QA-001` — fix a single issue by ID (routes by QA prefix to `docs/testing/reports/`).
+>
+> `/fix-report` — auto-merge with the newest code-review report (if any) and fix interactively.
+>
+> `/fix-report docs/testing/reports/<filename>` — fix issues from this QA report only.
