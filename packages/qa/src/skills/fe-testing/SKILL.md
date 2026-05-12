@@ -1,10 +1,16 @@
+---
+name: fe-testing
+description: Frontend testing patterns using Playwright — navigation, interaction, assertions, screenshots on failure, and common UI testing scenarios.
+allowed-tools: playwright_browser_navigate, playwright_browser_click, playwright_browser_fill_form, playwright_browser_snapshot, playwright_browser_take_screenshot, playwright_browser_press_key, playwright_browser_select_option, playwright_browser_hover, playwright_browser_wait_for, playwright_browser_evaluate, playwright_browser_console_messages, playwright_browser_navigate_back, playwright_browser_tabs, playwright_browser_handle_dialog, playwright_browser_resize, playwright_browser_close, playwright_browser_drag, playwright_browser_type, playwright_browser_file_upload, playwright_browser_network_requests, Write, Read, Bash(mkdir:*)
+---
+
 # Frontend Testing Patterns
 
 ## Playwright Strategy
 
 **Priority order:**
-1. **Bash `playwright` CLI** — `playwright screenshot`, `playwright open`, JS eval via node
-2. **MCP Playwright** — if browser tools are available in your session
+1. **OpenCode native Playwright tools** — `playwright_browser_navigate`, `playwright_browser_click`, `playwright_browser_snapshot`, etc.
+2. **Bash `playwright` CLI** — `playwright screenshot`, `playwright open`, JS eval via node
 3. **None** — mark all FE scenarios as SKIP
 
 ---
@@ -73,46 +79,68 @@ playwright screenshot --viewport-size=1280,720 "http://localhost:3000/page" docs
 
 ---
 
-## MCP Playwright Patterns (Optional)
+## OpenCode Native Playwright Patterns
 
-If MCP Playwright tools are available in your session, use these patterns:
+These are the primary testing tools in OpenCode. Use them whenever available.
 
 ### Navigation
+
 ```
-browser_navigate(url: "http://localhost:3000/page")
+playwright_browser_navigate(url: "http://localhost:3000/page")
 ```
 
-After navigation, take a snapshot to verify the page loaded:
+- Always use full URLs with the base URL from the test plan
+- After navigation, take a snapshot to verify the page loaded:
+
 ```
-browser_snapshot()
+playwright_browser_snapshot()
 ```
 
 ### Interaction
 
 **Clicking elements:**
+
 ```
-browser_click(element: "Submit button")
+playwright_browser_click(element: "Submit button", target: "<element-ref>")
+playwright_browser_click(element: "Link with text 'Sign In'", target: "<element-ref>")
 ```
 
 **Filling forms:**
+
 ```
-browser_fill_form(formData: [
-  { ref: "email input", value: "test@example.com" },
-  { ref: "password input", value: "TestPass123!" }
+playwright_browser_fill_form(fields: [
+  { name: "email", type: "textbox", target: "<ref>", value: "test@example.com" },
+  { name: "password", type: "textbox", target: "<ref>", value: "TestPass123!" }
 ])
 ```
 
-**Keyboard actions:**
+If `playwright_browser_fill_form` doesn't work for a field, fall back to:
+
 ```
-browser_press_key(key: "Enter")
-browser_press_key(key: "Escape")
+playwright_browser_click(element: "email input", target: "<ref>")
+playwright_browser_type(target: "<ref>", text: "test@example.com")
+```
+
+**Selecting options:**
+
+```
+playwright_browser_select_option(element: "Country dropdown", target: "<ref>", values: ["PL"])
+```
+
+**Keyboard actions:**
+
+```
+playwright_browser_press_key(key: "Enter")
+playwright_browser_press_key(key: "Escape")
+playwright_browser_press_key(key: "Tab")
 ```
 
 ### Verification
 
 **Primary method — snapshot and inspect:**
+
 ```
-browser_snapshot()
+playwright_browser_snapshot()
 ```
 
 After taking a snapshot, inspect the returned accessibility tree for:
@@ -123,18 +151,24 @@ After taking a snapshot, inspect the returned accessibility tree for:
 - Success notifications
 
 **JavaScript evaluation for complex checks:**
+
 ```
-browser_evaluate(expression: "document.querySelector('.items-list').children.length")
+playwright_browser_evaluate(function: "() => document.querySelector('.items-list').children.length")
+playwright_browser_evaluate(function: "() => document.title")
+playwright_browser_evaluate(function: "() => window.location.pathname")
 ```
 
 ### Waiting
+
 ```
-browser_wait_for(text: "Success", timeout: 5000)
+playwright_browser_wait_for(text: "Success", time: 5)
+playwright_browser_wait_for(textGone: ".loading-spinner", time: 10)
 ```
 
 ### Screenshots
+
 ```
-browser_take_screenshot()
+playwright_browser_take_screenshot(type: "png")
 ```
 
 ---
