@@ -1,3 +1,8 @@
+---
+name: test-plan-format
+description: Test plan structure, naming conventions, edge case generation rules, and file saving conventions for QA test plans.
+---
+
 # Test Plan Format
 
 ## File Conventions
