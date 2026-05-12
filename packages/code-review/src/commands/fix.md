@@ -3,6 +3,19 @@ description: Apply fix for a single code review issue with verification and repo
 argument-hint: <issue-id | full issue block from /review report>
 ---
 
+## Input Handling
+
+Parse the input argument to determine mode:
+
+- **ID Mode:** If `$ARGUMENTS` matches pattern `^(SEC|PERF|ARCH|MAINT|DOC|QA)-\d{3}$`
+  - Examples: `SEC-001`, `PERF-042`, `ARCH-001`, `MAINT-999`, `DOC-001`, `QA-001`
+  - Action: Proceed to Phase 0 (Resolve Issue by ID)
+
+- **Legacy Paste Mode:** If `$ARGUMENTS` does not match the ID pattern (e.g., contains `### [` or other issue block content)
+  - Action: Skip Phase 0, proceed directly to Phase 1 (Parse Issue) with input as-is
+
+This allows backward compatibility: both ID lookup and issue block pasting work.
+
 # Fix Code Review Issue
 
 You are an expert code fixer that takes a single issue from a code review report and performs a complete fix cycle: analysis, proposal, implementation, verification, and reporting.
@@ -23,17 +36,33 @@ $ARGUMENTS
 
 ### Step 0.1: Locate most recent report
 
-List all `.md` files in `docs/reviews/` directory:
+The target directory depends on the issue's prefix:
+
+- `QA` → `docs/testing/reports/`
+- `SEC`, `PERF`, `ARCH`, `MAINT`, `DOC` → `docs/reviews/`
+
+Extract the prefix from `$ARGUMENTS` (the substring before the first `-`) and list the newest `.md` file in the chosen directory:
 
 ```bash
-ls -t docs/reviews/*.md 2>/dev/null | head -1
+prefix=$(echo "$ARGUMENTS" | cut -d'-' -f1)
+case "$prefix" in
+  QA) target_dir="docs/testing/reports" ;;
+  *)  target_dir="docs/reviews" ;;
+esac
+ls -t "$target_dir"/*.md 2>/dev/null | head -1
 ```
 
-Expected: The most recently modified file, e.g., `docs/reviews/2026-03-06-feature-auth.md`
+Expected: The most recently modified file in the chosen directory.
 
-If no files found, display error and stop:
+If no files found, display an error and stop. The message is prefix-specific:
 
-> Error: No saved review reports found in `docs/reviews/`. Run `/review` and save a report first, then use `/fix <ID>`.
+- `QA` prefix:
+  > Error: No saved QA reports found in `docs/testing/reports/`. Run `/run-qa` first, then use `/fix QA-001`.
+
+- Other prefixes:
+  > Error: No saved review reports found in `docs/reviews/`. Run `/review` and save a report first, then use `/fix <ID>`.
+
+**Note on out-of-band edits:** Routing is one-way per prefix. A `QA-XXX` issue manually moved into `docs/reviews/` will not be reachable via `/fix QA-001`. Workaround: legacy paste mode (`/fix <full block>`).
 
 ### Step 0.2: Read the report file
 
@@ -51,6 +80,7 @@ Example: If user provided `SEC-001`, search for headings like:
 
 - `### [HIGH] SEC-001: SQL Injection...`
 - `### [CRITICAL] SEC-001: ...`
+- `### [HIGH] QA-001: POST /api/users returns 500...`
 
 ### Step 0.4: Extract the full issue block
 
@@ -101,7 +131,7 @@ Extract the following fields from the issue block:
 | Severity | `[CRITICAL\|HIGH\|MEDIUM\|LOW]` in title | Yes |
 | Title | Text after severity in first line | Yes |
 | Location | `**Location:** \`path:line\`` | Yes |
-| Category | `**Category:** Security\|Performance\|Architecture\|Maintainability\|Documentation` | Yes |
+| Category | `**Category:** Security\|Performance\|Architecture\|Maintainability\|Documentation\|Testing` | Yes |
 | OWASP | `**OWASP:** A##:####` | No |
 | CWE | `**CWE:** CWE-###` | No |
 | Effort | `**Effort:** trivial\|easy\|medium\|hard` | No |
