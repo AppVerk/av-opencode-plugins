@@ -14,6 +14,8 @@ dist/
 !packages/skill-registry/dist/**
 !packages/qa/dist/
 !packages/qa/dist/**
+!packages/swift-developer/dist/
+!packages/swift-developer/dist/**
 coverage/
 .DS_Store
 .serena/

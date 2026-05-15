@@ -47,6 +47,23 @@ describe("AppVerkPlugins", () => {
     expect(plugin.tool?.av_commit).toBeDefined()
   })
 
+  it("registers the /swift command and swift-developer agent", async () => {
+    const { AppVerkPlugins } = await loadRootModule()
+    const plugin = await AppVerkPlugins({} as never)
+    const config = {} as {
+      command?: Record<string, { description?: string; template: string; agent?: string }>
+      agent?: Record<string, { description?: string; prompt: string; mode?: string }>
+    }
+
+    await plugin.config?.(config as never)
+
+    expect(config.command?.swift?.description).toContain("Swift")
+    expect(config.command?.swift?.agent).toBe("swift-developer")
+    expect(config.agent?.["swift-developer"]?.description).toContain("Swift")
+    expect(config.agent?.["swift-developer"]?.mode).toBe("primary")
+    expect(plugin.tool?.load_appverk_skill).toBeDefined()
+  })
+
   it("registers the /frontend command and frontend-developer agent", async () => {
     const { AppVerkPlugins } = await loadRootModule()
     const plugin = await AppVerkPlugins({} as never)
@@ -109,6 +126,9 @@ describe("AppVerkPlugins", () => {
         "packages/code-review/dist/commands/review.md",
         "packages/skill-registry/dist/index.js",
         "packages/skill-registry/dist/index.d.ts",
+        "packages/swift-developer/dist/index.js",
+        "packages/swift-developer/dist/index.d.ts",
+        "packages/swift-developer/dist/commands/swift.md",
       ]),
     )
   })
