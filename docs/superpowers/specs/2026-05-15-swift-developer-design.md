@@ -28,7 +28,8 @@ The plugin registers:
 |---------|------|------|---------|
 | Agent | `swift-developer` | `primary` | User-facing agent for all Swift tasks |
 | Command | `/swift` | — | Entrypoint that delegates to the agent |
-| Tool | `load_swift_skill` | — | Loads a skill markdown file on demand |
+
+**Note:** Skill loading is handled globally by the `skill-registry` plugin via the `load_appverk_skill` tool. The `swift-developer` plugin does **not** register its own `load_swift_skill` tool; it passes `loadSkill: null` to `createSkillPlugin` (consistent with `python-developer` and `frontend-developer`).
 
 ### File Structure (package)
 
@@ -41,6 +42,8 @@ packages/swift-developer/
 │   └── copy-assets.mjs          # copies skills + markdowns to dist/
 ├── src/
 │   ├── index.ts                 # plugin factory (createSkillPlugin)
+│   ├── tools/
+│   │   └── load-skill.ts        # local skill loader (createSkillLoader) for tests
 │   ├── agent-prompt.md          # agent system prompt + skill catalog
 │   ├── commands/
 │   │   └── swift.md             # /swift command template
@@ -60,9 +63,24 @@ packages/swift-developer/
 │       └── swift-package-manager/
 │           └── SKILL.md
 └── tests/
-    ├── plugin.test.ts           # agent + command + tool registration
+    ├── plugin.test.ts           # agent + command registration (no tool, uses global registry)
+    ├── load-skill.test.ts       # each skill loads without error via local loader
     ├── package-smoke.test.ts    # package.json integrity
     └── build-output.test.ts    # dist/skills/ structure validation
+```
+
+**Command template** (`src/commands/swift.md`) with required YAML frontmatter:
+
+```markdown
+---
+agent: swift-developer
+argument-hint: <task description>
+description: Swift development workflow enforcing coding standards, TDD, and modern Apple stack patterns.
+---
+
+# /swift
+
+Invoke the `swift-developer` agent and follow its workflow for the given task.
 ```
 
 ### Root Integration
@@ -97,9 +115,9 @@ description: Expert Swift developer enforcing AppVerk coding standards, TDD work
 
 When assigned a Swift task:
 
-1. Detect the project stack by reading `Package.swift` and scanning imports.
+1. Detect the project stack by reading `Package.swift` and scanning imports. Check `platforms` in `Package.swift` (e.g. `.iOS(.v17)`) to determine minimum iOS version.
 2. Load mandatory skills: `swift-coding-standards` and `swift-tdd-workflow`.
-3. Load conditional skills based on detected frameworks (see catalog below).
+3. Load conditional skills based on detected frameworks and platform version (see catalog below).
 4. Follow the loaded skill rules strictly.
 5. Execute TDD cycle, quality gates, and final verification.
 
@@ -276,7 +294,8 @@ When assigned a Swift task:
 
 | Test File | What It Verifies |
 |---|---|
-| `plugin.test.ts` | Agent `swift-developer` is registered with correct description and mode. Command `swift` is registered with correct template and agent. Tool `load_swift_skill` is registered and loads each of the 7 skills without error. |
+| `plugin.test.ts` | Agent `swift-developer` is registered with correct description and mode. Command `swift` is registered with correct template and agent. Does NOT register `load_swift_skill` (handled globally by `skill-registry`). |
+| `load-skill.test.ts` | Each of the 7 skills loads without error via the local `loadSwiftSkill` loader (from `src/tools/load-skill.ts`). |
 | `package-smoke.test.ts` | `package.json` has valid `main`, `types`, `exports`. `dist/index.js` and `dist/index.d.ts` exist after build. |
 | `build-output.test.ts` | `dist/skills/` contains exactly 7 folders (`swift-coding-standards` … `swift-package-manager`). Each folder has `SKILL.md`. `dist/agent-prompt.md` and `dist/commands/swift.md` exist. |
 
@@ -308,10 +327,15 @@ Append `AppVerkSwiftDeveloperPlugin` to `defaultPluginFactories` array.
 
 Mirror the exact same import and array append.
 
+### `packages/skill-registry/src/index.ts`
+
+Add `path.resolve(moduleDirectory, "../../swift-developer/dist/skills")` to the `skillDirectories` array so the global `load_appverk_skill` tool and the `experimental.chat.system.transform` hook can discover swift skills and inject activation rules.
+
 ### Root `package.json`
 
 - Add `packages/swift-developer/dist/` to `files` array.
 - Update `build`, `test`, `typecheck` scripts to include `swift-developer` workspace.
+- **Bump version** in root `package.json` and all workspace `package.json` files (per AGENTS.md versioning guidelines).
 
 ### `.gitignore`
 
