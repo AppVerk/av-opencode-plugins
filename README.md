@@ -1,6 +1,6 @@
 # AppVerk OpenCode Plugins
 
-[![Package](https://img.shields.io/badge/package-7-blue.svg)](#available-packages)
+[![Package](https://img.shields.io/badge/package-8-blue.svg)](#available-packages)
 
 OpenCode plugin packages for AppVerk. The root plugin loads the AppVerk plugin bundle from this repository, which currently provides:
 
@@ -9,6 +9,7 @@ OpenCode plugin packages for AppVerk. The root plugin loads the AppVerk plugin b
 - A **TypeScript + React development workflow** (`/frontend`) with TDD, coding standards, and stack-specific patterns (Tailwind, Zustand, TanStack Query, React Hook Form, TanStack Router).
 - A **code review workflow** (`/review`) with parallel security and quality audits, verification agents, fix commands, feedback analysis, and skill-agent integration.
 - A **QA workflow** (`/create-qa-plan`, `/run-qa`) for end-to-end testing — generates test plans from PR descriptions and executes them via Playwright (frontend) or HTTP + DB (backend).
+- A **Swift development workflow** (`/swift`) with TDD, coding standards, and modern Apple stack patterns (SwiftUI, `@Observable`, SPM, SwiftData).
 - A **global skill registry** that makes all AppVerk development skills available to every OpenCode agent via a single `load_appverk_skill` tool, with mandatory activation rules injected into every agent's system prompt.
 
 ## Installation
@@ -82,6 +83,27 @@ You can also invoke the agent directly:
 
 ```bash
 opencode agent frontend-developer "Refactor auth store to use Zustand"
+```
+
+### /swift — Swift development workflow
+
+Run the Swift development workflow with TDD and modern Apple stack patterns:
+
+```text
+/swift Add user profile screen with SwiftData persistence
+```
+
+The `/swift` command:
+
+1. Detects your project stack (SwiftUI, SwiftData, URLSession, etc.)
+2. Loads relevant Swift development skills
+3. Follows TDD: writes tests first, then implementation
+4. Runs quality gates (build, tests)
+
+You can also invoke the agent directly:
+
+```bash
+opencode agent swift-developer "Refactor networking layer to use async/await"
 ```
 
 ### Global Skill Registry
@@ -191,6 +213,7 @@ opencode agent qa-be-tester "Test GET /api/v1/orders with pagination"
 | `/commit` | Controlled commit workflow — Conventional Commit messages, bash-level blocking for direct `git commit`/`git push`. | — | [Guide](docs/plugins/commit.md) |
 | `/python` | Python development workflow — TDD, coding standards, and stack-specific patterns (FastAPI, Django, Celery, SQLAlchemy). | — | [Guide](docs/plugins/python-developer.md) |
 | `/frontend` | TypeScript + React development workflow — TDD, coding standards, and stack-specific patterns (Tailwind, Zustand, TanStack Query). | — | [Guide](docs/plugins/frontend-developer.md) |
+| `/swift` | Swift development workflow — TDD, coding standards, and modern Apple stack patterns (SwiftUI, `@Observable`, SPM). | — | [Guide](docs/plugins/swift-developer.md) |
 | `/review` | Code review workflow — parallel security, quality, and documentation audits with verification and structured reports. | — | [Guide](docs/plugins/code-review.md) |
 | `/fix` | Fix a single issue by ID or pasted issue block from a saved review or QA report. | — | [Guide](docs/plugins/code-review.md) |
 | `/fix-report` | Batch-fix issues from a saved review or QA report with interactive selection. | — | [Guide](docs/plugins/code-review.md) |
@@ -200,6 +223,7 @@ opencode agent qa-be-tester "Test GET /api/v1/orders with pagination"
 | `load_appverk_skill` | Load any AppVerk development skill by name. Available to all agents globally. | — | [Guide](docs/plugins/skill-registry.md) |
 | `@python-developer` | Direct agent invocation for Python tasks outside of `/python`. | `primary` | [Guide](docs/plugins/python-developer.md) |
 | `@frontend-developer` | Direct agent invocation for TypeScript + React tasks outside of `/frontend`. | `primary` | [Guide](docs/plugins/frontend-developer.md) |
+| `@swift-developer` | Direct agent invocation for Swift tasks outside of `/swift`. | `primary` | [Guide](docs/plugins/swift-developer.md) |
 | `@security-auditor` | Direct agent invocation for security audits with skill-agent delegation. | `subagent` | [Guide](docs/plugins/code-review.md) |
 | `@code-quality-auditor` | Direct agent invocation for code quality audits with skill-agent delegation. | `subagent` | [Guide](docs/plugins/code-review.md) |
 | `@documentation-auditor` | Documentation audit agent — verifies code changes are reflected in docs. | `subagent` | [Guide](docs/plugins/code-review.md) |
@@ -227,6 +251,8 @@ opencode agent qa-be-tester "Test GET /api/v1/orders with pagination"
 - `docs/plugins/skill-registry.md` - package-level behavior and usage guide.
 - `packages/qa` - QA plugin source, tests, command templates, agent prompts, skills, and build scripts.
 - `docs/plugins/qa.md` - package-level behavior and usage guide.
+- `packages/swift-developer` - plugin source, tests, skill files, and build scripts for the Swift development workflow.
+- `docs/plugins/swift-developer.md` - package-level behavior and usage guide.
 - `package.json` - workspace definition and shared validation commands.
 
 ## Local Development
@@ -254,6 +280,7 @@ npm run check
 - [Frontend Developer Plugin Guide](docs/plugins/frontend-developer.md)
 - [Skill Registry Plugin Guide](docs/plugins/skill-registry.md)
 - [QA Plugin Guide](docs/plugins/qa.md)
+- [Swift Developer Plugin Guide](docs/plugins/swift-developer.md)
 
 ## License
 
