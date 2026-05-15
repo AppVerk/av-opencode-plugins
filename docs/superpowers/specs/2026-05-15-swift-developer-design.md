@@ -181,6 +181,7 @@ When assigned a Swift task:
 - **Previews**: use `#Preview` macro (iOS 17+). Include meaningful preview data. Never skip previews.
 - **Composition**: decompose large Views into small, reusable subviews. Max ~50 lines per View body; extract into private methods or subviews.
 - **No business logic in View**: Views should be declarative shells. Logic belongs in ViewModel or Service.
+- **Legacy state management not covered**: `@ObservedObject` and `@StateObject` are intentionally excluded; this skill targets iOS 17+ with `@Observable`.
 
 ---
 
