@@ -240,7 +240,7 @@ Store the detected patterns for use in Phases 3 and 4.
 
 Present the fix proposal in this exact format:
 
-~~~
+````
 ## Proposed Fix for [SEVERITY] [Title]
 
 **Target:** `path/to/file.py:line-range`
@@ -270,7 +270,7 @@ Proposed fix:
 - [ ] [Tool 2] - [reason if applicable]
 
 **Proceed with this fix? (yes/no)**
-~~~
+````
 
 **Stack-Aware Proposals (if developer skills available):**
 

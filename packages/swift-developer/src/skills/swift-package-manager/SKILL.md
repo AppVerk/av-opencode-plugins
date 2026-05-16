@@ -1,3 +1,9 @@
+---
+name: swift-package-manager
+description: Swift Package Manager (SPM) dependency and project management.
+activation: Load when managing Swift package dependencies or project configuration
+---
+
 # Skill: swift-package-manager
 
 ## Overview

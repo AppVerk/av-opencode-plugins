@@ -19,11 +19,11 @@ Add the root plugin package to your OpenCode config:
 ```json
 {
   "$schema": "https://opencode.ai/config.json",
-  "plugin": ["av-opencode-plugins@git+https://github.com/AppVerk/av-opencode-plugins.git#v0.2.10"]
+  "plugin": ["av-opencode-plugins@git+https://github.com/AppVerk/av-opencode-plugins.git#v0.2.16"]
 }
 ```
 
-Restart OpenCode after updating the config. The root plugin installs the AppVerk plugin bundle and registers `/commit`, `/python`, `/frontend`, `/review`, `/fix`, `/fix-report`, and `/analyze-feedback` automatically.
+Restart OpenCode after updating the config. The root plugin installs the AppVerk plugin bundle and registers `/commit`, `/python`, `/frontend`, `/swift`, `/review`, `/fix`, `/fix-report`, and `/analyze-feedback` automatically.
 
 ## Usage
 

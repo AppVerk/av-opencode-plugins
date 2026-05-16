@@ -1,6 +1,6 @@
 # AppVerk OpenCode Plugins — Agent Guide
 
-This is an **OpenCode plugin monorepo** that bundles multiple workspace plugins: a controlled `/commit` workflow, a Python `/python` workflow, a TypeScript + React `/frontend` workflow, a `/review` code review workflow, a QA testing workflow (`/create-qa-plan`, `/run-qa`), and shared `skill-utils` helpers. The root package re-exports all of them and handles plugin merging.
+This is an **OpenCode plugin monorepo** that bundles multiple workspace plugins: a controlled `/commit` workflow, a Python `/python` workflow, a TypeScript + React `/frontend` workflow, a Swift `/swift` workflow, a `/review` code review workflow, a QA testing workflow (`/create-qa-plan`, `/run-qa`), and shared `skill-utils` helpers. The root package re-exports all of them and handles plugin merging.
 
 ## Monorepo Layout
 
@@ -172,13 +172,13 @@ Example config:
 ```json
 {
   "plugin": [
-    "av-opencode-plugins@git+https://github.com/AppVerk/av-opencode-plugins.git#v0.2.10"
+    "av-opencode-plugins@git+https://github.com/AppVerk/av-opencode-plugins.git#v0.2.16"
   ]
 }
 ```
 
 If a user reports missing commands after an update, instruct them to either:
-- Re-install with `opencode plugin -f av-opencode-plugins@git+https://github.com/AppVerk/av-opencode-plugins.git#v0.2.8`, or
+- Re-install with `opencode plugin -f av-opencode-plugins@git+https://github.com/AppVerk/av-opencode-plugins.git#v0.2.16`, or
 - Remove the old cache directory manually:
   ```bash
   rm -rf ~/.cache/opencode/packages/av-opencode-plugins*

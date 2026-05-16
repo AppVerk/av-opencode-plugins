@@ -61,7 +61,7 @@ Create tasks based on what needs to run using `todowrite`:
 | 2 | Sanitize test plan | Sanitizing test plan content... | Always |
 | 3 | Execute FE tests | Running FE tests... | If has FE tests |
 | 4 | Execute BE tests | Running BE tests... | If has BE tests |
-| 5 | Collect test results | Collecting test results... | Always |
+| 5 | Execute and collect results | Executing and collecting results... | Always |
 | 6 | Generate test report | Generating test report... | Always |
 | 7 | Save test report | Saving test report... | Always |
 

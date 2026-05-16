@@ -1,3 +1,9 @@
+---
+name: swift-coding-standards
+description: Enforces AppVerk Swift coding standards across all code.
+activation: Load when writing or reviewing Swift code
+---
+
 # Skill: swift-coding-standards
 
 ## Overview

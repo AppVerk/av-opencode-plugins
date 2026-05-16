@@ -1,3 +1,9 @@
+---
+name: swiftui-patterns
+description: Patterns for SwiftUI apps using MVVM and `@Observable` (iOS 17+).
+activation: Load when writing or reviewing SwiftUI views, state management, or UI code
+---
+
 # Skill: swiftui-patterns
 
 ## Overview

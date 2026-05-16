@@ -1,3 +1,9 @@
+---
+name: swift-data-persistence
+description: Data persistence patterns for Swift apps using SwiftData, CoreData, UserDefaults, and Keychain.
+activation: Load when implementing data storage or persistence in Swift
+---
+
 # Skill: swift-data-persistence
 
 ## Overview

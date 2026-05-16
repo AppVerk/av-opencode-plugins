@@ -12,6 +12,9 @@ export function copyAssets(manifest, packageRoot) {
 
   for (const entry of manifest) {
     const src = path.resolve(packageRoot, entry.from)
+    if (!src.startsWith(path.resolve(packageRoot))) {
+      throw new Error(`Path traversal detected: ${entry.from}`)
+    }
     const dst = path.resolve(packageRoot, entry.to)
 
     if (!existsSync(src)) {

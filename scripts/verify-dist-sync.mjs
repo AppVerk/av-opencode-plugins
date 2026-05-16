@@ -15,6 +15,7 @@ const trackedDistPaths = [
   "packages/frontend-developer/dist",
   "packages/skill-utils/dist",
   "packages/skill-registry/dist",
+  "packages/swift-developer/dist",
 ]
 
 // Run build first

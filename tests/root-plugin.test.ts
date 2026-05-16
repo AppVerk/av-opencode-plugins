@@ -129,6 +129,8 @@ describe("AppVerkPlugins", () => {
         "packages/swift-developer/dist/index.js",
         "packages/swift-developer/dist/index.d.ts",
         "packages/swift-developer/dist/commands/swift.md",
+        "packages/swift-developer/dist/agent-prompt.md",
+        "packages/swift-developer/dist/skills/swift-coding-standards/SKILL.md",
       ]),
     )
   })

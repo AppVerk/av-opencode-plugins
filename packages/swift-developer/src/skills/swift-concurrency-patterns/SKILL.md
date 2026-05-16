@@ -1,3 +1,9 @@
+---
+name: swift-concurrency-patterns
+description: Structured concurrency and thread safety patterns in modern Swift.
+activation: Load when writing async/await code, actors, or concurrent Swift code
+---
+
 # Skill: swift-concurrency-patterns
 
 ## Overview

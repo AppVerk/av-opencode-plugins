@@ -1,5 +1,6 @@
 import { existsSync, readFileSync } from "node:fs"
-import { resolve } from "node:path"
+import { dirname, resolve } from "node:path"
+import { fileURLToPath } from "node:url"
 import { describe, expect, it } from "vitest"
 
 describe("build output assets", () => {
@@ -14,8 +15,9 @@ describe("build output assets", () => {
       "swift-package-manager",
     ]
 
+    const packageRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..")
     for (const name of skills) {
-      const skillPath = resolve(process.cwd(), "dist/skills", name, "SKILL.md")
+      const skillPath = resolve(packageRoot, "dist/skills", name, "SKILL.md")
       expect(existsSync(skillPath)).toBe(true)
       const content = readFileSync(skillPath, "utf8")
       expect(content.length).toBeGreaterThan(100)

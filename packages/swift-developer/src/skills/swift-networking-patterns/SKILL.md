@@ -1,3 +1,9 @@
+---
+name: swift-networking-patterns
+description: HTTP client architecture and API patterns using native Swift networking.
+activation: Load when building network layers or API clients in Swift
+---
+
 # Skill: swift-networking-patterns
 
 ## Overview

@@ -1,3 +1,9 @@
+---
+name: swift-tdd-workflow
+description: Enforces test-driven development for Swift code using XCTest or Swift Testing.
+activation: Load when writing tests, fixing bugs, or refactoring Swift code
+---
+
 # Skill: swift-tdd-workflow
 
 ## Overview
